@@ -1,13 +1,13 @@
 #pragma once
 #include "inclib.h"
 #include "InputDevice.h"
-//#include "Camera.h"
+#include "Camera.h"
 
 class Game;
 
 class CameraController
 {
-	/*Game* game;
+	Game* game;
 public:
 	float Yaw;
 	float Pitch;
@@ -18,6 +18,6 @@ public:
 	CameraController(Game* inGame, ::Camera* inCamera);
 	void Update(float deltaTime);
 protected:
-	void OnMouseMove(const InputDevice::MouseMoveEventArgs& args);*/
+	void OnMouseMove(const InputDevice::MouseMoveEventArgs& args);
 };
 

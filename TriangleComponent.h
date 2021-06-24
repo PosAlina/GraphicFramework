@@ -1,7 +1,7 @@
 #pragma once
 #include "inclib.h"
 #include "GameComponent.h"
-//#include "Camera.h"
+#include "Camera.h"
 
 class Game;
 
@@ -21,12 +21,12 @@ class TriangleComponent : public GameComponent
 	ID3D11RasterizerState *rastState = nullptr;
 	ID3DUserDefinedAnnotation* annotation = nullptr;
 
-	//Camera* camera = nullptr;
+	Camera* camera = nullptr;
 	SimpleMath::Vector4* points = nullptr;
 public:
 	SimpleMath::Vector3 Position;
 
-	//TriangleComponent(Game *inGame, Camera *inCamera);
+	TriangleComponent(Game *inGame, Camera *inCamera);
 	TriangleComponent(Game* inGame);
 
 	virtual void Initialize() override;

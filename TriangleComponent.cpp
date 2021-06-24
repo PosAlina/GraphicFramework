@@ -2,11 +2,12 @@
 #include "inclib.h"
 #include "Game.h"
 
-//TriangleComponent::TriangleComponent(Game *inGame, Camera *inCamera):GameComponent(inGame)
-//{
-//	camera = inCamera;
-//	Position = SimpleMath::Vector3::Zero;
-//}
+TriangleComponent::TriangleComponent(Game *inGame, Camera *inCamera):GameComponent(inGame)
+{
+	camera = inCamera;
+	Position = SimpleMath::Vector3::Zero;
+}
+
 TriangleComponent::TriangleComponent(Game* inGame) :GameComponent(inGame)
 {
 	Position = SimpleMath::Vector3::Zero;
@@ -221,11 +222,11 @@ void TriangleComponent::Draw(float deltaTime)
 
 void TriangleComponent::Update(float deltaTime)
 {
-	//auto wvp = SimpleMath::Matrix::CreateTranslation(Position) * camera->ViewMatrix * camera->ProjMatrix;
-	////game->Context->UpdataSubresource(constantBuffer, 0, nullptr, &wvp, 0, 0);
-	//D3D11_MAPPED_SUBRESOURCE res = {};
-	//game->Context->Map(constantBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &res);
-	//auto dataP = reinterpret_cast<float*>(res.pData);
-	//memcpy(dataP, &wvp, sizeof(SimpleMath::Matrix));
-	//game->Context->Unmap(constantBuffer, 0);
+	auto wvp = SimpleMath::Matrix::CreateTranslation(Position) * camera->ViewMatrix * camera->ProjMatrix;
+	//game->Context->UpdataSubresource(constantBuffer, 0, nullptr, &wvp, 0, 0);
+	D3D11_MAPPED_SUBRESOURCE res = {};
+	game->Context->Map(constantBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &res);
+	auto dataP = reinterpret_cast<float*>(res.pData);
+	memcpy(dataP, &wvp, sizeof(SimpleMath::Matrix));
+	game->Context->Unmap(constantBuffer, 0);
 }

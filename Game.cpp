@@ -1,5 +1,6 @@
 #include "Game.h"
 #include "InputDevice.h"
+#include "Camera.h"
 
 Game* Game::Instance = nullptr;
 
@@ -23,9 +24,9 @@ void CollectTimestamps(ID3D11DeviceContext* pContext, QueryBuf* buf)
 	pContext->GetData(buf->queryDisjoint, &tsDisjoint, sizeof(tsDisjoint), 0);
 }
 
-Game::Game(std::wstring& WindowName)
+Game::Game(std::wstring WindowName)
 {
-	*Name = WindowName;
+	Name = WindowName;
 
 	Instance = this;
 }
@@ -36,7 +37,7 @@ Game::~Game()
 
 void Game::Run(int WindowWidth, int WindowHeight)
 {
-	Display = new DisplayWin32(*Name, WindowWidth, WindowHeight, WndProc);
+	Display = new DisplayWin32(Name, WindowWidth, WindowHeight, WndProc);
 	if (!Display->hWnd)
 	{
 		DestroyResources();
@@ -153,7 +154,7 @@ void Game::PrepareResources()
 	rastDesc.FillMode = D3D11_FILL_WIREFRAME;
 
 	this->InputDevice = new ::InputDevice(this);
-	//GameCamera = new Camera(this);
+	GameCamera = new Camera(this);
 
 	D3D11_QUERY_DESC qDesc = {};
 	qDesc.Query = D3D11_QUERY_TIMESTAMP_DISJOINT;
@@ -218,7 +219,7 @@ void Game::DestroyResources()
 
 	backBuffer->Release();
 	
-	//delete GameCamera;
+	delete GameCamera;
 	delete InputDevice;
 
 	//Device->Release();

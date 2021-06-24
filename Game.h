@@ -4,15 +4,15 @@
 #include "GameComponent.h"
 #include "DisplayWin32.h"
 #include "Delegates.h"
-//#include "Camera.h"
 
+class Camera;
 class InputDevice;
 
 class Game
 {
 public:
 	static Game* Instance;
-	std::wstring* Name;
+	std::wstring Name;
 
 #pragma region Associations
 	std::vector<GameComponent*> Components;
@@ -50,12 +50,12 @@ public:
 	std::chrono::time_point<std::chrono::steady_clock> *PrevTime = nullptr;
 	std::chrono::seconds *TotalTime = nullptr;
 
-	//Camera* GameCamera = nullptr;
+	Camera* GameCamera = nullptr;
 
 	bool isExitRequested = false;
 	bool isActive = false;
 
-	Game(std::wstring& WindowName);
+	Game(std::wstring WindowName);
 	virtual ~Game();
 
 	void Exit();

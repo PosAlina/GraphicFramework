@@ -1,14 +1,14 @@
 #pragma once
 #include "Game.h"
 #include "InputDevice.h"
-//#include "CameraController.h"
+#include "CameraController.h"
 
 class TransformGame :
     public Game
 {
 public:
-    /*Camera *cam = nullptr;
-    CameraController *camCont = nullptr;*/
+    Camera *cam = nullptr;
+    CameraController *camCont = nullptr;
 
     TransformGame(std::wstring WindowName):Game(WindowName) {}
     virtual void Initialize() override;

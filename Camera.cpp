@@ -41,5 +41,4 @@ void Camera::UpdateProjectionMatrix()
 		10000.0f);
 }
 
-
 #undef M_PI
