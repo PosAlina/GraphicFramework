@@ -3,42 +3,60 @@
 
 #include "GameComponent.h"
 #include "DisplayWin32.h"
-#include "InputDevice.h"
+#include "Delegates.h"
+//#include "Camera.h"
+
+class InputDevice;
 
 class Game
 {
-	bool isExitRequested = false;
 public:
-	std::wstring Name;
-	virtual LRESULT MessageHandler(HWND hwnd, UINT umessage, WPARAM wparam, LPARAM lparam);
-	static LRESULT CALLBACK WndProc(HWND hwnd, UINT umessage, WPARAM wparam, LPARAM lparam);
+	static Game* Instance;
+	std::wstring* Name;
 
 #pragma region Associations
-	DisplayWin32 *Display = nullptr;
-	InputDevice *InputDevice = nullptr;
 	std::vector<GameComponent*> Components;
+	MulticastDelegate<const SimpleMath::Vector2&> ScreenResized;
+	DisplayWin32 *Display = nullptr;
+	InputDevice *InputDevice;
 #pragma endregion Associations
 
+	virtual LRESULT MessageHandler(HWND hwnd, UINT umessage, WPARAM wparam, LPARAM lparam);
+
 #pragma region DirectX resources
-	Microsoft::WRL::ComPtr<ID3D11Device> Device;
+	ID3D11Device *Device = nullptr;
+	IDXGISwapChain* SwapChain = nullptr;
+	IDXGISwapChain1* SwapChain1 = nullptr;
+	ID3D11DeviceContext* Context = nullptr;
+
 	ID3D11Texture2D *backBuffer = nullptr;
-	ID3D11DeviceContext *Context = nullptr;
-	IDXGISwapChain *SwapChain = nullptr;
+	ID3D11Texture2D* depthBuffer = nullptr;
+
 	ID3D11RenderTargetView *RenderView = nullptr;
+	ID3D11DepthStencilView *DepthView = nullptr;
+
+	ID3D11ShaderResourceView* RenderSRV = nullptr;
+
+	ID3D11RasterizerState* RastState;
+	ID3D11DepthStencilState* DepthState;
+
 	ID3DUserDefinedAnnotation *DebugAnnotation = nullptr;
-	D3D11_VIEWPORT RenderSRV = {};
-
-	IDXGISwapChain1 *SwapChain1 = nullptr;
-	ID3D11Debug *Debug = nullptr;
+private:
+	DXGI_SWAP_CHAIN_DESC swapDesc = {};
 #pragma endregion DirectX resources
-	int ScreenResized;
 
-	std::chrono::time_point<std::chrono::steady_clock> *StartTime;
-	std::chrono::time_point<std::chrono::steady_clock> *PrevTime;
-	float TotalTime = 0;
-	unsigned int frameCount = 0;
+public:
+	std::chrono::time_point<std::chrono::steady_clock> *StartTime = nullptr;
+	std::chrono::time_point<std::chrono::steady_clock> *PrevTime = nullptr;
+	std::chrono::seconds *TotalTime = nullptr;
 
-	Game(std::wstring WindowName);
+	//Camera* GameCamera = nullptr;
+
+	bool isExitRequested = false;
+	bool isActive = false;
+
+	Game(std::wstring& WindowName);
+	virtual ~Game();
 
 	void Exit();
 	void RestoreTargets();
@@ -50,10 +68,13 @@ protected:
 	virtual void PostDraw(float deltaTime);
 
 	void DestroyResources();
-	int PrepareResources();
+	void PrepareResources();
 	void UpdateInternal();
 	void PrepareFrame();
 	void EndFrame();
 private:
-	int CreateBackBuffer();
+	void CreateBackBuffer();
 };
+
+static LRESULT CALLBACK WndProc(HWND hwnd, UINT umessage, WPARAM wparam, LPARAM lparam);
+

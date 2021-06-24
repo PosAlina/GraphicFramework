@@ -2,12 +2,13 @@
 #include <unordered_set>
 #include "Keys.h"
 #include "Delegates.h"
-#include "DisplayWin32.h"
 #include "inclib.h"
+
+class Game; 
 
 class InputDevice
 {
-	DisplayWin32 *game  = nullptr;
+	Game *game  = nullptr;
 	std::unordered_set<Keys>* keys;
 
 public:
@@ -27,7 +28,7 @@ public:
 
 public:
 
-	InputDevice(DisplayWin32 *inGame);
+	InputDevice(Game *inGame);
 	~InputDevice();
 
 

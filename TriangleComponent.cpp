@@ -1,23 +1,29 @@
 #include "TriangleComponent.h"
+#include "inclib.h"
+#include "Game.h"
 
-TriangleComponent::TriangleComponent(DisplayWin32* Display, Microsoft::WRL::ComPtr<ID3D11Device> Device, ID3D11DeviceContext* Context)
+//TriangleComponent::TriangleComponent(Game *inGame, Camera *inCamera):GameComponent(inGame)
+//{
+//	camera = inCamera;
+//	Position = SimpleMath::Vector3::Zero;
+//}
+TriangleComponent::TriangleComponent(Game* inGame) :GameComponent(inGame)
 {
-	game = new GameSpecification();
-	game->Initialize(Display, Device, Context);
+	Position = SimpleMath::Vector3::Zero;
 }
 
-int TriangleComponent::Initialize()
+void TriangleComponent::Initialize()
 {
 	HRESULT res;
 
 #pragma region Initialize shaders
 	ID3DBlob* errorVertexCode;
-	res = D3DCompileFromFile(L"MiniTri.fx",
+	res = D3DCompileFromFile(L"Simple.hlsl",
 		nullptr /*macros*/,
 		nullptr /*include*/,
 		"VSMain",
 		"vs_5_0",
-		D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION,
+		D3DCOMPILE_PACK_MATRIX_ROW_MAJOR,
 		0,
 		&vertexShaderByteCode,
 		&errorVertexCode);
@@ -32,40 +38,54 @@ int TriangleComponent::Initialize()
 		}
 		else
 		{
-			MessageBox(game->Display->hWnd, L"MiniTri.fx", L"Missing Shader File", MB_OK);
+			MessageBox(game->Display->hWnd, L"Simple.hlsl", L"Missing Shader File", MB_OK);
 		}
-		return 0;
+		return;
+	}
+	res = game->Device->CreateVertexShader(
+		vertexShaderByteCode->GetBufferPointer(),
+		vertexShaderByteCode->GetBufferSize(),
+		nullptr, &vertexShader);
+	if (FAILED(res))
+	{
+		std::cout << L"Vertex shader dont compile" << std::endl;
+		return;
 	}
 
-	D3D_SHADER_MACRO Shader_Macros[] = { "TEST", "1", "TCOLOR", "float4(0.0f, 1.0f, 0.0f, 1.0f)", nullptr, nullptr };
-
 	ID3DBlob* errorPixelCode;
-	res = D3DCompileFromFile(L"MiniTri.fx", Shader_Macros /*macros*/, nullptr /*include*/, "PSMain", "ps_5_0", D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION, 0, &pixelShaderByteCode, &errorPixelCode);
+	res = D3DCompileFromFile(L"Simple.hlsl",
+		nullptr /*macros*/,
+		nullptr /*include*/,
+		"PSMain",
+		"vs_5_0",
+		D3DCOMPILE_PACK_MATRIX_ROW_MAJOR,
+		0,
+		&pixelShaderByteCode,
+		&errorPixelCode);
 
-	if (FAILED(res)) {
-		if (errorPixelCode) {
+	if (FAILED(res))
+	{
+		if (errorPixelCode)
+		{
 			char* compileErrors = (char*)(errorPixelCode->GetBufferPointer());
 
 			std::cout << compileErrors << std::endl;
 		}
 		else
 		{
-			MessageBox(game->Display->hWnd, L"MiniTri.fx", L"Missing Shader File", MB_OK);
+			MessageBox(game->Display->hWnd, L"Simple.hlsl", L"Missing Shader File", MB_OK);
 		}
-		return 0;
+		return;
 	}
-
-	res = game->Device->CreateVertexShader(
-		vertexShaderByteCode->GetBufferPointer(),
-		vertexShaderByteCode->GetBufferSize(),
-		nullptr, &vertexShader);
-	ZCHECK(res);
-
 	res = game->Device->CreatePixelShader(
 		pixelShaderByteCode->GetBufferPointer(),
 		pixelShaderByteCode->GetBufferSize(),
 		nullptr, &pixelShader);
-	ZCHECK(res);
+	if (FAILED(res))
+	{
+		std::cout << L"Pixel shader dont compile" << std::endl;
+		return;
+	}
 #pragma endregion Initialize shaders
 
 #pragma region Initialize layout
@@ -87,52 +107,60 @@ int TriangleComponent::Initialize()
 			D3D11_INPUT_PER_VERTEX_DATA,
 			0}
 	};
-
-	D3D11_INPUT_ELEMENT_DESC inputElements2[] = {
-		D3D11_INPUT_ELEMENT_DESC {"POSITION",	0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0},
-		D3D11_INPUT_ELEMENT_DESC {"COLOR",	0, DXGI_FORMAT_R32G32B32A32_FLOAT, 1, 0, D3D11_INPUT_PER_VERTEX_DATA, 0}
-	};
 	res = game->Device->CreateInputLayout(
-		inputElements2,
+		inputElements,
 		2,
 		vertexShaderByteCode->GetBufferPointer(),
 		vertexShaderByteCode->GetBufferSize(),
 		&layout);
-	ZCHECK(res);
+	if (FAILED(res))
+	{
+		std::cout << L"Layout dont compile" << std::endl;
+		return;
+	}
 #pragma endregion Initialize layout
 
-#pragma region Initialize buffers
-	D3D11_BUFFER_DESC vertexBufDesc = {};
-	vertexBufDesc.Usage = D3D11_USAGE_DEFAULT;
-	vertexBufDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-	vertexBufDesc.CPUAccessFlags = 0;
-	vertexBufDesc.MiscFlags = 0;
-	vertexBufDesc.StructureByteStride = 0;
-	vertexBufDesc.ByteWidth = sizeof(SimpleMath::Vector4) * points.points.size();
+#pragma region Initialize points value
+	points = new SimpleMath::Vector4[6]{
+		SimpleMath::Vector4(0.0f, 50.5f, 0.0f, 1.0f), SimpleMath::Vector4(1.0f, 0.0f, 0.0f, 1.0f),
+		SimpleMath::Vector4(50.5f, -50.5f, 0.0f, 1.0f), SimpleMath::Vector4(0.0f, 1.0f, 0.0f, 0.0f),
+		SimpleMath::Vector4(-50.0f, -50.5f, 0.0f, 1.0f), SimpleMath::Vector4(0.0f, 0.0f, 1.0f, 1.0f),
+	};
+#pragma endregion Initialize points value
 
-	D3D11_SUBRESOURCE_DATA vertexData = {};
-	vertexData.pSysMem = points.points.data();
-	vertexData.SysMemPitch = 0;
-	vertexData.SysMemSlicePitch = 0;
+#pragma region Initialize bufferss
+	D3D11_BUFFER_DESC bufDesc = {};
+	bufDesc.Usage = D3D11_USAGE_DEFAULT;
+	bufDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+	bufDesc.CPUAccessFlags = 0;
+	bufDesc.MiscFlags = 0;
+	bufDesc.StructureByteStride = 32;
+	bufDesc.ByteWidth = sizeof(SimpleMath::Vector4) * 6;
 
-	res = game->Device->CreateBuffer(&vertexBufDesc, &vertexData, &points.buffer);
-	ZCHECK(res);
+	D3D11_SUBRESOURCE_DATA positionsData = {};
+	positionsData.pSysMem = points;
+	positionsData.SysMemPitch = 0;
+	positionsData.SysMemSlicePitch = 0;
 
-	D3D11_BUFFER_DESC indexBufDesc = {};
-	indexBufDesc.Usage = D3D11_USAGE_DEFAULT;
-	indexBufDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
-	indexBufDesc.CPUAccessFlags = 0;
-	indexBufDesc.MiscFlags = 0;
-	indexBufDesc.StructureByteStride = 0;
-	indexBufDesc.ByteWidth = sizeof(int) * indeces.indeces.size();
+	res = game->Device->CreateBuffer(&bufDesc, &positionsData, &vertices);
+	if (FAILED(res))
+	{
+		std::cout << L"Points buffer dont initialize" << std::endl;
+	}
 
-	D3D11_SUBRESOURCE_DATA indexData = {};
-	indexData.pSysMem = indeces.indeces.data();
-	indexData.SysMemPitch = 0;
-	indexData.SysMemSlicePitch = 0;
+	D3D11_BUFFER_DESC constBufDesc = {};
+	constBufDesc.Usage = D3D11_USAGE_DEFAULT;
+	constBufDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
+	constBufDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+	constBufDesc.MiscFlags = 0;
+	constBufDesc.StructureByteStride = 0;
+	constBufDesc.ByteWidth = sizeof(SimpleMath::Matrix);
 
-	res = game->Device->CreateBuffer(&indexBufDesc, &indexData, &indeces.buffer);
-	ZCHECK(res);
+	res = game->Device->CreateBuffer(&constBufDesc, nullptr, &constantBuffer);
+	if (FAILED(res))
+	{
+		std::cout << L"Const buffer dont initialize" << std::endl;
+	}
 #pragma endregion Initialize buffers
 
 #pragma region Initialize rasterization state
@@ -141,49 +169,63 @@ int TriangleComponent::Initialize()
 	rastDesc.FillMode = D3D11_FILL_SOLID;
 
 	res = game->Device->CreateRasterizerState(&rastDesc, &rastState);
-	ZCHECK(res);
+	if (FAILED(res))
+	{
+		std::cout << L"Rast state dont initialize" << std::endl;
+	}
+	res = game->Context->QueryInterface(IID_ID3DUserDefinedAnnotation, (void**)&annotation);
+	if (FAILED(res))
+	{
+		std::cout << L"Annotation dont initialize" << std::endl;
+	}
 #pragma endregion Initialize rasterization state
-	return 0;
 }
 
 void TriangleComponent::DestroyResources()
 {
+	delete[] points;
+
 	layout->Release();
 	pixelShader->Release();
 	vertexShader->Release();
 	pixelShaderByteCode->Release();
 	vertexShaderByteCode->Release();
+	vertices->Release();
 	rastState->Release();
-	points.Release();
-	indeces.Release();
+
+	constantBuffer->Release();
+	annotation->Release();
 }
 
 void TriangleComponent::Draw(float deltaTime)
 {
-	UINT strides[] = { 16, 16 };
-	UINT offsets[] = { 0, 0 };
+	auto context = game->Context;
+	ID3D11RasterizerState* oldState;
+	const UINT stride = 32;
+	const UINT offset = 0;
+	context->RSGetState(&oldState);
+	context->RSSetState(rastState);
+	context->IASetInputLayout(layout);
+	context->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	context->IASetVertexBuffers(0, 1, &vertices, &stride, &offset);
+	context->VSSetShader(vertexShader, nullptr, 0);
+	context->PSSetShader(pixelShader, nullptr, 0);
+	context->VSSetConstantBuffers(0, 1, &constantBuffer);
 
-	game->Context->IASetInputLayout(layout);
-	game->Context->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-	game->Context->IASetIndexBuffer(indeces.buffer, DXGI_FORMAT_R32_UINT, 0);
-	game->Context->IASetVertexBuffers(0, 2, &points.buffer, strides, offsets);
-	game->Context->VSSetShader(vertexShader, nullptr, 0);
-	game->Context->PSSetShader(pixelShader, nullptr, 0);
-	game->Context->RSSetState(rastState);
-
-	// In Game or Triangle component:
-	//D3D11_VIEWPORT viewport = {};
-	//viewport.Width = static_cast<float>(screenWidth);
-	//viewport.Height = static_cast<float>(screenHeight);
-	//viewport.TopLeftX = 0;
-	//viewport.TopLeftY = 0;
-	//viewport.MinDepth = 0;
-	//viewport.MaxDepth = 1.0f;
-	//context->RSSetViewports(1, &viewport);
-	//context->OMSetRenderTargets(1, &rtv, nullptr);
+	annotation->BeginEvent(L"Triangle draw event");
+	context->Draw(3, 0);
+	annotation->EndEvent();
+	context->RSSetState(oldState);
+	oldState->Release();
 }
 
 void TriangleComponent::Update(float deltaTime)
 {
-	///// Not done
+	//auto wvp = SimpleMath::Matrix::CreateTranslation(Position) * camera->ViewMatrix * camera->ProjMatrix;
+	////game->Context->UpdataSubresource(constantBuffer, 0, nullptr, &wvp, 0, 0);
+	//D3D11_MAPPED_SUBRESOURCE res = {};
+	//game->Context->Map(constantBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &res);
+	//auto dataP = reinterpret_cast<float*>(res.pData);
+	//memcpy(dataP, &wvp, sizeof(SimpleMath::Matrix));
+	//game->Context->Unmap(constantBuffer, 0);
 }

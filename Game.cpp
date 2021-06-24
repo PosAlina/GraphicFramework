@@ -1,12 +1,71 @@
 #include "Game.h"
+#include "InputDevice.h"
 
-Game *Instance;
+Game* Game::Instance = nullptr;
 
-Game::Game(std::wstring WindowName)
+struct QueryBuf {
+	ID3D11Query* queryDisjoint;
+	ID3D11Query* queryAtStart;
+	ID3D11Query* queryAtEnd;
+};
+QueryBuf qBuf;
+QueryBuf qBufSecond;
+QueryBuf* qBufCur;
+
+void CollectTimestamps(ID3D11DeviceContext* pContext, QueryBuf* buf)
 {
-	Name = WindowName;
+	while (pContext->GetData(buf->queryDisjoint, NULL, 0, 0) == S_FALSE)
+	{
+		Sleep(1);
+	}
+
+	D3D10_QUERY_DATA_TIMESTAMP_DISJOINT tsDisjoint;
+	pContext->GetData(buf->queryDisjoint, &tsDisjoint, sizeof(tsDisjoint), 0);
+}
+
+Game::Game(std::wstring& WindowName)
+{
+	*Name = WindowName;
+
 	Instance = this;
+}
+
+Game::~Game()
+{
+}
+
+void Game::Run(int WindowWidth, int WindowHeight)
+{
+	Display = new DisplayWin32(*Name, WindowWidth, WindowHeight, WndProc);
+	if (!Display->hWnd)
+	{
+		DestroyResources();
+		return;
+	}
+	PrepareResources();
 	Initialize();
+	for (auto component : Components) component->Initialize();
+
+	StartTime = new std::chrono::time_point<std::chrono::steady_clock>();
+	PrevTime = new std::chrono::time_point<std::chrono::steady_clock>();
+	*StartTime = std::chrono::steady_clock::now();
+	*PrevTime = *StartTime;
+	TotalTime = new std::chrono::duration<long long>();
+
+	MSG msg = {};
+
+	while (!isExitRequested)
+	{
+		while (PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE))
+		{
+			TranslateMessage(&msg);
+			DispatchMessage(&msg);
+		}
+		UpdateInternal();
+	}
+	delete StartTime;
+	delete PrevTime;
+	DestroyResources();
 }
 
 void Game::Exit()
@@ -15,7 +74,37 @@ void Game::Exit()
 }
 
 // After Display initialization
-int Game::CreateBackBuffer()
+void Game::CreateBackBuffer()
+{
+	if (backBuffer != nullptr) backBuffer->Release();
+	if (RenderView != nullptr) RenderView->Release();
+	if (depthBuffer != nullptr) depthBuffer->Release();
+	if (DepthView != nullptr) DepthView->Release();
+	if (RenderSRV != nullptr) RenderSRV->Release();
+	HRESULT res;
+	res = SwapChain->GetBuffer(0, IID_ID3D11Texture2D, (void**)&backBuffer); //ZCHECK(res);
+	res = Device->CreateRenderTargetView(backBuffer, nullptr, &RenderView); //ZCHECK(res);
+
+	D3D11_TEXTURE2D_DESC depthTexDesc = {};
+	depthTexDesc.ArraySize = 1;
+	depthTexDesc.MipLevels = 1;
+	depthTexDesc.Format = DXGI_FORMAT_R32_TYPELESS;
+	depthTexDesc.BindFlags = D3D11_BIND_SHADER_RESOURCE | D3D11_BIND_DEPTH_STENCIL;
+	depthTexDesc.CPUAccessFlags = 0;
+	depthTexDesc.MiscFlags = 0;
+	depthTexDesc.Usage = D3D11_USAGE_DEFAULT;
+	depthTexDesc.Width = Display->ClientWidth;
+	depthTexDesc.Height = Display->ClientHeight;
+	depthTexDesc.SampleDesc = { 1, 0 };
+	res = Device->CreateTexture2D(&depthTexDesc, nullptr, &depthBuffer); //ZCHECK(res);
+	D3D11_DEPTH_STENCIL_VIEW_DESC depthStenDesc = {};
+	depthStenDesc.Format = DXGI_FORMAT_D32_FLOAT;
+	depthStenDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
+	depthStenDesc.Flags = 0;
+	res = Device->CreateDepthStencilView(depthBuffer, &depthStenDesc, &DepthView); //SCHECK(res);
+}
+
+void Game::PrepareResources()
 {
 	HRESULT res;
 	DXGI_SWAP_CHAIN_DESC swapDesc = {};
@@ -40,74 +129,128 @@ int Game::CreateBackBuffer()
 		nullptr,
 		D3D_DRIVER_TYPE_HARDWARE,
 		nullptr,
-		D3D11_CREATE_DEVICE_DEBUG,
+#ifdef _DEBUG
+		D3D11_CREATE_DEVICE_DEBUG |
+#endif
+		D3D11_CREATE_DEVICE_BGRA_SUPPORT,
 		featureLevel,
 		1,
+
 		D3D11_SDK_VERSION,
 		&swapDesc,
 		&SwapChain,
 		&Device,
 		nullptr,
-		&Context);
-	ZCHECK(res);
+		&Context); //ZCHECK(res)
 
-	res = SwapChain->GetBuffer(0, IID_ID3D11Texture2D, (void**)&backBuffer);	ZCHECK(res);
-	return 0;
-}
-
-int Game::PrepareResources()
-{
-	HRESULT res;
-	CreateBackBuffer();
-	res = Device->CreateRenderTargetView(backBuffer, nullptr, &RenderView);	ZCHECK(res);
 	SwapChain->QueryInterface<IDXGISwapChain1>(&SwapChain1);
 	Context->QueryInterface(IID_ID3DUserDefinedAnnotation, (void**)&DebugAnnotation);
-	Device->QueryInterface(IID_ID3D11Debug, (void**)&Debug);
 
-	RenderSRV.Width = static_cast<float>(Display->ClientWidth);
-	RenderSRV.Height = static_cast<float>(Display->ClientHeight);
-	RenderSRV.TopLeftX = 0;
-	RenderSRV.TopLeftY = 0;
-	RenderSRV.MinDepth = 0;
-	RenderSRV.MaxDepth = 1.0f;
+	CreateBackBuffer();
 
-	Context->RSSetViewports(1, &RenderSRV);
-	Context->OMSetRenderTargets(1, &RenderView, nullptr);
-	return 0;
+	D3D11_RASTERIZER_DESC rastDesc = {};
+	rastDesc.CullMode = D3D11_CULL_NONE;
+	rastDesc.FillMode = D3D11_FILL_WIREFRAME;
+
+	this->InputDevice = new ::InputDevice(this);
+	//GameCamera = new Camera(this);
+
+	D3D11_QUERY_DESC qDesc = {};
+	qDesc.Query = D3D11_QUERY_TIMESTAMP_DISJOINT;
+	qDesc.MiscFlags = 0;
+	Device->CreateQuery(&qDesc, &qBuf.queryDisjoint);
 }
 
 // After Game Component run
 void Game::RestoreTargets()
 {
-	RenderSRV.Width = static_cast<float>(Display->ClientWidth);
-	RenderSRV.Height = static_cast<float>(Display->ClientHeight);
-	RenderSRV.TopLeftX = 0;
-	RenderSRV.TopLeftY = 0;
-	RenderSRV.MinDepth = 0;
-	RenderSRV.MaxDepth = 1.0f;
+	Context->OMSetRenderTargets(1, &RenderView, DepthView);
+	D3D11_VIEWPORT viewport = {};
+	viewport.Width = static_cast<float>(Display->ClientWidth);
+	viewport.Height = static_cast<float>(Display->ClientHeight);
+	viewport.TopLeftX = 0;
+	viewport.TopLeftY = 0;
+	viewport.MinDepth = 0;
+	viewport.MaxDepth = 1.0f;
 
-	Context->RSSetViewports(1, &RenderSRV);
-	Context->OMSetRenderTargets(1, &RenderView, nullptr);
+	Context->RSSetViewports(1, &viewport);
+}
+
+void Game::Update(float deltaTime)
+{
+	for (auto component : Components) component->Update(deltaTime);
+}
+
+void Game::Draw(float deltaTime)
+{
+	for (auto component : Components) component->Draw(deltaTime);
+}
+
+void Game::PostDraw(float deltaTime) // UI above
+{
+}
+
+void Game::EndFrame()
+{
+	// SwapChain->Present(1, 0);
+	SwapChain1->Present(1, 0);
+	//SwapChain1->Present(1, OXGI_PRESENT_DO_NOT_WAIT);
+}
+
+void Game::UpdateInternal()
+{
+#pragma region DrawSomeStaff
+	auto currentTime = std::chrono::steady_clock::now();
+	float deltaTime = std::chrono::duration_cast<std::chrono::microseconds>(currentTime - *PrevTime).count() / 1000000.0f;
+	*PrevTime = currentTime;
+	*TotalTime = std::chrono::duration_cast<std::chrono::seconds>(currentTime - *StartTime);
+
+	PrepareFrame();
+	Update(deltaTime);
+	Draw(deltaTime);
+	PostDraw(deltaTime);
+	EndFrame();
+#pragma endregion DrawSomeStaff
+}
+
+void Game::DestroyResources()
+{
+
+	backBuffer->Release();
+	
+	//delete GameCamera;
+	delete InputDevice;
+
+	//Device->Release();
+	//Context->Release();
+	//SwapChain->Release();
+	//SwapChain1->Release();
+	//RenderView->Release();
+	//DebugAnnotation->Release();
+
+
+	//delete Display;
+
+	//for (auto component : Components) component->DestroyResources();
 }
 
 //
-// Functions for Run()
+// HANDLER
 //
-LRESULT CALLBACK Game::WndProc(HWND hwnd, UINT umessage, WPARAM wparam, LPARAM lparam)
+LRESULT CALLBACK WndProc(HWND hwnd, UINT umessage, WPARAM wparam, LPARAM lparam)
 {
-	return Instance->MessageHandler(hwnd, umessage, wparam, lparam);
+	return Game::Instance->MessageHandler(hwnd, umessage, wparam, lparam);
 }
 
 LRESULT Game::MessageHandler(HWND hwnd, UINT umessage, WPARAM wparam, LPARAM lparam)
 {
-	//UIRendererClass::WndProcHandler(hwnd, umessage, wparam, lparam); // From class work
 	switch (umessage)
 	{
 	case WM_DESTROY:
 	case WM_CLOSE:
 	{
 		PostQuitMessage(0);
-		//isExitRequested = true;
+		isExitRequested = true;
 		return 0;
 	}
 	case WM_ENTERSIZEMOVE:
@@ -118,40 +261,6 @@ LRESULT Game::MessageHandler(HWND hwnd, UINT umessage, WPARAM wparam, LPARAM lpa
 	{
 		return 0;
 	}
-	//case WM_INPUT:
-	//{
-	//	UINT dwSize = 0;
-	//	GetRawInputData(reinterpret_cast<HRAWINPUT>(lparam), RID_INPUT, nullptr, &dwSize, sizeof(RAWINPUTHEADER));
-	//	LPBYTE lpb = new BYTE[dwSize];
-	//	if (lpb == nullptr) {
-	//		return 0;
-	//	}
-	//	if (GetRawInputData((HRAWINPUT)lparam, RID_INPUT, lpb, &dwSize, sizeof(RAWINPUTHEADER)) != dwSize)
-	//		OutputDebugString(TEXT("GetRawInputData does not return correct size"));
-	//	RAWINPUT* raw = reinterpret_cast<RAWINPUT*>(lpb);
-	//	if (raw->header.dwType == RIM_TYPEKEYBOARD)
-	//	{
-	//		InputDevice->OnKeyDown({
-	//			raw->data.keyboard.MakeCode,
-	//			raw->data.keyboard.Flags,
-	//			raw->data.keyboard.VKey,
-	//			raw->data.keyboard.Message
-	//			});
-	//	}
-	//	else if (raw->header.dwType == RIM_TYPEMOUSE)
-	//	{
-	//		InputDevice->OnMouseMove({
-	//			raw->data.mouse.usFlags,
-	//			static_cast<int>(raw->data.mouse.ulExtraInformation),
-	//			static_cast<int>(raw->data.mouse.ulRawButtons),
-	//			static_cast<int>(raw->data.mouse.usButtonData),
-	//			raw->data.mouse.lLastX,
-	//			raw->data.mouse.lLastY
-	//			});
-	//	}
-	//	delete[] lpb;
-	//	return DefWindowProc(hwnd, umessage, wparam, lparam);
-	//}
 	case WM_INPUT:
 	{
 		UINT dwSize = 0;
@@ -191,43 +300,6 @@ LRESULT Game::MessageHandler(HWND hwnd, UINT umessage, WPARAM wparam, LPARAM lpa
 		delete[] lpb;
 		return DefWindowProc(hwnd, umessage, wparam, lparam);
 	}
-	case WM_SIZE:
-	{
-		std::cout << "Width " << LOWORD(lparam) << "Height " << HIWORD(lparam) << std::endl;
-		//if (Instance->Device)
-		//{
-			//int newWidth = LOWORD(lparam);
-			//int newHeight = HIWORD(lparam);
-			//if (newWidth == 0 || newHeight == 0 || ((Instance->Display->ClientWidth == newWidth) && (Instance->Display->ClientHeight == newHeight)))
-			//{
-			//	return 0;
-			//}
-			//Instance->Display->ClientWidth = newWidth;
-			//Instance->Display->ClientHeight = newHeight;
-			//if (Instance->backBuffer != nullptr)
-			//{
-			//	Instance->backBuffer->Release();
-			//	Instance->backBuffer = nullptr;
-			//}
-			//if (Instance->RenderView != nullptr)
-			//{
-			//	Instance->RenderView->Release();
-			//	Instance->RenderView = nullptr;
-			//}
-			//if (depthBuffer != nullptr)
-			//{
-			//	depthBuffer->Release();
-			//	depthBuffer = nullptr;
-			//}
-			//Render2D->UnloadResources();
-			//SwapChain1->ResizeBuffer(2, Display->ClientWidth, Display->ClientHeight, DXGI_FORMAT_R8G8S8A8_UNORM, 0);
-			//CreateBackBuffer();
-			//Renderer2D->SetTarget(RenderView);
-			//const auto screenSize = Vector2{ static_cast<float>(Display->ClientWidth), static_cast<float>(Display->ClientHeight) };
-			//ScreenResized.Broadcast(screenSize);
-		//}
-		return 0;
-	}
 	default:
 		return DefWindowProc(hwnd, umessage, wparam, lparam);
 	}
@@ -239,121 +311,21 @@ void Game::Initialize()
 
 void Game::PrepareFrame()
 {
-	//TotalTime += deltaTime;
-//frameCount++;
-
-//if (TotalTime > 1.0f) {
-//	float fps = frameCount / TotalTime;
-
-//	TotalTime = 0.0f;
-
-//	WCHAR text[256];
-//	swprintf_s(text, TEXT("FPS: %f"), fps);
-//	SetWindowText(Display->hWnd, text);
-
-//	frameCount = 0;
-//}
-//// Background
-//float color[] = { TotalTime, 0.1f, 0.1f, 1.0f };
-//Context->OMSetRenderTargets(1, &RenderView, nullptr);
-//Context->ClearRenderTargetView(RenderView, color);
 	Context->ClearState();
-}
 
-void Game::Update(float deltaTime)
-{
-	for (auto component : Components) component->Update(deltaTime);
-}
+	Context->OMSetRenderTargets(1, &RenderView, DepthView);
 
-void Game::Draw(float deltaTime)
-{
-	DebugAnnotation->BeginEvent(L"BeginDraw");
-	for (auto component : Components) component->Draw(deltaTime);
-	DebugAnnotation->EndEvent();
-}
+	D3D11_VIEWPORT viewport = {};
+	viewport.Width = static_cast<float>(Display->ClientWidth);
+	viewport.Height = static_cast<float>(Display->ClientHeight);
+	viewport.TopLeftX = 0;
+	viewport.TopLeftY = 0;
+	viewport.MinDepth = 0;
+	viewport.MaxDepth = 1.0f;
 
-void Game::PostDraw(float deltaTime) // UI above
-{
-}
+	Context->RSSetViewports(1, &viewport);
+	Context->RSSetState(RastState);
 
-void Game::EndFrame()
-{
-	// SwapChain->Present(1, 0);
-	SwapChain1->Present(1, 0);
-	//SwapChain1->Present(1, OXGI_PRESENT_DO_NOT_WAIT);
-}
-
-void Game::UpdateInternal()
-{
-#pragma region DrawSomeStaff
-	auto currentTime = std::chrono::steady_clock::now();
-	float deltaTime = std::chrono::duration_cast<std::chrono::microseconds>(currentTime - *PrevTime).count() / 1000000.0f;
-	*PrevTime = currentTime;
-	TotalTime = std::chrono::duration_cast<std::chrono::microseconds>(currentTime - *StartTime).count() / 1000000.0f;
-
-	PrepareFrame();
-	Update(deltaTime);
-	Draw(deltaTime);
-	PostDraw(deltaTime);
-	EndFrame();
-#pragma endregion DrawSomeStaff
-}
-
-void Game::DestroyResources()
-{
-	Device->Release();
-	Debug->ReportLiveDeviceObjects(D3D11_RLDO_DETAIL);
-	backBuffer->Release();
-
-	Context->Release();
-	SwapChain->Release();
-	SwapChain1->Release();
-	RenderView->Release();
-	DebugAnnotation->Release();
-
-	delete InputDevice;
-	delete Display;
-
-	for (auto component : Components) component->DestroyResources();
-}
-
-void Game::Run(int WindowWidth, int WindowHeight)
-{
-	Display = new DisplayWin32(Name, WindowWidth, WindowHeight, WndProc);
-	if (!Display->hWnd)
-	{
-		DestroyResources();
-		return;
-	}
-	if (!PrepareResources())
-	{
-		DestroyResources();
-		return;
-	}
-	Initialize();
-	for (auto component : Components) component->Initialize();
-
-	StartTime = new std::chrono::time_point<std::chrono::steady_clock>();
-	PrevTime = new std::chrono::time_point<std::chrono::steady_clock>();
-	*StartTime = std::chrono::steady_clock::now();
-	*PrevTime = *StartTime;
-
-	MSG msg = {};
-
-	while (!isExitRequested)
-	{
-		while (PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE))
-		{
-			TranslateMessage(&msg);
-			DispatchMessage(&msg);
-		}
-		if (msg.message == WM_QUIT)
-		{
-			isExitRequested = true;
-		}
-		UpdateInternal();
-	}
-	delete StartTime;
-	delete PrevTime;
-	DestroyResources();
+	Context->ClearRenderTargetView(RenderView, SimpleMath::Color(0.0f, 0, 0, 1.0f));
+	Context->ClearDepthStencilView(DepthView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 }

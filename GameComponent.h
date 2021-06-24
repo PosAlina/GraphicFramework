@@ -1,26 +1,18 @@
 #pragma once
-#include "DisplayWin32.h"
 
-struct GameSpecification {
-	DisplayWin32* Display = nullptr;
-	Microsoft::WRL::ComPtr<ID3D11Device> Device;
-	ID3D11DeviceContext* Context = nullptr;
-
-	void Initialize(DisplayWin32* Display, Microsoft::WRL::ComPtr<ID3D11Device> Device, ID3D11DeviceContext* Context)
-	{
-		this->Display = Display;
-		this->Device = Device;
-		this->Context = Context;
-	}
-};
+class Game;
 
 class GameComponent
 {
 public:
-	GameSpecification *game = nullptr;
+	virtual ~GameComponent() = default;
+	Game* game;
 
-	GameComponent() {}
-	virtual int Initialize() = 0;	
+	GameComponent(Game* inGame) {
+		game = inGame;
+	}
+
+	virtual void Initialize() = 0;
 	virtual void DestroyResources() = 0;
 	virtual void Draw(float deltaTime) = 0;
 	virtual void Reload() = 0;

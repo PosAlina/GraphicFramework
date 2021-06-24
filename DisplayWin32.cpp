@@ -23,7 +23,7 @@ DisplayWin32::DisplayWin32(std::wstring& windowName, int width, int height, WNDP
 	wc.cbSize = sizeof(WNDCLASSEX);
 	if (!RegisterClassEx(&wc))
 	{
-		MessageBox(NULL, L"Ошибка при регистрации класса!", L"Регистрация класса", NULL);
+		MessageBox(NULL, L"Register class error!", L"Register class", NULL);
 		return;
 	}
 

@@ -1,15 +1,15 @@
 #pragma warning(disable : 4267)
 #include "inclib.h"
-#include "TransformGame.h"
+//#include "TransformGame.h"
+//
+//int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR pScmdline, int iCmdshow)
+//{
+//	auto* tGame = new TransformGame(L"TransformGame");
+//	tGame->Run(1024, 768);
+//	delete tGame;
+//}
 
-int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR pScmdline, int iCmdshow)
-{
-	TransformGame* tGame = new TransformGame(L"TransformGame");
-	tGame->Run(1024, 768);
-	delete tGame;
-}
-
-/*ID3D11DeviceContext* context;
+ID3D11DeviceContext* context;
 IDXGISwapChain* swapChain;
 IDXGISwapChain1* swapChain1;
 ID3D11RenderTargetView* rtv;
@@ -57,10 +57,14 @@ LRESULT CALLBACK WndProcy(HWND hwnd, UINT umessage, WPARAM wparam, LPARAM lparam
 	}
 }
 
-
+//
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR pScmdline, int iCmdshow)
 {
-#pragma region Window Initialization
+#pragma region Window Initializationint main()
+//{
+//	return 0;
+//}
+
 	LPCWSTR applicationName;
 	HWND hWnd;
 
@@ -82,7 +86,11 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR pScmdline,
 	wc.lpszClassName = applicationName;
 	wc.cbSize = sizeof(WNDCLASSEX);
 
-	RegisterClassEx(&wc);
+	if (!RegisterClassEx(&wc))
+	{
+		MessageBox(NULL, L"Register class error!", L"Register class", NULL);
+		return 0;
+	}
 
 	auto screenWidth = GetSystemMetrics(SM_CXSCREEN);
 	auto screenHeight = GetSystemMetrics(SM_CYSCREEN);
@@ -160,8 +168,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR pScmdline,
 	ID3DBlob* vertexBC;
 	ID3DBlob* errorVertexCode;
 	res = D3DCompileFromFile(L"MiniTri.fx",
-		nullptr *//*macros*//*,
-		nullptr *//*include*//*,
+		nullptr,
+		nullptr,
 		"VSMain",
 		"vs_5_0",
 		D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION,
@@ -188,7 +196,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR pScmdline,
 
 	ID3DBlob* pixelBC;
 	ID3DBlob* errorPixelCode;
-	res = D3DCompileFromFile(L"MiniTri.fx", Shader_Macros *//*macros*//*, nullptr *//*include*//*, "PSMain", "ps_5_0", D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION, 0, & pixelBC, & errorPixelCode);
+	res = D3DCompileFromFile(L"MiniTri.fx", Shader_Macros, nullptr, "PSMain", "ps_5_0", D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION, 0, & pixelBC, & errorPixelCode);
 
 	if (FAILED(res)) {
 		if (errorPixelCode) {
@@ -415,7 +423,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR pScmdline,
 		context->DrawIndexed(6, 0, 0);
 		annotation->EndEvent();
 
-		//swapChain1->Present(1, *//*DXGI_PRESENT_DO_NOT_WAIT*//* 0);
+		swapChain1->Present(1, /*DXGI_PRESENT_DO_NOT_WAIT*/ 0);
 #pragma endregion DrawSomeStaff
 	}
 
@@ -427,4 +435,4 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR pScmdline,
 	debug->ReportLiveDeviceObjects(D3D11_RLDO_DETAIL);
 
 	return 0;
-}*/
+}

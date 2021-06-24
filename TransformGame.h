@@ -1,14 +1,20 @@
 #pragma once
 #include "Game.h"
+#include "InputDevice.h"
+//#include "CameraController.h"
 
 class TransformGame :
     public Game
 {
 public:
-    TransformGame(std::wstring WindowName):Game(WindowName) {}
-    void Initialize() override;
-    void Update(float deltaTime) override;
-    void Draw(float deltaTime) override;
-    void PostDraw(float deltaTime) override;
-};
+    /*Camera *cam = nullptr;
+    CameraController *camCont = nullptr;*/
 
+    TransformGame(std::wstring WindowName):Game(WindowName) {}
+    virtual void Initialize() override;
+    virtual void Update(float deltaTime) override;
+    virtual void Draw(float deltaTime) override;
+    virtual void PostDraw(float deltaTime) override;
+
+    void OnMouseMove(InputDevice::MouseMoveEventArgs& args);
+};
