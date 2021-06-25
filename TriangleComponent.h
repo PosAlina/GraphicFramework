@@ -26,6 +26,7 @@ class TriangleComponent : public GameComponent
 public:
 	SimpleMath::Vector3 Position;
 
+	TriangleComponent(Game* inGame, Camera* inCamera, SimpleMath::Vector4 *points);
 	TriangleComponent(Game *inGame, Camera *inCamera);
 	TriangleComponent(Game* inGame);
 

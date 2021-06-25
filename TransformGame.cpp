@@ -11,9 +11,9 @@ void TransformGame::Initialize()
 	cam = new Camera(this);
 	camCont = new CameraController(this, cam);
 	plane = new PlaneComponent(this, cam);
-	//tri = new TriangleComponent(this, cam);
+	tri = new TriangleComponent(this, cam);
 	Components.emplace_back(plane);
-	//Components.emplace_back(tri);
+	Components.emplace_back(tri);
 }
 
 void TransformGame::Update(float deltaTime)

@@ -22,9 +22,12 @@ class PlaneComponent :
 
 	Camera* camera = nullptr;
 	SimpleMath::Vector4 *points = nullptr;
+	int size = 100;
+	int count = 0;
 public:
 	SimpleMath::Vector3 Position;
 
+	PlaneComponent(Game* inGame, Camera* inCamera, int size);
 	PlaneComponent(Game* inGame, Camera* inCamera);
 	PlaneComponent(Game* inGame);
 

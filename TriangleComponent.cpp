@@ -2,15 +2,37 @@
 #include "inclib.h"
 #include "Game.h"
 
+TriangleComponent::TriangleComponent(Game* inGame, Camera* inCamera, SimpleMath::Vector4 *inPoints) :GameComponent(inGame)
+{
+	camera = inCamera;
+	Position = SimpleMath::Vector3::Zero;
+	points = new SimpleMath::Vector4[6];
+	for (auto i = 0; i < 6; ++i)
+	{
+		points[i] = inPoints[i];
+	}
+}
+
+
 TriangleComponent::TriangleComponent(Game *inGame, Camera *inCamera):GameComponent(inGame)
 {
 	camera = inCamera;
 	Position = SimpleMath::Vector3::Zero;
+	points = new SimpleMath::Vector4[6]{
+		SimpleMath::Vector4(0.0f, 1.0f, -1.0f, 1.0f), SimpleMath::Vector4(1.0f, 0.0f, 0.0f, 1.0f),
+		SimpleMath::Vector4(1.0f, 1.0f, 0.0f, 1.0f), SimpleMath::Vector4(0.0f, 1.0f, 0.0f, 0.0f),
+		SimpleMath::Vector4(0.0f, 1.0f, -2.0f, 1.0f), SimpleMath::Vector4(0.0f, 0.0f, 1.0f, 1.0f),
+	};
 }
 
 TriangleComponent::TriangleComponent(Game* inGame) :GameComponent(inGame)
 {
 	Position = SimpleMath::Vector3::Zero;
+	points = new SimpleMath::Vector4[6]{
+		SimpleMath::Vector4(0.0f, 1.0f, -1.0f, 1.0f), SimpleMath::Vector4(1.0f, 0.0f, 0.0f, 1.0f),
+		SimpleMath::Vector4(1.0f, 1.0f, 0.0f, 1.0f), SimpleMath::Vector4(0.0f, 1.0f, 0.0f, 0.0f),
+		SimpleMath::Vector4(0.0f, 1.0f, -2.0f, 1.0f), SimpleMath::Vector4(0.0f, 0.0f, 1.0f, 1.0f),
+	};
 }
 
 void TriangleComponent::Initialize()
@@ -116,14 +138,6 @@ void TriangleComponent::Initialize()
 		std::cout << L"Layout dont compile" << std::endl;
 	}
 #pragma endregion Initialize layout
-
-#pragma region Initialize points value
-	points = new SimpleMath::Vector4[6] {
-		SimpleMath::Vector4(0.0f, 40.0f, 40.0f, 1.0f), SimpleMath::Vector4(1.0f, 0.0f, 0.0f, 1.0f),
-		SimpleMath::Vector4(40.0f, -40.0f, 0.0f, 1.0f), SimpleMath::Vector4(0.0f, 1.0f, 0.0f, 0.0f),
-		SimpleMath::Vector4(-40.0f, -40.0f, 0.0f, 1.0f), SimpleMath::Vector4(0.0f, 0.0f, 1.0f, 1.0f),
-	};
-#pragma endregion Initialize points value
 
 #pragma region Initialize bufferss
 	D3D11_BUFFER_DESC bufDesc = {};

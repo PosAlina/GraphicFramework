@@ -2,15 +2,51 @@
 #include "inclib.h"
 #include "Game.h"
 
+PlaneComponent::PlaneComponent(Game* inGame, Camera* inCamera, int inSize) :GameComponent(inGame)
+{
+	camera = inCamera;
+	Position = SimpleMath::Vector3::Zero;
+	size = inSize;
+	count = (size * 2 + 1) * 8;
+}
+
+//	points = new SimpleMath::Vector4[count]{
+//// Lines parallel Z (triangles in XY-field)
+//		SimpleMath::Vector4(-2.0f, 0.0f, 2.0f, 1.0f), SimpleMath::Vector4(1.0f, 1.0f, 1.0f, 1.0f),
+//		SimpleMath::Vector4(-2.0f, 0.0f, -2.0f, 1.0f), SimpleMath::Vector4(1.0f, 1.0f, 1.0f, 1.0f),
+//		SimpleMath::Vector4(-1.0f, 0.0f, -2.0f, 1.0f), SimpleMath::Vector4(1.0f, 1.0f, 1.0f, 1.0f),
+//		SimpleMath::Vector4(-1.0f, 0.0f, 2.0f, 1.0f), SimpleMath::Vector4(1.0f, 1.0f, 1.0f, 1.0f),
+//		SimpleMath::Vector4(0.0f, 0.0f, 2.0f, 1.0f), SimpleMath::Vector4(1.0f, 1.0f, 1.0f, 1.0f),
+//		SimpleMath::Vector4(0.0f, 0.0f, -2.0f, 1.0f), SimpleMath::Vector4(1.0f, 1.0f, 1.0f, 1.0f),
+//		SimpleMath::Vector4(1.0f, 0.0f, -2.0f, 1.0f), SimpleMath::Vector4(1.0f, 1.0f, 1.0f, 1.0f),
+//		SimpleMath::Vector4(1.0f, 0.0f, 2.0f, 1.0f), SimpleMath::Vector4(1.0f, 1.0f, 1.0f, 1.0f),
+//		SimpleMath::Vector4(2.0f, 0.0f, 2.0f, 1.0f), SimpleMath::Vector4(1.0f, 1.0f, 1.0f, 1.0f),
+//		SimpleMath::Vector4(2.0f, 0.0f, -2.0f, 1.0f), SimpleMath::Vector4(1.0f, 1.0f, 1.0f, 1.0f),
+//// Lines parallel X
+//		SimpleMath::Vector4(-2.0f, 0.0f, 2.0f, 1.0f), SimpleMath::Vector4(1.0f, 1.0f, 1.0f, 1.0f),
+//		SimpleMath::Vector4(2.0f, 0.0f, 2.0f, 1.0f), SimpleMath::Vector4(1.0f, 1.0f, 1.0f, 1.0f),
+//		SimpleMath::Vector4(2.0f, 0.0f, 1.0f, 1.0f), SimpleMath::Vector4(1.0f, 1.0f, 1.0f, 1.0f),
+//		SimpleMath::Vector4(-2.0f, 0.0f, 1.0f, 1.0f), SimpleMath::Vector4(1.0f, 1.0f, 1.0f, 1.0f),
+//		SimpleMath::Vector4(-2.0f, 0.0f, 0.0f, 1.0f), SimpleMath::Vector4(1.0f, 1.0f, 1.0f, 1.0f),
+//		SimpleMath::Vector4(2.0f, 0.0f, 0.0f, 1.0f), SimpleMath::Vector4(1.0f, 1.0f, 1.0f, 1.0f),
+//		SimpleMath::Vector4(2.0f, 0.0f, -1.0f, 1.0f), SimpleMath::Vector4(1.0f, 1.0f, 1.0f, 1.0f),
+//		SimpleMath::Vector4(-2.0f, 0.0f, -1.0f, 1.0f), SimpleMath::Vector4(1.0f, 1.0f, 1.0f, 1.0f),
+//		SimpleMath::Vector4(-2.0f, 0.0f, 2.0f, 1.0f), SimpleMath::Vector4(1.0f, 1.0f, 1.0f, 1.0f),
+//		SimpleMath::Vector4(2.0f, 0.0f, 2.0f, 1.0f), SimpleMath::Vector4(1.0f, 1.0f, 1.0f, 1.0f),
+//	};
+
+
 PlaneComponent::PlaneComponent(Game* inGame, Camera* inCamera) :GameComponent(inGame)
 {
 	camera = inCamera;
 	Position = SimpleMath::Vector3::Zero;
+	count = (size * 2 + 1) * 8;
 }
 
 PlaneComponent::PlaneComponent(Game* inGame) : GameComponent(inGame)
 {
 	Position = SimpleMath::Vector3::Zero;
+	count = (size * 2 + 1) * 8;
 }
 
 void PlaneComponent::Initialize()
@@ -41,7 +77,6 @@ void PlaneComponent::Initialize()
 		{
 			MessageBox(game->Display->hWnd, L"Simple.hlsl", L"Missing Shader File", MB_OK);
 		}
-		return;
 	}
 	res = game->Device->CreateVertexShader(
 		vertexShaderByteCode->GetBufferPointer(),
@@ -50,7 +85,6 @@ void PlaneComponent::Initialize()
 	if (FAILED(res))
 	{
 		std::cout << L"Vertex shader dont compile" << std::endl;
-		return;
 	}
 
 	ID3DBlob* errorPixelCode;
@@ -76,7 +110,6 @@ void PlaneComponent::Initialize()
 		{
 			MessageBox(game->Display->hWnd, L"Simple.hlsl", L"Missing Shader File", MB_OK);
 		}
-		return;
 	}
 	res = game->Device->CreatePixelShader(
 		pixelShaderByteCode->GetBufferPointer(),
@@ -85,7 +118,6 @@ void PlaneComponent::Initialize()
 	if (FAILED(res))
 	{
 		std::cout << L"Pixel shader dont compile" << std::endl;
-		return;
 	}
 #pragma endregion Initialize shaders
 
@@ -122,54 +154,43 @@ void PlaneComponent::Initialize()
 #pragma endregion Initialize layout
 
 #pragma region Initialize points value
-	points = new SimpleMath::Vector4[88]{
-// Lines parallel Z (triangles in XY-field)
-		SimpleMath::Vector4(-50.0f, 0.0f, -50.0f, 1.0f), SimpleMath::Vector4(1.0f, 1.0f, 1.0f, 1.0f),
-		SimpleMath::Vector4(-50.0f, 0.0f, 50.0f, 1.0f), SimpleMath::Vector4(1.0f, 1.0f, 1.0f, 1.0f),
-		SimpleMath::Vector4(-40.0f, 0.0f, 50.0f, 1.0f), SimpleMath::Vector4(1.0f, 1.0f, 1.0f, 1.0f),
-		SimpleMath::Vector4(-40.0f, 0.0f, -50.0f, 1.0f), SimpleMath::Vector4(1.0f, 1.0f, 1.0f, 1.0f),
-		SimpleMath::Vector4(-30.0f, 0.0f, -50.0f, 1.0f), SimpleMath::Vector4(1.0f, 1.0f, 1.0f, 1.0f),
-		SimpleMath::Vector4(-30.0f, 0.0f, 50.0f, 1.0f), SimpleMath::Vector4(1.0f, 1.0f, 1.0f, 1.0f),
-		SimpleMath::Vector4(-20.0f, 0.0f, 50.0f, 1.0f), SimpleMath::Vector4(1.0f, 1.0f, 1.0f, 1.0f),
-		SimpleMath::Vector4(-20.0f, 0.0f, -50.0f, 1.0f), SimpleMath::Vector4(1.0f, 1.0f, 1.0f, 1.0f),
-		SimpleMath::Vector4(-10.0f, 0.0f, -50.0f, 1.0f), SimpleMath::Vector4(1.0f, 1.0f, 1.0f, 1.0f),
-		SimpleMath::Vector4(-10.0f, 0.0f, 50.0f, 1.0f), SimpleMath::Vector4(1.0f, 1.0f, 1.0f, 1.0f),
-		SimpleMath::Vector4(0.0f, 0.0f, 50.0f, 1.0f), SimpleMath::Vector4(1.0f, 1.0f, 1.0f, 1.0f),
-		SimpleMath::Vector4(0.0f, 0.0f, -50.0f, 1.0f), SimpleMath::Vector4(1.0f, 1.0f, 1.0f, 1.0f),
-		SimpleMath::Vector4(10.0f, 0.0f, -50.0f, 1.0f), SimpleMath::Vector4(1.0f, 1.0f, 1.0f, 1.0f),
-		SimpleMath::Vector4(10.0f, 0.0f, 50.0f, 1.0f), SimpleMath::Vector4(1.0f, 1.0f, 1.0f, 1.0f),
-		SimpleMath::Vector4(20.0f, 0.0f, 50.0f, 1.0f), SimpleMath::Vector4(1.0f, 1.0f, 1.0f, 1.0f),
-		SimpleMath::Vector4(20.0f, 0.0f, -50.0f, 1.0f), SimpleMath::Vector4(1.0f, 1.0f, 1.0f, 1.0f),
-		SimpleMath::Vector4(30.0f, 0.0f, -50.0f, 1.0f), SimpleMath::Vector4(1.0f, 1.0f, 1.0f, 1.0f),
-		SimpleMath::Vector4(30.0f, 0.0f, 50.0f, 1.0f), SimpleMath::Vector4(1.0f, 1.0f, 1.0f, 1.0f),
-		SimpleMath::Vector4(40.0f, 0.0f, 50.0f, 1.0f), SimpleMath::Vector4(1.0f, 1.0f, 1.0f, 1.0f),
-		SimpleMath::Vector4(40.0f, 0.0f, -50.0f, 1.0f), SimpleMath::Vector4(1.0f, 1.0f, 1.0f, 1.0f),
-		SimpleMath::Vector4(50.0f, 0.0f, -50.0f, 1.0f), SimpleMath::Vector4(1.0f, 1.0f, 1.0f, 1.0f),
-		SimpleMath::Vector4(50.0f, 0.0f, 50.0f, 1.0f), SimpleMath::Vector4(1.0f, 1.0f, 1.0f, 1.0f),
-// Lines parallel X
-		SimpleMath::Vector4(50.0f, 0.0f, 50.0f, 1.0f), SimpleMath::Vector4(1.0f, 1.0f, 1.0f, 1.0f),
-		SimpleMath::Vector4(-50.0f, 0.0f, 50.0f, 1.0f), SimpleMath::Vector4(1.0f, 1.0f, 1.0f, 1.0f),
-		SimpleMath::Vector4(-50.0f, 0.0f, 40.0f, 1.0f), SimpleMath::Vector4(1.0f, 1.0f, 1.0f, 1.0f),
-		SimpleMath::Vector4(50.0f, 0.0f, 40.0f, 1.0f), SimpleMath::Vector4(1.0f, 1.0f, 1.0f, 1.0f),
-		SimpleMath::Vector4(50.0f, 0.0f, 30.0f, 1.0f), SimpleMath::Vector4(1.0f, 1.0f, 1.0f, 1.0f),
-		SimpleMath::Vector4(-50.0f, 0.0f, 30.0f, 1.0f), SimpleMath::Vector4(1.0f, 1.0f, 1.0f, 1.0f),
-		SimpleMath::Vector4(-50.0f, 0.0f, 20.0f, 1.0f), SimpleMath::Vector4(1.0f, 1.0f, 1.0f, 1.0f),
-		SimpleMath::Vector4(50.0f, 0.0f, 20.0f, 1.0f), SimpleMath::Vector4(1.0f, 1.0f, 1.0f, 1.0f),
-		SimpleMath::Vector4(50.0f, 0.0f, 10.0f, 1.0f), SimpleMath::Vector4(1.0f, 1.0f, 1.0f, 1.0f),
-		SimpleMath::Vector4(-50.0f, 0.0f, 10.0f, 1.0f), SimpleMath::Vector4(1.0f, 1.0f, 1.0f, 1.0f),
-		SimpleMath::Vector4(-50.0f, 0.0f, 0.0f, 1.0f), SimpleMath::Vector4(1.0f, 1.0f, 1.0f, 1.0f),
-		SimpleMath::Vector4(50.0f, 0.0f, 0.0f, 1.0f), SimpleMath::Vector4(1.0f, 1.0f, 1.0f, 1.0f),
-		SimpleMath::Vector4(50.0f, 0.0f, -10.0f, 1.0f), SimpleMath::Vector4(1.0f, 1.0f, 1.0f, 1.0f),
-		SimpleMath::Vector4(-50.0f, 0.0f, -10.0f, 1.0f), SimpleMath::Vector4(1.0f, 1.0f, 1.0f, 1.0f),
-		SimpleMath::Vector4(-50.0f, 0.0f, 20.0f, 1.0f), SimpleMath::Vector4(1.0f, 1.0f, 1.0f, 1.0f),
-		SimpleMath::Vector4(50.0f, 0.0f, 20.0f, 1.0f), SimpleMath::Vector4(1.0f, 1.0f, 1.0f, 1.0f),
-		SimpleMath::Vector4(50.0f, 0.0f, 30.0f, 1.0f), SimpleMath::Vector4(1.0f, 1.0f, 1.0f, 1.0f),
-		SimpleMath::Vector4(-50.0f, 0.0f, 30.0f, 1.0f), SimpleMath::Vector4(1.0f, 1.0f, 1.0f, 1.0f),
-		SimpleMath::Vector4(-50.0f, 0.0f, 40.0f, 1.0f), SimpleMath::Vector4(1.0f, 1.0f, 1.0f, 1.0f),
-		SimpleMath::Vector4(50.0f, 0.0f, 40.0f, 1.0f), SimpleMath::Vector4(1.0f, 1.0f, 1.0f, 1.0f),
-		SimpleMath::Vector4(50.0f, 0.0f, 50.0f, 1.0f), SimpleMath::Vector4(1.0f, 1.0f, 1.0f, 1.0f),
-		SimpleMath::Vector4(-50.0f, 0.0f, 50.0f, 1.0f), SimpleMath::Vector4(1.0f, 1.0f, 1.0f, 1.0f),
-	};
+	points = new SimpleMath::Vector4[count];
+
+	int i = 0;
+	std::cout << count << std::endl;
+	std::cout << size << std::endl;
+	float s = (float)size;
+	float x = -s;
+	while (i < (count / 2))
+	{
+		points[i] = SimpleMath::Vector4(x, 0.0f, -s, 1.0f);
+		i++;
+		points[i] = (x != 0.0f) ? SimpleMath::Vector4(1.0f, 1.0f, 1.0f, 1.0f) : SimpleMath::Vector4(1.0f, 0.0f, 0.0f, 1.0f);
+		i++;
+
+		points[i] = SimpleMath::Vector4(x, 0.0f, s, 1.0f);
+		i++;
+		points[i] = (x != 0.0f) ? SimpleMath::Vector4(1.0f, 1.0f, 1.0f, 1.0f) : SimpleMath::Vector4(1.0f, 0.0f, 0.0f, 1.0f);
+		i++;
+
+		x = x + 1.0f;
+	}
+
+	float z = -s;
+	while (i < count)
+	{
+		points[i] = SimpleMath::Vector4(-s, 0.0f, z, 1.0f);
+		i++;
+		points[i] = (z != 0.0f) ? SimpleMath::Vector4(1.0f, 1.0f, 1.0f, 1.0f) : SimpleMath::Vector4(1.0f, 0.0f, 0.0f, 1.0f);
+		i++;
+
+		points[i] = SimpleMath::Vector4(s, 0.0f, z, 1.0f);
+		i++;
+		points[i] = (z != 0.0f) ? SimpleMath::Vector4(1.0f, 1.0f, 1.0f, 1.0f) : SimpleMath::Vector4(1.0f, 0.0f, 0.0f, 1.0f);
+		i++;
+
+		z = z + 1.0f;
+	}
 #pragma endregion Initialize points value
 
 #pragma region Initialize bufferss
@@ -179,7 +200,7 @@ void PlaneComponent::Initialize()
 	bufDesc.CPUAccessFlags = 0;
 	bufDesc.MiscFlags = 0;
 	bufDesc.StructureByteStride = 32;
-	bufDesc.ByteWidth = sizeof(SimpleMath::Vector4) * 6;
+	bufDesc.ByteWidth = sizeof(SimpleMath::Vector4) * count;
 
 	D3D11_SUBRESOURCE_DATA positionsData = {};
 	positionsData.pSysMem = points;
@@ -193,12 +214,12 @@ void PlaneComponent::Initialize()
 	}
 
 	D3D11_BUFFER_DESC constBufDesc = {};
-	constBufDesc.Usage = D3D11_USAGE_DEFAULT;
+	constBufDesc.Usage = D3D11_USAGE_DYNAMIC;
 	constBufDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
 	constBufDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
 	constBufDesc.MiscFlags = 0;
 	constBufDesc.StructureByteStride = 0;
-	constBufDesc.ByteWidth = sizeof(SimpleMath::Matrix);
+	constBufDesc.ByteWidth = sizeof(SimpleMath::Vector4) * count;
 
 	res = game->Device->CreateBuffer(&constBufDesc, nullptr, &constantBuffer);
 	if (FAILED(res))
@@ -210,7 +231,7 @@ void PlaneComponent::Initialize()
 #pragma region Initialize rasterization state
 	CD3D11_RASTERIZER_DESC rastDesc = {};
 	rastDesc.CullMode = D3D11_CULL_NONE;
-	rastDesc.FillMode = D3D11_FILL_WIREFRAME; // Only lines
+	rastDesc.FillMode = D3D11_FILL_SOLID; // Only lines
 
 	res = game->Device->CreateRasterizerState(&rastDesc, &rastState);
 	if (FAILED(res))
@@ -257,7 +278,7 @@ void PlaneComponent::Draw(float deltaTime)
 	context->VSSetConstantBuffers(0, 1, &constantBuffer);
 
 	annotation->BeginEvent(L"Wireframe draw event");
-	context->Draw(88, 0);
+	context->Draw(count, 0);
 	annotation->EndEvent();
 	context->RSSetState(oldState);
 	if (oldState != nullptr) oldState->Release();
@@ -268,10 +289,8 @@ void PlaneComponent::Update(float deltaTime)
 	auto wvp = SimpleMath::Matrix::CreateTranslation(Position) * camera->ViewMatrix * camera->ProjMatrix;
 	//game->Context->UpdataSubresource(constantBuffer, 0, nullptr, &wvp, 0, 0);
 	D3D11_MAPPED_SUBRESOURCE res = {};
-	if (constantBuffer != nullptr) {
-		game->Context->Map(constantBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &res);
-		auto dataP = reinterpret_cast<float*>(res.pData);
-		memcpy(dataP, &wvp, sizeof(SimpleMath::Matrix));
-		game->Context->Unmap(constantBuffer, 0);
-	}
+	game->Context->Map(constantBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &res);
+	auto dataP = reinterpret_cast<float*>(res.pData);
+	memcpy(dataP, &wvp, sizeof(SimpleMath::Matrix));
+	game->Context->Unmap(constantBuffer, 0);
 }

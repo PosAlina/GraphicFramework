@@ -10,7 +10,7 @@ CameraController::CameraController(Game* inGame, ::Camera* inCamera)
 	Pitch = 0;
 	CameraController& cont = *this;
 	game->InputDevice->MouseMove.AddRaw(this, &CameraController::OnMouseMove);
-	CameraPosition = SimpleMath::Vector3(0, 10.0f, 10.0f);
+	CameraPosition = SimpleMath::Vector3(0.0f, 2.0f, 1.0f);
 }
 
 void CameraController::Update(float deltaTime)
