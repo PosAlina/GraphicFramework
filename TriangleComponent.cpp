@@ -25,16 +25,6 @@ TriangleComponent::TriangleComponent(Game *inGame, Camera *inCamera):GameCompone
 	};
 }
 
-TriangleComponent::TriangleComponent(Game* inGame) :GameComponent(inGame)
-{
-	Position = SimpleMath::Vector3::Zero;
-	points = new SimpleMath::Vector4[6]{
-		SimpleMath::Vector4(0.0f, 1.0f, -1.0f, 1.0f), SimpleMath::Vector4(1.0f, 0.0f, 0.0f, 1.0f),
-		SimpleMath::Vector4(1.0f, 1.0f, 0.0f, 1.0f), SimpleMath::Vector4(0.0f, 1.0f, 0.0f, 0.0f),
-		SimpleMath::Vector4(0.0f, 1.0f, -2.0f, 1.0f), SimpleMath::Vector4(0.0f, 0.0f, 1.0f, 1.0f),
-	};
-}
-
 void TriangleComponent::Initialize()
 {
 	HRESULT res;

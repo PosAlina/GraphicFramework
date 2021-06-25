@@ -28,7 +28,6 @@ public:
 
 	TriangleComponent(Game* inGame, Camera* inCamera, SimpleMath::Vector4 *points);
 	TriangleComponent(Game *inGame, Camera *inCamera);
-	TriangleComponent(Game* inGame);
 
 	virtual void Initialize() override;
 	virtual void DestroyResources() override;
