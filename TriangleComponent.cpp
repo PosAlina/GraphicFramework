@@ -50,7 +50,6 @@ void TriangleComponent::Initialize()
 	if (FAILED(res))
 	{
 		std::cout << L"Vertex shader dont compile" << std::endl;
-		return;
 	}
 
 	ID3DBlob* errorPixelCode;
@@ -58,7 +57,7 @@ void TriangleComponent::Initialize()
 		nullptr /*macros*/,
 		nullptr /*include*/,
 		"PSMain",
-		"vs_5_0",
+		"ps_5_0",
 		D3DCOMPILE_PACK_MATRIX_ROW_MAJOR,
 		0,
 		&pixelShaderByteCode,
@@ -76,7 +75,6 @@ void TriangleComponent::Initialize()
 		{
 			MessageBox(game->Display->hWnd, L"Simple.hlsl", L"Missing Shader File", MB_OK);
 		}
-		return;
 	}
 	res = game->Device->CreatePixelShader(
 		pixelShaderByteCode->GetBufferPointer(),
@@ -85,7 +83,6 @@ void TriangleComponent::Initialize()
 	if (FAILED(res))
 	{
 		std::cout << L"Pixel shader dont compile" << std::endl;
-		return;
 	}
 #pragma endregion Initialize shaders
 
@@ -117,15 +114,14 @@ void TriangleComponent::Initialize()
 	if (FAILED(res))
 	{
 		std::cout << L"Layout dont compile" << std::endl;
-		return;
 	}
 #pragma endregion Initialize layout
 
 #pragma region Initialize points value
 	points = new SimpleMath::Vector4[6] {
-		SimpleMath::Vector4(0.0f, 40.5f, 0.0f, 1.0f), SimpleMath::Vector4(1.0f, 0.0f, 0.0f, 1.0f),
-		SimpleMath::Vector4(40.5f, -40.5f, 0.0f, 1.0f), SimpleMath::Vector4(0.0f, 1.0f, 0.0f, 0.0f),
-		SimpleMath::Vector4(-40.0f, -40.5f, 0.0f, 1.0f), SimpleMath::Vector4(0.0f, 0.0f, 1.0f, 1.0f),
+		SimpleMath::Vector4(0.0f, 40.0f, 40.0f, 1.0f), SimpleMath::Vector4(1.0f, 0.0f, 0.0f, 1.0f),
+		SimpleMath::Vector4(40.0f, -40.0f, 0.0f, 1.0f), SimpleMath::Vector4(0.0f, 1.0f, 0.0f, 0.0f),
+		SimpleMath::Vector4(-40.0f, -40.0f, 0.0f, 1.0f), SimpleMath::Vector4(0.0f, 0.0f, 1.0f, 1.0f),
 	};
 #pragma endregion Initialize points value
 
@@ -150,8 +146,8 @@ void TriangleComponent::Initialize()
 	}
 
 	D3D11_BUFFER_DESC constBufDesc = {};
-	constBufDesc.Usage = D3D11_USAGE_DEFAULT;
-	constBufDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
+	constBufDesc.Usage = D3D11_USAGE_DYNAMIC;
+	constBufDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
 	constBufDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
 	constBufDesc.MiscFlags = 0;
 	constBufDesc.StructureByteStride = 0;
@@ -186,16 +182,16 @@ void TriangleComponent::DestroyResources()
 {
 	delete[] points;
 
-	layout->Release();
-	pixelShader->Release();
-	vertexShader->Release();
-	pixelShaderByteCode->Release();
-	vertexShaderByteCode->Release();
-	vertices->Release();
-	rastState->Release();
+	if (layout != nullptr) layout->Release();
+	if (pixelShader != nullptr) pixelShader->Release();
+	if (vertexShader != nullptr) vertexShader->Release();
+	if (pixelShaderByteCode != nullptr) pixelShaderByteCode->Release();
+	if (vertexShaderByteCode != nullptr) vertexShaderByteCode->Release();
+	if (vertices != nullptr) vertices->Release();
+	if (rastState != nullptr) rastState->Release();
 
-	constantBuffer->Release();
-	annotation->Release();
+	if (constantBuffer != nullptr) constantBuffer->Release();
+	if (annotation != nullptr) annotation->Release();
 }
 
 void TriangleComponent::Draw(float deltaTime)
@@ -217,7 +213,7 @@ void TriangleComponent::Draw(float deltaTime)
 	context->Draw(3, 0);
 	annotation->EndEvent();
 	context->RSSetState(oldState);
-	oldState->Release();
+	if (oldState != nullptr) oldState->Release();
 }
 
 void TriangleComponent::Update(float deltaTime)

@@ -10,6 +10,7 @@ CameraController::CameraController(Game* inGame, ::Camera* inCamera)
 	Pitch = 0;
 	CameraController& cont = *this;
 	game->InputDevice->MouseMove.AddRaw(this, &CameraController::OnMouseMove);
+	CameraPosition = SimpleMath::Vector3(0, 10.0f, 10.0f);
 }
 
 void CameraController::Update(float deltaTime)
@@ -33,6 +34,7 @@ void CameraController::Update(float deltaTime)
 		velDir.Normalize();
 	}
 	CameraPosition = CameraPosition + velDir * VelocityMagnitude * deltaTime;
+
 	Camera->ViewMatrix = SimpleMath::Matrix::CreateLookAt(CameraPosition, CameraPosition * rotMat.Forward(), rotMat.Up());
 	Camera->UpdateProjectionMatrix();
 }

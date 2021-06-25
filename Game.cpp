@@ -217,7 +217,7 @@ void Game::UpdateInternal()
 void Game::DestroyResources()
 {
 
-	backBuffer->Release();
+	if (backBuffer != nullptr) backBuffer->Release();
 	
 	delete GameCamera;
 	delete InputDevice;

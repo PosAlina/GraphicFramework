@@ -58,7 +58,7 @@ void PlaneComponent::Initialize()
 		nullptr /*macros*/,
 		nullptr /*include*/,
 		"PSMain",
-		"vs_5_0",
+		"ps_5_0",
 		D3DCOMPILE_PACK_MATRIX_ROW_MAJOR,
 		0,
 		&pixelShaderByteCode,
@@ -122,7 +122,7 @@ void PlaneComponent::Initialize()
 #pragma endregion Initialize layout
 
 #pragma region Initialize points value
-	points = new SimpleMath::Vector4[86]{
+	points = new SimpleMath::Vector4[88]{
 // Lines parallel Z (triangles in XY-field)
 		SimpleMath::Vector4(-50.0f, 0.0f, -50.0f, 1.0f), SimpleMath::Vector4(1.0f, 1.0f, 1.0f, 1.0f),
 		SimpleMath::Vector4(-50.0f, 0.0f, 50.0f, 1.0f), SimpleMath::Vector4(1.0f, 1.0f, 1.0f, 1.0f),
@@ -147,7 +147,7 @@ void PlaneComponent::Initialize()
 		SimpleMath::Vector4(50.0f, 0.0f, -50.0f, 1.0f), SimpleMath::Vector4(1.0f, 1.0f, 1.0f, 1.0f),
 		SimpleMath::Vector4(50.0f, 0.0f, 50.0f, 1.0f), SimpleMath::Vector4(1.0f, 1.0f, 1.0f, 1.0f),
 // Lines parallel X
-		//SimpleMath::Vector4(50.0f, 0.0f, 50.0f, 1.0f), SimpleMath::Vector4(1.0f, 1.0f, 1.0f, 1.0f),
+		SimpleMath::Vector4(50.0f, 0.0f, 50.0f, 1.0f), SimpleMath::Vector4(1.0f, 1.0f, 1.0f, 1.0f),
 		SimpleMath::Vector4(-50.0f, 0.0f, 50.0f, 1.0f), SimpleMath::Vector4(1.0f, 1.0f, 1.0f, 1.0f),
 		SimpleMath::Vector4(-50.0f, 0.0f, 40.0f, 1.0f), SimpleMath::Vector4(1.0f, 1.0f, 1.0f, 1.0f),
 		SimpleMath::Vector4(50.0f, 0.0f, 40.0f, 1.0f), SimpleMath::Vector4(1.0f, 1.0f, 1.0f, 1.0f),
@@ -194,7 +194,7 @@ void PlaneComponent::Initialize()
 
 	D3D11_BUFFER_DESC constBufDesc = {};
 	constBufDesc.Usage = D3D11_USAGE_DEFAULT;
-	constBufDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
+	constBufDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
 	constBufDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
 	constBufDesc.MiscFlags = 0;
 	constBufDesc.StructureByteStride = 0;
@@ -229,13 +229,13 @@ void PlaneComponent::DestroyResources()
 {
 	delete[] points;
 
-	layout->Release();
-	pixelShader->Release();
-	vertexShader->Release();
-	pixelShaderByteCode->Release();
-	vertexShaderByteCode->Release();
-	vertices->Release();
-	rastState->Release();
+	if (layout != nullptr) layout->Release();
+	if (pixelShader != nullptr) pixelShader->Release();
+	if (vertexShader != nullptr) vertexShader->Release();
+	if (pixelShaderByteCode != nullptr) pixelShaderByteCode->Release();
+	if (vertexShaderByteCode != nullptr) vertexShaderByteCode->Release();
+	if (vertices != nullptr) vertices->Release();
+	if (rastState != nullptr) rastState->Release();
 
 	constantBuffer->Release();
 	annotation->Release();
@@ -257,10 +257,10 @@ void PlaneComponent::Draw(float deltaTime)
 	context->VSSetConstantBuffers(0, 1, &constantBuffer);
 
 	annotation->BeginEvent(L"Wireframe draw event");
-	context->Draw(86, 0);
+	context->Draw(88, 0);
 	annotation->EndEvent();
 	context->RSSetState(oldState);
-	oldState->Release();
+	if (oldState != nullptr) oldState->Release();
 }
 
 void PlaneComponent::Update(float deltaTime)
@@ -268,8 +268,10 @@ void PlaneComponent::Update(float deltaTime)
 	auto wvp = SimpleMath::Matrix::CreateTranslation(Position) * camera->ViewMatrix * camera->ProjMatrix;
 	//game->Context->UpdataSubresource(constantBuffer, 0, nullptr, &wvp, 0, 0);
 	D3D11_MAPPED_SUBRESOURCE res = {};
-	game->Context->Map(constantBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &res);
-	auto dataP = reinterpret_cast<float*>(res.pData);
-	memcpy(dataP, &wvp, sizeof(SimpleMath::Matrix));
-	game->Context->Unmap(constantBuffer, 0);
+	if (constantBuffer != nullptr) {
+		game->Context->Map(constantBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &res);
+		auto dataP = reinterpret_cast<float*>(res.pData);
+		memcpy(dataP, &wvp, sizeof(SimpleMath::Matrix));
+		game->Context->Unmap(constantBuffer, 0);
+	}
 }
