@@ -22,7 +22,7 @@ class TriangleComponent : public GameComponent
 	ID3DUserDefinedAnnotation* annotation = nullptr;
 
 	Camera* camera = nullptr;
-	SimpleMath::Vector4* points = nullptr;
+	SimpleMath::Vector4 *points;
 public:
 	SimpleMath::Vector3 Position;
 

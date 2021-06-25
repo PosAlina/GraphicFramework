@@ -43,15 +43,15 @@ void TransformGame::Update(float deltaTime)
 	Game::Update(deltaTime);
 }
 
-void TransformGame::PostDraw(float deltaTime)
-{
-}
-
-void TransformGame::Draw(float deltaTime)
-{
-}
-
-void OnMouseMove(InputDevice::MouseMoveEventArgs& args)
+void TransformGame::OnMouseMove(InputDevice::MouseMoveEventArgs& args)
 {
 	std::cout << args.Position.x << " " << args.Position.y << std::endl;
 }
+
+//void TransformGame::PostDraw(float deltaTime)
+//{
+//}
+//
+//void TransformGame::Draw(float deltaTime)
+//{
+//}

@@ -5,7 +5,7 @@
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR pScmdline, int iCmdshow)
 {
 	TransformGame* tGame = new TransformGame(L"TransformGame");
-	//tGame->Run(1024, 768);
+	tGame->Run(1024, 768);
 	delete tGame;
 	return 0;
 }

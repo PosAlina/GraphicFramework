@@ -122,10 +122,10 @@ void TriangleComponent::Initialize()
 #pragma endregion Initialize layout
 
 #pragma region Initialize points value
-	points = new SimpleMath::Vector4[6]{
-		SimpleMath::Vector4(0.0f, 50.5f, 0.0f, 1.0f), SimpleMath::Vector4(1.0f, 0.0f, 0.0f, 1.0f),
-		SimpleMath::Vector4(50.5f, -50.5f, 0.0f, 1.0f), SimpleMath::Vector4(0.0f, 1.0f, 0.0f, 0.0f),
-		SimpleMath::Vector4(-50.0f, -50.5f, 0.0f, 1.0f), SimpleMath::Vector4(0.0f, 0.0f, 1.0f, 1.0f),
+	points = new SimpleMath::Vector4[6] {
+		SimpleMath::Vector4(0.0f, 40.5f, 0.0f, 1.0f), SimpleMath::Vector4(1.0f, 0.0f, 0.0f, 1.0f),
+		SimpleMath::Vector4(40.5f, -40.5f, 0.0f, 1.0f), SimpleMath::Vector4(0.0f, 1.0f, 0.0f, 0.0f),
+		SimpleMath::Vector4(-40.0f, -40.5f, 0.0f, 1.0f), SimpleMath::Vector4(0.0f, 0.0f, 1.0f, 1.0f),
 	};
 #pragma endregion Initialize points value
 

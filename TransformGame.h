@@ -13,8 +13,8 @@ public:
     TransformGame(std::wstring WindowName):Game(WindowName) {}
     virtual void Initialize() override;
     virtual void Update(float deltaTime) override;
-    virtual void Draw(float deltaTime) override;
-    virtual void PostDraw(float deltaTime) override;
+    //virtual void Draw(float deltaTime) override;
+    //virtual void PostDraw(float deltaTime) override;
 
     void OnMouseMove(InputDevice::MouseMoveEventArgs& args);
 };

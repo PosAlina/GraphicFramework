@@ -21,7 +21,7 @@ class PlaneComponent :
 	ID3DUserDefinedAnnotation* annotation = nullptr;
 
 	Camera* camera = nullptr;
-	SimpleMath::Vector4* points = nullptr;
+	SimpleMath::Vector4 *points = nullptr;
 public:
 	SimpleMath::Vector3 Position;
 
