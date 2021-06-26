@@ -86,7 +86,7 @@ float4 PSMain(PS_IN input, in bool isFrontFace : SV_IsFrontFace) : SV_Target
    // float specularStrength = 0.5f;
     //float spec = pow(max(0.0f, dot(viewDir, refVec)), 32);
    // float3 specular = specularStrength * spec * ambientLightColor;
-    
+   // return input.normal;
     return float4(color.xyz * (ambient.xyz + diffuse.xyz + specular.xyz), 1.0f);
 }
 

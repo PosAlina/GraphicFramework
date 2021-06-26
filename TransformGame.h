@@ -6,6 +6,7 @@
 class TransformGame :
     public Game
 {
+    void InitViaEdges();
 public:
     Camera *cam = nullptr;
     CameraController *camCont = nullptr;

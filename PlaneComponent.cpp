@@ -219,7 +219,7 @@ void PlaneComponent::Initialize()
 
 void PlaneComponent::DestroyResources()
 {
-	delete[] points;
+	if (points != nullptr) delete points;
 
 	if (layout != nullptr) layout->Release();
 	if (pixelShader != nullptr) pixelShader->Release();

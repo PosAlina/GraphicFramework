@@ -218,7 +218,9 @@ void Game::UpdateInternal()
 
 void Game::DestroyResources()
 {
-	for (auto component : Components) component->DestroyResources();
+	/*for (auto i = 0; i < Components.size(); ++i) {
+		Components[i]->DestroyResources();
+	}*/
 	if (backBuffer != nullptr) backBuffer->Release();
 	
 	if (GameCamera != nullptr) delete GameCamera;

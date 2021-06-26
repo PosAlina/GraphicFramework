@@ -1,6 +1,5 @@
 #include "BoxComponent.h"
 
-
 void BoxComponent::inputPoints(SimpleMath::Vector4* points)
 {
 	points1 = new SimpleMath::Vector4[8];

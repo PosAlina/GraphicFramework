@@ -30,14 +30,81 @@ void TransformGame::Initialize()
 
 	plane = new PlaneComponent(this, cam);
 
+	InitViaEdges();
+
+	Components.emplace_back(plane);
+	for (auto box : boxes)
+	{
+		Components.emplace_back(box);
+	}
+}
+
+void TransformGame::Update(float deltaTime)
+{
+	camCont->Update(deltaTime);
+	float velocity = 500.0f;
+	if (InputDevice->IsKeyDown(Keys::Left))
+	{
+		for (auto box : boxes)
+		{
+			box->movePositions(-velocity * SimpleMath::Vector3::Left * deltaTime);
+		}
+		//tri->Position += velocity * SimpleMath::Vector3::Left * deltaTime;
+	}
+	if (InputDevice->IsKeyDown(Keys::Right))
+	{
+		for (auto box : boxes)
+		{
+			box->movePositions(velocity * SimpleMath::Vector3::Right * deltaTime);
+		}
+		//tri->Position += velocity * SimpleMath::Vector3::Right * deltaTime;
+	}
+	if (InputDevice->IsKeyDown(Keys::Up))
+	{
+		for (auto box : boxes)
+		{
+			box->movePositions(-velocity * SimpleMath::Vector3::Up * deltaTime);
+		}
+		//tri->Position += velocity * SimpleMath::Vector3::Up * deltaTime;
+	}
+	if (InputDevice->IsKeyDown(Keys::Down))
+	{
+		for (auto box : boxes)
+		{
+			box->movePositions(velocity * SimpleMath::Vector3::Down * deltaTime);
+		}
+		//tri->Position += velocity * SimpleMath::Vector3::Down * deltaTime;
+	}
+	if (InputDevice->IsKeyDown(Keys::Escape))
+	{
+		Exit();
+	}
+	Game::Update(deltaTime);
+}
+
+void TransformGame::OnMouseMove(InputDevice::MouseMoveEventArgs& args)
+{
+	std::cout << args.Position.x << " " << args.Position.y << std::endl;
+}
+
+//void TransformGame::PostDraw(float deltaTime)
+//{
+//}
+//
+//void TransformGame::Draw(float deltaTime)
+//{
+//}
+
+void TransformGame::InitViaEdges()
+{
 	//SimpleMath::Vector4* tripoints = new SimpleMath::Vector4[6]{
-	//	SimpleMath::Vector4(-4.0f, 8.0f, -2.0f, 1.0f), SimpleMath::Vector4(0.0f, 1.0f, 0.0f, 1.0f),
-	//	SimpleMath::Vector4(-4.0f, 15.0f, -4.0f, 1.0f), SimpleMath::Vector4(0.5f, 0.0f, 0.0f, 1.0f),
-	//	SimpleMath::Vector4(-2.0f, 8.0f, -4.0f, 1.0f), SimpleMath::Vector4(1.0f, 1.0f, 1.0f, 1.0f),
-	//};
-	//tri = new TriangleComponent(this, cam, tripoints, L"ground_Tex.png");
-	//Components.emplace_back(tri);
-	//edge = new EdgeComponent(this, cam);
+//	SimpleMath::Vector4(-4.0f, 8.0f, -2.0f, 1.0f), SimpleMath::Vector4(0.0f, 1.0f, 0.0f, 1.0f),
+//	SimpleMath::Vector4(-4.0f, 15.0f, -4.0f, 1.0f), SimpleMath::Vector4(0.5f, 0.0f, 0.0f, 1.0f),
+//	SimpleMath::Vector4(-2.0f, 8.0f, -4.0f, 1.0f), SimpleMath::Vector4(1.0f, 1.0f, 1.0f, 1.0f),
+//};
+//tri = new TriangleComponent(this, cam, tripoints, L"ground_Tex.png");
+//Components.emplace_back(tri);
+//edge = new EdgeComponent(this, cam);
 	box1 = new BoxComponent(light, this, cam);
 	boxes.emplace_back(box1);
 
@@ -228,59 +295,3 @@ void TransformGame::Initialize()
 		Components.emplace_back(box);
 	}
 }
-
-void TransformGame::Update(float deltaTime)
-{
-	camCont->Update(deltaTime);
-	float velocity = 500.0f;
-	if (InputDevice->IsKeyDown(Keys::Left))
-	{
-		for (auto box : boxes)
-		{
-			box->movePositions(-velocity * SimpleMath::Vector3::Left * deltaTime);
-		}
-		//tri->Position += velocity * SimpleMath::Vector3::Left * deltaTime;
-	}
-	if (InputDevice->IsKeyDown(Keys::Right))
-	{
-		for (auto box : boxes)
-		{
-			box->movePositions(velocity * SimpleMath::Vector3::Right * deltaTime);
-		}
-		//tri->Position += velocity * SimpleMath::Vector3::Right * deltaTime;
-	}
-	if (InputDevice->IsKeyDown(Keys::Up))
-	{
-		for (auto box : boxes)
-		{
-			box->movePositions(-velocity * SimpleMath::Vector3::Up * deltaTime);
-		}
-		//tri->Position += velocity * SimpleMath::Vector3::Up * deltaTime;
-	}
-	if (InputDevice->IsKeyDown(Keys::Down))
-	{
-		for (auto box : boxes)
-		{
-			box->movePositions(velocity * SimpleMath::Vector3::Down * deltaTime);
-		}
-		//tri->Position += velocity * SimpleMath::Vector3::Down * deltaTime;
-	}
-	if (InputDevice->IsKeyDown(Keys::Escape))
-	{
-		Exit();
-	}
-	Game::Update(deltaTime);
-}
-
-void TransformGame::OnMouseMove(InputDevice::MouseMoveEventArgs& args)
-{
-	std::cout << args.Position.x << " " << args.Position.y << std::endl;
-}
-
-//void TransformGame::PostDraw(float deltaTime)
-//{
-//}
-//
-//void TransformGame::Draw(float deltaTime)
-//{
-//}

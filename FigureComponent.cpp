@@ -1,4 +1,4 @@
-#include "TriangleComponent.h"
+#include "FigureComponent.h"
 #include "inclib.h"
 #include "Game.h"
 #include "TextureLoader.h"
@@ -7,20 +7,6 @@ struct ConstantData_Simple
 {
 	SimpleMath::Matrix WorldViewProj;
 };
-
-//struct ConstantData_Light
-//{
-//	SimpleMath::Matrix WorldViewProj;
-//	SimpleMath::Matrix World;
-//	SimpleMath::Vector4 ViewerPos;
-//};
-//
-//struct LightData
-//{
-//	SimpleMath::Vector4 Direction;
-//	SimpleMath::Vector4 Color;
-//	SimpleMath::Vector4 KaSpecPowKsX;
-//};
 
 struct ConstantLightData
 {
@@ -33,48 +19,48 @@ struct ConstantLightData
 	SimpleMath::Vector4 KaSpecPowKsX;
 };
 
-TriangleComponent::TriangleComponent(bool light, Game* inGame, Camera* inCamera, SimpleMath::Vector4* inPoints, LPCWSTR inTextureName) :GameComponent(inGame)
+FigureComponent::FigureComponent(bool light, int vcount, int icount, Game* inGame, Camera* inCamera, SimpleMath::Vector4* inPoints, LPCWSTR inTextureName, int* indeces) :GameComponent(inGame)
 {
 	camera = inCamera;
 	Position = SimpleMath::Vector3::Zero;
-	points = new SimpleMath::Vector4[6];
-	for (auto i = 0; i < 6; ++i)
+	points = new SimpleMath::Vector4[vcount * 2];
+	for (auto i = 0; i < vcount * 2; ++i)
 	{
 		points[i] = inPoints[i];
 	}
 	textureName = inTextureName;
 	hasTexture = true;
 	onLight = light;
-	ind = new int[3]{ 0, 1, 2 };
+	ind = new int[icount * 3];
+	for (auto i = 0; i < icount * 3; ++i)
+	{
+		ind[i] = indeces[i];
+	}
+	count_v = vcount;
+	count_i = icount;
 }
 
-TriangleComponent::TriangleComponent(bool light, Game* inGame, Camera* inCamera, SimpleMath::Vector4* inPoints) :GameComponent(inGame)
+FigureComponent::FigureComponent(bool light, int vcount, int icount, Game* inGame, Camera* inCamera, SimpleMath::Vector4* inPoints, int* indeces) :GameComponent(inGame)
 {
 	camera = inCamera;
 	Position = SimpleMath::Vector3::Zero;
-	points = new SimpleMath::Vector4[6];
-	for (auto i = 0; i < 6; ++i)
+	points = new SimpleMath::Vector4[vcount * 2];
+	for (auto i = 0; i < vcount * 2; ++i)
 	{
 		points[i] = inPoints[i];
 	}
+	hasTexture = false;
 	onLight = light;
-	ind = new int[3]{ 0, 1, 2 };
+	ind = new int[icount * 3];
+	for (auto i = 0; i < icount * 3; ++i)
+	{
+		ind[i] = indeces[i];
+	}
+	count_v = vcount;
+	count_i = icount;
 }
 
-TriangleComponent::TriangleComponent(bool light, Game* inGame, Camera* inCamera) :GameComponent(inGame)
-{
-	camera = inCamera;
-	Position = SimpleMath::Vector3::Zero;
-	points = new SimpleMath::Vector4[6]{
-		SimpleMath::Vector4(0.0f, 1.0f, -1.0f, 1.0f), SimpleMath::Vector4(1.0f, 0.0f, 0.0f, 1.0f),
-		SimpleMath::Vector4(1.0f, 1.0f, 0.0f, 1.0f), SimpleMath::Vector4(0.0f, 1.0f, 0.0f, 0.0f),
-		SimpleMath::Vector4(0.0f, 1.0f, -2.0f, 1.0f), SimpleMath::Vector4(0.0f, 0.0f, 1.0f, 1.0f),
-	};
-	onLight = light;
-	ind = new int[3]{ 0, 1, 2 };
-}
-
-void TriangleComponent::Initialize()
+void FigureComponent::Initialize()
 {
 	if (hasTexture)
 	{
@@ -85,17 +71,17 @@ void TriangleComponent::Initialize()
 	onLight ? InitializeColorLight() : InitialColor();
 }
 
-void TriangleComponent::DestroyResources()
+void FigureComponent::DestroyResources()
 {
 	if (points != nullptr) delete[] points;
+	if (ind != nullptr) delete[] ind;
 
 	if (layout != nullptr) layout->Release();
 	if (pixelShader != nullptr) pixelShader->Release();
 	if (vertexShader != nullptr) vertexShader->Release();
 	if (pixelShaderByteCode != nullptr) pixelShaderByteCode->Release();
 	if (vertexShaderByteCode != nullptr) vertexShaderByteCode->Release();
-	
-	
+
 	if (vertices != nullptr) vertices->Release();
 	if (indeces != nullptr) indeces->Release();
 	if (rastState != nullptr) rastState->Release();
@@ -108,7 +94,7 @@ void TriangleComponent::DestroyResources()
 	if (texSRV != nullptr) texSRV->Release();
 }
 
-void TriangleComponent::Draw(float deltaTime)
+void FigureComponent::Draw(float deltaTime)
 {
 	auto context = game->Context;
 	ID3D11RasterizerState* oldState;
@@ -134,90 +120,54 @@ void TriangleComponent::Draw(float deltaTime)
 	}
 
 	annotation->BeginEvent(L"Triangle draw event");
-	context->DrawIndexed(3, 0, 0);
-	//context->Draw(3, 0);
+	context->DrawIndexed(count_i * 3, 0, 0);
 	annotation->EndEvent();
 	context->RSSetState(oldState);
 	if (oldState != nullptr) oldState->Release();
 }
 
-void TriangleComponent::Update(float deltaTime)
+void FigureComponent::Update(float deltaTime)
 {
 	HRESULT resalt;
 
 	if (onLight)
 	{
-		//if (constantBuffer != nullptr)
-		//{
-			auto constantData = ConstantLightData{};
-	
-			constantData.WorldViewProj = SimpleMath::Matrix::CreateTranslation(Position) * camera->ViewMatrix * camera->ProjMatrix;
-			constantData.World = SimpleMath::Matrix::CreateTranslation(Position);
-			auto cam_pos = camera->GetPosition();
-			constantData.ViewerPos = SimpleMath::Vector4(cam_pos.x, cam_pos.y, cam_pos.z, 1.0f);
+		auto constantData = ConstantLightData{};
 
-			constantData.Direction = SimpleMath::Vector4(1.0f, 30.0f, 0.0f, 1.0f);
-			constantData.Color = SimpleMath::Vector4(1.0f, 1.0f, 1.0f, 1.0f);
-			constantData.KaSpecPowKsX = SimpleMath::Vector4(0.2f, 0.4f, 1.0f, 1.0f);
+		constantData.WorldViewProj = SimpleMath::Matrix::CreateTranslation(Position) * camera->ViewMatrix * camera->ProjMatrix;
+		constantData.World = SimpleMath::Matrix::CreateTranslation(Position);
+		auto cam_pos = camera->GetPosition();
+		constantData.ViewerPos = SimpleMath::Vector4(cam_pos.x, cam_pos.y, cam_pos.z, 1.0f);
 
-			//game->Context->UpdateSubresource(constantBuffer, 0, nullptr, &constantData, 0, 0);
+		constantData.Direction = SimpleMath::Vector4(10.0f, 30.0f, 10.0f, 1.0f);
+		constantData.Color = SimpleMath::Vector4(1.0f, 1.0f, 1.0f, 1.0f);
+		constantData.KaSpecPowKsX = SimpleMath::Vector4(0.2f, 0.4f, 1.0f, 1.0f);
 
-			D3D11_MAPPED_SUBRESOURCE res1 = {};
-			resalt = game->Context->Map(constantBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &res1); ZCHECK(resalt);
-		//	if (res1.pData != nullptr)
-		//	{
-				auto dataP1 = reinterpret_cast<float*>(res1.pData);
-				memcpy(dataP1, &constantData, sizeof(constantData));
-				game->Context->Unmap(constantBuffer, 0);
-		//	}
-		/*}
+		//game->Context->UpdateSubresource(constantBuffer, 0, nullptr, &constantData, 0, 0);
 
-		if (lightBuffer != nullptr)
-		{
-			auto lightData = LightData{};
-			lightData.Direction = SimpleMath::Vector4(1.0f, 30.0f, 0.0f, 1.0f);
-			lightData.Color = SimpleMath::Vector4(1.0f, 1.0f, 1.0f, 1.0f);
-			lightData.KaSpecPowKsX = SimpleMath::Vector4(0.5f, 1.0f, 1.0f, 1.0f);
+		D3D11_MAPPED_SUBRESOURCE res1 = {};
+		resalt = game->Context->Map(constantBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &res1); ZCHECK(resalt);
 
-			game->Context->UpdateSubresource(lightBuffer, 0, nullptr, &lightData, 0, 0);
-
-			D3D11_MAPPED_SUBRESOURCE res2 = {};
-			resalt = game->Context->Map(lightBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &res2);
-			if (FAILED(resalt))
-			{
-				std::cout << L"Const buffer dont update" << std::endl;
-			}
-			if (res2.pData != nullptr)
-			{
-				auto dataP2 = reinterpret_cast<float*>(res2.pData);
-				memcpy(dataP2, &lightData, sizeof(lightData));
-				game->Context->Unmap(lightBuffer, 0);
-			}
-		}*/
+		auto dataP1 = reinterpret_cast<float*>(res1.pData);
+		memcpy(dataP1, &constantData, sizeof(constantData));
+		game->Context->Unmap(constantBuffer, 0);
 	}
 	else
 	{
-		//if (constantBuffer != nullptr)
-		//{
-			auto constantData = ConstantData_Simple{};
-			constantData.WorldViewProj = SimpleMath::Matrix::CreateTranslation(Position) * camera->ViewMatrix * camera->ProjMatrix;
+		auto constantData = ConstantData_Simple{};
+		constantData.WorldViewProj = SimpleMath::Matrix::CreateTranslation(Position) * camera->ViewMatrix * camera->ProjMatrix;
 
-			//game->Context->UpdateSubresource(constantBuffer, 0, nullptr, &constantData, 0, 0);
+		//game->Context->UpdateSubresource(constantBuffer, 0, nullptr, &constantData, 0, 0);
 
-			D3D11_MAPPED_SUBRESOURCE res = {};
-			resalt = game->Context->Map(constantBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &res); ZCHECK(resalt);
-			//if (res.pData != nullptr)
-			//{
-				auto dataP = reinterpret_cast<float*>(res.pData);
-				memcpy(dataP, &constantData, sizeof(constantData));
-				game->Context->Unmap(constantBuffer, 0);
-			//}
-
-		//}
+		D3D11_MAPPED_SUBRESOURCE res = {};
+		resalt = game->Context->Map(constantBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &res); ZCHECK(resalt);
+		auto dataP = reinterpret_cast<float*>(res.pData);
+		memcpy(dataP, &constantData, sizeof(constantData));
+		game->Context->Unmap(constantBuffer, 0);
 	}
 }
 
-void TriangleComponent::InitialColor() {
+void FigureComponent::InitialColor() {
 	HRESULT res;
 
 #pragma region Initialize shaders wwith color
@@ -314,7 +264,7 @@ void TriangleComponent::InitialColor() {
 	bufDesc.CPUAccessFlags = 0;
 	bufDesc.MiscFlags = 0;
 	bufDesc.StructureByteStride = 32;
-	bufDesc.ByteWidth = sizeof(SimpleMath::Vector4) * 6;
+	bufDesc.ByteWidth = sizeof(SimpleMath::Vector4) * 2 * count_v;
 
 	D3D11_SUBRESOURCE_DATA positionsData = {};
 	positionsData.pSysMem = points;
@@ -329,7 +279,7 @@ void TriangleComponent::InitialColor() {
 	indDesc.CPUAccessFlags = 0;
 	indDesc.MiscFlags = 0;
 	indDesc.StructureByteStride = 32;
-	indDesc.ByteWidth = sizeof(sizeof(int)) * 3;
+	indDesc.ByteWidth = sizeof(sizeof(int)) * 3 * count_i;
 
 	D3D11_SUBRESOURCE_DATA indData = {};
 	indData.pSysMem = ind;
@@ -359,7 +309,7 @@ void TriangleComponent::InitialColor() {
 #pragma endregion Initialize rasterization state
 }
 
-void TriangleComponent::InitializeTexture()
+void FigureComponent::InitializeTexture()
 {
 	HRESULT res;
 
@@ -457,7 +407,7 @@ void TriangleComponent::InitializeTexture()
 	bufDesc.CPUAccessFlags = 0;
 	bufDesc.MiscFlags = 0;
 	bufDesc.StructureByteStride = 32;
-	bufDesc.ByteWidth = sizeof(SimpleMath::Vector4) * 6;
+	bufDesc.ByteWidth = sizeof(SimpleMath::Vector4) * 2 * count_v;
 
 	D3D11_SUBRESOURCE_DATA positionsData = {};
 	positionsData.pSysMem = points;
@@ -466,14 +416,13 @@ void TriangleComponent::InitializeTexture()
 
 	res = game->Device->CreateBuffer(&bufDesc, &positionsData, &vertices); ZCHECK(res);
 
-
 	D3D11_BUFFER_DESC indDesc = {};
 	indDesc.Usage = D3D11_USAGE_DEFAULT;
 	indDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
 	indDesc.CPUAccessFlags = 0;
 	indDesc.MiscFlags = 0;
 	indDesc.StructureByteStride = 32;
-	indDesc.ByteWidth = sizeof(sizeof(int)) * 3;
+	indDesc.ByteWidth = sizeof(sizeof(int)) * 3 * count_i;
 
 	D3D11_SUBRESOURCE_DATA indData = {};
 	indData.pSysMem = ind;
@@ -522,7 +471,7 @@ void TriangleComponent::InitializeTexture()
 #pragma endregion Load texture
 }
 
-void TriangleComponent::InitializeTextureLight()
+void FigureComponent::InitializeTextureLight()
 {
 	HRESULT res;
 
@@ -629,7 +578,7 @@ void TriangleComponent::InitializeTextureLight()
 	bufDesc.CPUAccessFlags = 0;
 	bufDesc.MiscFlags = 0;
 	bufDesc.StructureByteStride = 32;
-	bufDesc.ByteWidth = sizeof(SimpleMath::Vector4) * 6;
+	bufDesc.ByteWidth = sizeof(SimpleMath::Vector4) * 2 * count_v;
 
 	D3D11_SUBRESOURCE_DATA positionsData = {};
 	positionsData.pSysMem = points;
@@ -638,14 +587,13 @@ void TriangleComponent::InitializeTextureLight()
 
 	res = game->Device->CreateBuffer(&bufDesc, &positionsData, &vertices); ZCHECK(res);
 
-
 	D3D11_BUFFER_DESC indDesc = {};
 	indDesc.Usage = D3D11_USAGE_DEFAULT;
 	indDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
 	indDesc.CPUAccessFlags = 0;
 	indDesc.MiscFlags = 0;
 	indDesc.StructureByteStride = 32;
-	indDesc.ByteWidth = sizeof(sizeof(int)) * 3;
+	indDesc.ByteWidth = sizeof(sizeof(int)) * 3 * count_i;
 
 	D3D11_SUBRESOURCE_DATA indData = {};
 	indData.pSysMem = ind;
@@ -653,19 +601,6 @@ void TriangleComponent::InitializeTextureLight()
 	indData.SysMemSlicePitch = 0;
 
 	res = game->Device->CreateBuffer(&indDesc, &indData, &indeces); ZCHECK(res);
-	//D3D11_BUFFER_DESC lightBufDesc = {};
-	//lightBufDesc.Usage = D3D11_USAGE_DEFAULT;
-	//lightBufDesc.BindFlags = D3D11_BIND_SHADER_RESOURCE;
-	//lightBufDesc.CPUAccessFlags = 0;// D3D11_CPU_ACCESS_WRITE;
-	//lightBufDesc.MiscFlags = 0;
-	//lightBufDesc.StructureByteStride = 0;
-	//lightBufDesc.ByteWidth = sizeof(LightData);
-
-	//res = game->Device->CreateBuffer(&lightBufDesc, nullptr, &lightBuffer);
-	//if (FAILED(res))
-	//{
-	//	std::cout << L"Light buffer dont initialize" << std::endl;
-	//}
 
 	D3D11_BUFFER_DESC constBufDesc = {};
 	constBufDesc.Usage = D3D11_USAGE_DYNAMIC;
@@ -707,7 +642,7 @@ void TriangleComponent::InitializeTextureLight()
 }
 
 
-void TriangleComponent::InitializeColorLight() {
+void FigureComponent::InitializeColorLight() {
 	HRESULT res;
 
 #pragma region Initialize shaders wwith color
@@ -812,7 +747,7 @@ void TriangleComponent::InitializeColorLight() {
 	bufDesc.CPUAccessFlags = 0;
 	bufDesc.MiscFlags = 0;
 	bufDesc.StructureByteStride = 32;
-	bufDesc.ByteWidth = sizeof(SimpleMath::Vector4) * 6;
+	bufDesc.ByteWidth = sizeof(SimpleMath::Vector4) * 2 * count_v;
 
 	D3D11_SUBRESOURCE_DATA positionsData = {};
 	positionsData.pSysMem = points;
@@ -821,14 +756,13 @@ void TriangleComponent::InitializeColorLight() {
 
 	res = game->Device->CreateBuffer(&bufDesc, &positionsData, &vertices); ZCHECK(res);
 
-
 	D3D11_BUFFER_DESC indDesc = {};
 	indDesc.Usage = D3D11_USAGE_DEFAULT;
 	indDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
 	indDesc.CPUAccessFlags = 0;
 	indDesc.MiscFlags = 0;
 	indDesc.StructureByteStride = 32;
-	indDesc.ByteWidth = sizeof(sizeof(int)) * 3;
+	indDesc.ByteWidth = sizeof(sizeof(int)) * 3 * count_i;
 
 	D3D11_SUBRESOURCE_DATA indData = {};
 	indData.pSysMem = ind;

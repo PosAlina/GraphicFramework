@@ -144,6 +144,7 @@
     <ClCompile Include="CameraController.cpp" />
     <ClCompile Include="Delegates.cpp" />
     <ClCompile Include="DisplayWin32.cpp" />
+    <ClCompile Include="FigureComponent.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameComponent.cpp" />
     <ClCompile Include="InputDevice.cpp" />
@@ -183,6 +184,7 @@
     <ClInclude Include="CameraController.h" />
     <ClInclude Include="Delegates.h" />
     <ClInclude Include="DisplayWin32.h" />
+    <ClInclude Include="FigureComponent.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameComponent.h" />
     <ClInclude Include="inclib.h" />
