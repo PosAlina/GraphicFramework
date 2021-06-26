@@ -84,22 +84,24 @@ void TriangleComponent::Initialize()
 
 void TriangleComponent::DestroyResources()
 {
-	delete[] points;
+	if (points != nullptr) delete[] points;
 
 	if (layout != nullptr) layout->Release();
 	if (pixelShader != nullptr) pixelShader->Release();
 	if (vertexShader != nullptr) vertexShader->Release();
 	if (pixelShaderByteCode != nullptr) pixelShaderByteCode->Release();
 	if (vertexShaderByteCode != nullptr) vertexShaderByteCode->Release();
+	
+	
 	if (vertices != nullptr) vertices->Release();
 	if (rastState != nullptr) rastState->Release();
 
 	//if (lightBuffer != nullptr) lightBuffer->Release();
 	if (constantBuffer != nullptr) constantBuffer->Release();
 	if (annotation != nullptr) annotation->Release();
-
 	if (texture != nullptr) texture->Release();
 	if (sampler != nullptr) sampler->Release();
+	if (texSRV != nullptr) texSRV->Release();
 }
 
 void TriangleComponent::Draw(float deltaTime)
@@ -121,7 +123,7 @@ void TriangleComponent::Draw(float deltaTime)
 		context->PSSetShaderResources(0, 1, &texSRV);
 		context->PSSetSamplers(0, 1, &sampler);
 	}
-	if (onLight && hasTexture)
+	if (onLight)
 	{
 		context->PSSetConstantBuffers(0, 1, &constantBuffer);
 	}
@@ -150,9 +152,9 @@ void TriangleComponent::Update(float deltaTime)
 
 			constantData.Direction = SimpleMath::Vector4(1.0f, 30.0f, 0.0f, 1.0f);
 			constantData.Color = SimpleMath::Vector4(1.0f, 1.0f, 1.0f, 1.0f);
-			constantData.KaSpecPowKsX = SimpleMath::Vector4(0.5f, 1.0f, 1.0f, 1.0f);
+			constantData.KaSpecPowKsX = SimpleMath::Vector4(0.2f, 0.4f, 1.0f, 1.0f);
 
-			game->Context->UpdateSubresource(constantBuffer, 0, nullptr, &constantData, 0, 0);
+			//game->Context->UpdateSubresource(constantBuffer, 0, nullptr, &constantData, 0, 0);
 
 			D3D11_MAPPED_SUBRESOURCE res1 = {};
 			resalt = game->Context->Map(constantBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &res1); ZCHECK(resalt);
@@ -194,7 +196,7 @@ void TriangleComponent::Update(float deltaTime)
 			auto constantData = ConstantData_Simple{};
 			constantData.WorldViewProj = SimpleMath::Matrix::CreateTranslation(Position) * camera->ViewMatrix * camera->ProjMatrix;
 
-			game->Context->UpdateSubresource(constantBuffer, 0, nullptr, &constantData, 0, 0);
+			//game->Context->UpdateSubresource(constantBuffer, 0, nullptr, &constantData, 0, 0);
 
 			D3D11_MAPPED_SUBRESOURCE res = {};
 			resalt = game->Context->Map(constantBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &res); ZCHECK(resalt);
@@ -479,6 +481,7 @@ void TriangleComponent::InitializeTexture()
 	samplerDesc.MaxLOD = INT_MAX;
 
 	res = game->Device->CreateSamplerState(&samplerDesc, &sampler); ZCHECK(res);
+
 #pragma endregion Load texture
 }
 
@@ -556,6 +559,7 @@ void TriangleComponent::InitializeTextureLight()
 			0,
 			D3D11_INPUT_PER_VERTEX_DATA,
 			0},
+
 		D3D11_INPUT_ELEMENT_DESC {
 			"TEXCOORD",
 			0,
@@ -725,7 +729,7 @@ void TriangleComponent::InitializeColorLight() {
 			D3D11_INPUT_PER_VERTEX_DATA,
 			0},
 		D3D11_INPUT_ELEMENT_DESC {
-			"COLOR",
+			"NORMAL",
 			0,
 			DXGI_FORMAT_R32G32B32A32_FLOAT,
 			0,
@@ -733,7 +737,7 @@ void TriangleComponent::InitializeColorLight() {
 			D3D11_INPUT_PER_VERTEX_DATA,
 			0},
 		D3D11_INPUT_ELEMENT_DESC {
-			"NORMAL",
+			"COLOR",
 			0,
 			DXGI_FORMAT_R32G32B32A32_FLOAT,
 			0,

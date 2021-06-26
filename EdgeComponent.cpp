@@ -63,13 +63,15 @@ void EdgeComponent::DestroyResources()
 	if (tri1 != nullptr)
 	{
 		tri1->DestroyResources();
-		delete[] tri1;
+		delete tri1;
 	}
 	if (tri2 != nullptr)
 	{
 		tri2->DestroyResources();
-		delete[] tri2;
+		delete tri2;
 	}
+	delete[] points1;
+	delete[] points2;
 }
 
 void EdgeComponent::Draw(float deltaTime)

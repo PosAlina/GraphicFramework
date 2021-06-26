@@ -218,12 +218,23 @@ void Game::UpdateInternal()
 
 void Game::DestroyResources()
 {
-
+	for (auto component : Components) component->DestroyResources();
 	if (backBuffer != nullptr) backBuffer->Release();
 	
-	delete GameCamera;
-	delete InputDevice;
-	delete TextureLoader;
+	if (GameCamera != nullptr) delete GameCamera;
+	if (InputDevice != nullptr) delete InputDevice;
+	if (TextureLoader != nullptr) delete TextureLoader;
+	if (Device != nullptr) Device->Release();
+	if (SwapChain != nullptr) SwapChain->Release();
+	if (SwapChain1 != nullptr) SwapChain1->Release();
+	if (Context != nullptr) Context->Release();
+	if (depthBuffer != nullptr) depthBuffer->Release();
+	if (RenderView != nullptr) RenderView->Release();
+	if (DepthView != nullptr) DepthView->Release();
+	if (RenderSRV != nullptr) RenderSRV->Release();
+	if (RastState != nullptr) RastState->Release();
+	if (DepthState != nullptr) DepthState->Release();
+	if (DebugAnnotation != nullptr) DebugAnnotation->Release();
 }
 
 //

@@ -19,13 +19,12 @@ BoxComponent* box8;
 BoxComponent* box9;
 BoxComponent* box10;
 
-
+bool light = true;
 
 std::vector<BoxComponent*> boxes;
 
 void TransformGame::Initialize()
 {
-	int light = false;
 	cam = new Camera(this);
 	camCont = new CameraController(this, cam);
 

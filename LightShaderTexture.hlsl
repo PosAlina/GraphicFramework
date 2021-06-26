@@ -3,23 +3,32 @@ struct ConstantData
     float4x4 WorldViewProj;
     float4x4 World;
     float4 ViewerPos;
+    float4 Direction;
+    float4 Color;
+    float4 KaSpecPowKsX; // Enhancing the specular of the Materials
 };
+//struct ConstantData
+//{
+//    float4x4 WorldViewProj;
+//    float4x4 World;
+//    float4 ViewerPos;
+//};
 
 cbuffer ConstBuf : register(b0) {
     ConstantData ConstData;
 }
 
-struct LightData
-{
-    float4 Direction;
-    float4 Color;
-    float4 KaSpecPowKsX; // Enhancing the specular of the Materials
-};
+//struct LightData
+//{
+//    float4 Direction;
+//    float4 Color;
+//    float4 KaSpecPowKsX; // Enhancing the specular of the Materials
+//};
 
-cbuffer LightBuf : register(b1)
-{
-    LightData Lights;
-}
+//cbuffer LightBuf : register(b1)
+//{
+//    LightData Lights;
+//}
 
 struct VS_IN {
     float4 pos : POSITION;
@@ -58,19 +67,26 @@ float4 PSMain(PS_IN input, in bool isFrontFace : SV_IsFrontFace) : SV_Target
     color = DiffuseMap.Sample(Sampler, float2(input.tex.x, 1.0f - input.tex.y));
     //}
     clip(color.a - 0.01f); // Discards the current pixel if the specified value is less than zero. to test for alpha behavior
-    float3 lightDir = Lights.Direction.xyz;
+    float3 lightDir = ConstData.Direction.xyz;
     float3 normal = normalize(input.normal.xyz);
-    float3 kd = color.xyz; // diffuse value for main color of material
 
-    float3 diffuse = saturate(dot(lightDir, normal)) * kd; // saturate - Clamps the specified value within the range of 0 to 1.
+    float3 ambientLightColor = color.xyz; // diffuse value for main color of material
+    //float3 ambientLightColor = float3(0.8f, 0.8f, 0.8f);
+    float3 ambient = ambientLightColor * ConstData.KaSpecPowKsX.x; // global background light
 
-    float3 ambient = kd * Lights.KaSpecPowKsX.x; // global background light
+    //float3 diffuse = saturate(dot(lightDir, normal))* ambientLightColor; // saturate - Clamps the specified value within the range of 0 to 1.
+   // float diff = max(dot(lightDir, normal), 0.0f);
+    float3 diffuse = saturate(dot(lightDir, normal)) * ambientLightColor;// ambientLightColor* diff;
 
     float3 viewDir = normalize(ConstData.ViewerPos.xyz - input.worldPos.xyz);
     float3 refVec = normalize(reflect(lightDir, normal));
 
-    float3 spec = pow(max(0, dot(-viewDir, refVec)), Lights.KaSpecPowKsX.y) * Lights.KaSpecPowKsX.z;
-    color = float4(Lights.Color.xyz * (diffuse + ambient + spec), 1.0f);
-    return color;
+    float3 specular = pow(max(0, dot(-viewDir, refVec)), ConstData.KaSpecPowKsX.y) * ConstData.KaSpecPowKsX.z;
+    //color = float4(Lights.Color.xyz * (diffuse + ambient + spec), 1.0f);
+   // float specularStrength = 0.5f;
+    //float spec = pow(max(0.0f, dot(viewDir, refVec)), 32);
+   // float3 specular = specularStrength * spec * ambientLightColor;
+    
+    return float4(color.xyz * (ambient.xyz + diffuse.xyz + specular.xyz), 1.0f);
 }
 
