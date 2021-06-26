@@ -5,6 +5,7 @@ InputDevice::InputDevice(Game *inGame)
 {
 	game = inGame;
 	keys = new std::unordered_set<Keys>();
+	MouseWheelDelta = 0;
 
 	RAWINPUTDEVICE Rid[2];
 

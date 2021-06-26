@@ -151,11 +151,16 @@
     <ClCompile Include="PlaneComponent.cpp" />
     <ClCompile Include="SimpleMath.cpp" />
     <ClCompile Include="EdgeComponent.cpp" />
+    <ClCompile Include="TextureLoader.cpp" />
     <ClCompile Include="TransformGame.cpp" />
     <ClCompile Include="TriangleComponent.cpp" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="MiniTri.fx">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">yes</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">yes</ExcludedFromBuild>
+    </FxCompile>
+    <FxCompile Include="ObjModelShader.hlsl">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">yes</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">yes</ExcludedFromBuild>
     </FxCompile>
@@ -179,14 +184,22 @@
     <ClInclude Include="PlaneComponent.h" />
     <ClInclude Include="SimpleMath.h" />
     <ClInclude Include="EdgeComponent.h" />
+    <ClInclude Include="TextureLoader.h" />
     <ClInclude Include="TransformGame.h" />
     <ClInclude Include="TriangleComponent.h" />
+    <ClInclude Include="VertexPositionNormalBinormalTangentColorTex.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="ClassDiagram.cd" />
   </ItemGroup>
   <ItemGroup>
     <Natvis Include="Delegates.natvis" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="ground_Tex.png">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">yes</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">yes</ExcludedFromBuild>
+    </Image>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

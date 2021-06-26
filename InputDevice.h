@@ -17,12 +17,12 @@ public:
 	{
 		DirectX::SimpleMath::Vector2 Position;
 		DirectX::SimpleMath::Vector2 Offset;
-		int WheelDelta;
+		int WheelDelta = 0;
 	};
 
 	DirectX::SimpleMath::Vector2 MousePosition;
 	DirectX::SimpleMath::Vector2 MouseOffset;
-	int MouseWheelDelta;
+	int MouseWheelDelta = 0;
 
 	MulticastDelegate<const MouseMoveEventArgs&> MouseMove;
 

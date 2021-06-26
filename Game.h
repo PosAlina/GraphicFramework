@@ -7,6 +7,7 @@
 
 class Camera;
 class InputDevice;
+class TextureLoader;
 
 class Game
 {
@@ -17,7 +18,7 @@ public:
 #pragma region Associations
 	std::vector<GameComponent*> Components;
 	MulticastDelegate<const SimpleMath::Vector2&> ScreenResized;
-	DisplayWin32 *Display = nullptr;
+	DisplayWin32 *Display;
 	InputDevice *InputDevice;
 #pragma endregion Associations
 
@@ -46,6 +47,8 @@ private:
 #pragma endregion DirectX resources
 
 public:
+	TextureLoader* TextureLoader = nullptr;
+
 	std::chrono::time_point<std::chrono::steady_clock> *StartTime = nullptr;
 	std::chrono::time_point<std::chrono::steady_clock> *PrevTime = nullptr;
 	std::chrono::seconds *TotalTime = nullptr;

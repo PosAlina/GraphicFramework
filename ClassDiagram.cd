@@ -1,28 +1,40 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ClassDiagram MajorVersion="1" MinorVersion="1">
   <Class Name="Game">
-    <Position X="4.75" Y="0.5" Width="1.5" />
+    <Position X="10.25" Y="0.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AASCAQAAAgEAA6gkAEAAATQCIwjCAAEAYA0QAAhAAEI=</HashCode>
       <FileName>Game.h</FileName>
     </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="InputDevice" />
+    </ShowAsAssociation>
+    <ShowAsCollectionAssociation>
+      <Field Name="Components" />
+    </ShowAsCollectionAssociation>
   </Class>
   <Class Name="DisplayWin32">
-    <Position X="8" Y="0.5" Width="1.5" />
+    <Position X="14.25" Y="0.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>QAABAAAAAAAAAAAAAAAAIAAAAAAAAAAABAAACAAAAEA=</HashCode>
       <FileName>DisplayWin32.h</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="GameComponent">
-    <Position X="1.75" Y="0.5" Width="1.5" />
+    <Position X="6" Y="0.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAQAAAAFAAAAAwAAAAAAAAAAAABAAAAICAAAAAAAAAA=</HashCode>
       <FileName>GameComponent.h</FileName>
     </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="game" />
+    </ShowAsAssociation>
   </Class>
   <Class Name="InputDevice">
-    <Position X="8" Y="4.25" Width="1.5" />
+    <Position X="12.5" Y="0.5" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Nested Types" Collapsed="false" />
+    </Compartments>
     <NestedTypes>
       <Struct Name="InputDevice::MouseMoveEventArgs" Collapsed="true">
         <TypeIdentifier>
@@ -49,15 +61,96 @@
       <HashCode>AAAAAAAIAAAIAAAAAAACACAAhBIAAAAIAAAAQACCAIA=</HashCode>
       <FileName>InputDevice.h</FileName>
     </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="game" />
+    </ShowAsAssociation>
   </Class>
   <Class Name="TriangleComponent">
-    <Position X="2" Y="3.75" Width="1.5" />
+    <Position X="5.5" Y="3.25" Width="1.5" />
     <Compartments>
       <Compartment Name="Nested Types" Collapsed="false" />
     </Compartments>
     <TypeIdentifier>
       <HashCode>AAQAAACFAgQAAwAgEAAAAAAAAIBQAIAACAAACAAAAgA=</HashCode>
       <FileName>TriangleComponent.h</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="camera" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="TransformGame">
+    <Position X="12.75" Y="10.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAUABAAAAAgAAQAAAAAAAAAAABAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>TransformGame.h</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="cam" />
+      <Field Name="camCont" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="EdgeComponent">
+    <Position X="3.5" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AwQAAAAAAAgAAwEAAAAAAAAASABgAAAACAAAAAAAAAA=</HashCode>
+      <FileName>EdgeComponent.h</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="tri1" />
+      <Field Name="tri2" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="PlaneComponent">
+    <Position X="7.25" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAEACFAgQAAwAgFIAAAAAAAIBQAAAACAAACAAAAgA=</HashCode>
+      <FileName>PlaneComponent.h</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="camera" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="CameraController">
+    <Position X="10" Y="9.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQCABAAABABAAEAAAAIAAAAABAAAAAIAABAAAAAAAA=</HashCode>
+      <FileName>CameraController.h</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="game" />
+      <Field Name="Camera" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="Camera">
+    <Position X="7.75" Y="9.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAQAACAAAAAAQAAAAAAAACIEAAAIAAAACAAAAAA=</HashCode>
+      <FileName>Camera.h</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="game" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="BoxComponent">
+    <Position X="1" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>BwQACAAAAAAAAwUAAAAAAAIBAABgACAACAAAABAAADg=</HashCode>
+      <FileName>BoxComponent.h</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="edge1" />
+      <Field Name="edge2" />
+      <Field Name="edge3" />
+      <Field Name="edge4" />
+      <Field Name="edge5" />
+      <Field Name="edge6" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="std::vector&lt;_Ty, _Alloc&gt;" Collapsed="true">
+    <Position X="7.5" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>A2AEk4EqCrBsCEBAAOMIIAAyEEUEQBIghQkwgkAFUko=</HashCode>
+      <FileName>C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.29.30037\include\vector</FileName>
     </TypeIdentifier>
   </Class>
   <Font Name="Segoe UI" Size="9" />

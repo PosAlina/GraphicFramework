@@ -1,6 +1,7 @@
 #include "Game.h"
 #include "InputDevice.h"
 #include "Camera.h"
+#include "TextureLoader.h"
 
 Game* Game::Instance = nullptr;
 
@@ -27,6 +28,7 @@ void CollectTimestamps(ID3D11DeviceContext* pContext, QueryBuf* buf)
 Game::Game(std::wstring WindowName)
 {
 	Name = WindowName;
+	TextureLoader = new ::TextureLoader(this);
 
 	Instance = this;
 }
@@ -221,18 +223,7 @@ void Game::DestroyResources()
 	
 	delete GameCamera;
 	delete InputDevice;
-
-	//Device->Release();
-	//Context->Release();
-	//SwapChain->Release();
-	//SwapChain1->Release();
-	//RenderView->Release();
-	//DebugAnnotation->Release();
-
-
-	//delete Display;
-
-	//for (auto component : Components) component->DestroyResources();
+	delete TextureLoader;
 }
 
 //

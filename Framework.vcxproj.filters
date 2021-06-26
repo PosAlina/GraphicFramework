@@ -57,12 +57,18 @@
     <ClCompile Include="BoxComponent.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
+    <ClCompile Include="TextureLoader.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="MiniTri.fx">
       <Filter>Файлы ресурсов</Filter>
     </FxCompile>
     <FxCompile Include="Simple.hlsl">
+      <Filter>Файлы ресурсов</Filter>
+    </FxCompile>
+    <FxCompile Include="ObjModelShader.hlsl">
       <Filter>Файлы ресурсов</Filter>
     </FxCompile>
   </ItemGroup>
@@ -115,11 +121,22 @@
     <ClInclude Include="BoxComponent.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
+    <ClInclude Include="TextureLoader.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="VertexPositionNormalBinormalTangentColorTex.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="ClassDiagram.cd" />
   </ItemGroup>
   <ItemGroup>
     <Natvis Include="Delegates.natvis" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="ground_Tex.png">
+      <Filter>Файлы ресурсов</Filter>
+    </Image>
   </ItemGroup>
 </Project>

@@ -258,8 +258,8 @@ void PlaneComponent::DestroyResources()
 	if (vertices != nullptr) vertices->Release();
 	if (rastState != nullptr) rastState->Release();
 
-	constantBuffer->Release();
-	annotation->Release();
+	if (constantBuffer != nullptr) constantBuffer->Release();
+	if (annotation != nullptr) annotation->Release();
 }
 
 void PlaneComponent::Draw(float deltaTime)
