@@ -68,10 +68,13 @@
     <FxCompile Include="Simple.hlsl">
       <Filter>Файлы ресурсов</Filter>
     </FxCompile>
-    <FxCompile Include="ObjModelShader.hlsl">
+    <FxCompile Include="Texture.hlsl">
       <Filter>Файлы ресурсов</Filter>
     </FxCompile>
-    <FxCompile Include="LightShader.hlsl">
+    <FxCompile Include="LightShaderTexture.hlsl">
+      <Filter>Файлы ресурсов</Filter>
+    </FxCompile>
+    <FxCompile Include="LightShaderSimple.hlsl">
       <Filter>Файлы ресурсов</Filter>
     </FxCompile>
   </ItemGroup>
@@ -145,6 +148,9 @@
       <Filter>Файлы ресурсов</Filter>
     </Image>
     <Image Include="camouflage_Tex.jpg">
+      <Filter>Файлы ресурсов</Filter>
+    </Image>
+    <Image Include="box_Tex.jpg">
       <Filter>Файлы ресурсов</Filter>
     </Image>
   </ItemGroup>

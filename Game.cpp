@@ -85,8 +85,8 @@ void Game::CreateBackBuffer()
 	if (DepthView != nullptr) DepthView->Release();
 	if (RenderSRV != nullptr) RenderSRV->Release();
 	HRESULT res;
-	res = SwapChain->GetBuffer(0, IID_ID3D11Texture2D, (void**)&backBuffer); //ZCHECK(res);
-	res = Device->CreateRenderTargetView(backBuffer, nullptr, &RenderView); //ZCHECK(res);
+	res = SwapChain->GetBuffer(0, IID_ID3D11Texture2D, (void**)&backBuffer); ZCHECK(res);
+	Device->CreateRenderTargetView(backBuffer, nullptr, &RenderView);
 
 	D3D11_TEXTURE2D_DESC depthTexDesc = {};
 	depthTexDesc.ArraySize = 1;
@@ -99,12 +99,12 @@ void Game::CreateBackBuffer()
 	depthTexDesc.Width = Display->ClientWidth;
 	depthTexDesc.Height = Display->ClientHeight;
 	depthTexDesc.SampleDesc = { 1, 0 };
-	res = Device->CreateTexture2D(&depthTexDesc, nullptr, &depthBuffer); //ZCHECK(res);
+	res = Device->CreateTexture2D(&depthTexDesc, nullptr, &depthBuffer); ZCHECK(res);
 	D3D11_DEPTH_STENCIL_VIEW_DESC depthStenDesc = {};
 	depthStenDesc.Format = DXGI_FORMAT_D32_FLOAT;
 	depthStenDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
 	depthStenDesc.Flags = 0;
-	res = Device->CreateDepthStencilView(depthBuffer, &depthStenDesc, &DepthView); //SCHECK(res);
+	Device->CreateDepthStencilView(depthBuffer, &depthStenDesc, &DepthView);
 }
 
 void Game::PrepareResources()
@@ -243,6 +243,7 @@ LRESULT Game::MessageHandler(HWND hwnd, UINT umessage, WPARAM wparam, LPARAM lpa
 	{
 		PostQuitMessage(0);
 		isExitRequested = true;
+
 		return 0;
 	}
 	case WM_ENTERSIZEMOVE:

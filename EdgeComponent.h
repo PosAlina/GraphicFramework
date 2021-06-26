@@ -14,9 +14,9 @@ public:
     TriangleComponent *tri1 = nullptr;
     TriangleComponent *tri2 = nullptr;
 
-	EdgeComponent(Game* inGame, Camera* inCamera, SimpleMath::Vector4* points, LPCWSTR inTextureName);//8 points
-	EdgeComponent(Game* inGame, Camera* inCamera, SimpleMath::Vector4* points);//8 points
-	EdgeComponent(Game* inGame, Camera* inCamera);
+	EdgeComponent(bool light, Game* inGame, Camera* inCamera, SimpleMath::Vector4* points, LPCWSTR inTextureName);//8 points
+	EdgeComponent(bool light, Game* inGame, Camera* inCamera, SimpleMath::Vector4* points);//8 points
+	EdgeComponent(bool light, Game* inGame, Camera* inCamera);
 
 	virtual void Initialize() override;
 	virtual void DestroyResources() override;

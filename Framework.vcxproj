@@ -156,7 +156,11 @@
     <ClCompile Include="TriangleComponent.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="LightShader.hlsl">
+    <FxCompile Include="LightShaderSimple.hlsl">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">yes</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">yes</ExcludedFromBuild>
+    </FxCompile>
+    <FxCompile Include="LightShaderTexture.hlsl">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">yes</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">yes</ExcludedFromBuild>
     </FxCompile>
@@ -164,7 +168,7 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">yes</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">yes</ExcludedFromBuild>
     </FxCompile>
-    <FxCompile Include="ObjModelShader.hlsl">
+    <FxCompile Include="Texture.hlsl">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">yes</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">yes</ExcludedFromBuild>
     </FxCompile>
@@ -199,6 +203,7 @@
     <Natvis Include="Delegates.natvis" />
   </ItemGroup>
   <ItemGroup>
+    <Image Include="box_Tex.jpg" />
     <Image Include="camouflage_Tex.jpg" />
     <Image Include="ground_Tex.png">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">yes</ExcludedFromBuild>

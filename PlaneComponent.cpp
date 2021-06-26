@@ -81,11 +81,7 @@ void PlaneComponent::Initialize()
 	res = game->Device->CreateVertexShader(
 		vertexShaderByteCode->GetBufferPointer(),
 		vertexShaderByteCode->GetBufferSize(),
-		nullptr, &vertexShader);
-	if (FAILED(res))
-	{
-		std::cout << L"Vertex shader dont compile" << std::endl;
-	}
+		nullptr, &vertexShader); ZCHECK(res);
 
 	ID3DBlob* errorPixelCode;
 	res = D3DCompileFromFile(L"Simple.hlsl",
@@ -114,11 +110,7 @@ void PlaneComponent::Initialize()
 	res = game->Device->CreatePixelShader(
 		pixelShaderByteCode->GetBufferPointer(),
 		pixelShaderByteCode->GetBufferSize(),
-		nullptr, &pixelShader);
-	if (FAILED(res))
-	{
-		std::cout << L"Pixel shader dont compile" << std::endl;
-	}
+		nullptr, &pixelShader); ZCHECK(res);
 #pragma endregion Initialize shaders
 
 #pragma region Initialize layout
@@ -145,16 +137,11 @@ void PlaneComponent::Initialize()
 		2,
 		vertexShaderByteCode->GetBufferPointer(),
 		vertexShaderByteCode->GetBufferSize(),
-		&layout);
-	if (FAILED(res))
-	{
-		std::cout << L"Layout dont compile" << std::endl;
-		return;
-	}
+		&layout); ZCHECK(res);
 #pragma endregion Initialize layout
 
 #pragma region Initialize points value
-	points = new SimpleMath::Vector4[count];
+	points = new SimpleMath::Vector4[count * 16];
 
 	int i = 0;
 	std::cout << count << std::endl;
@@ -207,11 +194,7 @@ void PlaneComponent::Initialize()
 	positionsData.SysMemPitch = 0;
 	positionsData.SysMemSlicePitch = 0;
 
-	res = game->Device->CreateBuffer(&bufDesc, &positionsData, &vertices);
-	if (FAILED(res))
-	{
-		std::cout << L"Points buffer dont initialize" << std::endl;
-	}
+	res = game->Device->CreateBuffer(&bufDesc, &positionsData, &vertices); ZCHECK(res);
 
 	D3D11_BUFFER_DESC constBufDesc = {};
 	constBufDesc.Usage = D3D11_USAGE_DYNAMIC;
@@ -221,11 +204,7 @@ void PlaneComponent::Initialize()
 	constBufDesc.StructureByteStride = 0;
 	constBufDesc.ByteWidth = sizeof(SimpleMath::Vector4) * count;
 
-	res = game->Device->CreateBuffer(&constBufDesc, nullptr, &constantBuffer);
-	if (FAILED(res))
-	{
-		std::cout << L"Const buffer dont initialize" << std::endl;
-	}
+	res = game->Device->CreateBuffer(&constBufDesc, nullptr, &constantBuffer); ZCHECK(res);
 #pragma endregion Initialize buffers
 
 #pragma region Initialize rasterization state
@@ -233,16 +212,8 @@ void PlaneComponent::Initialize()
 	rastDesc.CullMode = D3D11_CULL_NONE;
 	rastDesc.FillMode = D3D11_FILL_SOLID; // Only lines
 
-	res = game->Device->CreateRasterizerState(&rastDesc, &rastState);
-	if (FAILED(res))
-	{
-		std::cout << L"Rast state dont initialize" << std::endl;
-	}
-	res = game->Context->QueryInterface(IID_ID3DUserDefinedAnnotation, (void**)&annotation);
-	if (FAILED(res))
-	{
-		std::cout << L"Annotation dont initialize" << std::endl;
-	}
+	res = game->Device->CreateRasterizerState(&rastDesc, &rastState); ZCHECK(res);
+	res = game->Context->QueryInterface(IID_ID3DUserDefinedAnnotation, (void**)&annotation); ZCHECK(res);
 #pragma endregion Initialize rasterization state
 }
 

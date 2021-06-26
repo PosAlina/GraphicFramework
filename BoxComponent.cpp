@@ -53,7 +53,7 @@ void BoxComponent::inputPoints(SimpleMath::Vector4* points)
 	points6[7] = points[15];
 }
 
-BoxComponent::BoxComponent(Game* inGame, Camera* inCamera, SimpleMath::Vector4* points, LPCWSTR inTextureName) :GameComponent(inGame)
+BoxComponent::BoxComponent(bool light, Game* inGame, Camera* inCamera, SimpleMath::Vector4* points, LPCWSTR inTextureName) :GameComponent(inGame)
 {
 	points1 = new SimpleMath::Vector4[8];
 	points2 = new SimpleMath::Vector4[8];
@@ -116,27 +116,27 @@ BoxComponent::BoxComponent(Game* inGame, Camera* inCamera, SimpleMath::Vector4* 
 	points6[6] = points[7];
 	points6[7] = SimpleMath::Vector4(1.0f, 0.0f, 0.0f, 0.0f);
 
-	edge1 = new EdgeComponent(inGame, inCamera, points1, inTextureName);
-	edge2 = new EdgeComponent(inGame, inCamera, points2, inTextureName);
-	edge3 = new EdgeComponent(inGame, inCamera, points3, inTextureName);
-	edge4 = new EdgeComponent(inGame, inCamera, points4, inTextureName);
-	edge5 = new EdgeComponent(inGame, inCamera, points5, inTextureName);
-	edge6 = new EdgeComponent(inGame, inCamera, points6, inTextureName);
+	edge1 = new EdgeComponent(light, inGame, inCamera, points1, inTextureName);
+	edge2 = new EdgeComponent(light, inGame, inCamera, points2, inTextureName);
+	edge3 = new EdgeComponent(light, inGame, inCamera, points3, inTextureName);
+	edge4 = new EdgeComponent(light, inGame, inCamera, points4, inTextureName);
+	edge5 = new EdgeComponent(light, inGame, inCamera, points5, inTextureName);
+	edge6 = new EdgeComponent(light, inGame, inCamera, points6, inTextureName);
 }
 
-BoxComponent::BoxComponent(Game* inGame, Camera* inCamera, SimpleMath::Vector4* points) :GameComponent(inGame)
+BoxComponent::BoxComponent(bool light, Game* inGame, Camera* inCamera, SimpleMath::Vector4* points) :GameComponent(inGame)
 {
 	inputPoints(points);
 
-	edge1 = new EdgeComponent(inGame, inCamera, points1);
-	edge2 = new EdgeComponent(inGame, inCamera, points2);
-	edge3 = new EdgeComponent(inGame, inCamera, points3);
-	edge4 = new EdgeComponent(inGame, inCamera, points4);
-	edge5 = new EdgeComponent(inGame, inCamera, points5);
-	edge6 = new EdgeComponent(inGame, inCamera, points6);
+	edge1 = new EdgeComponent(light, inGame, inCamera, points1);
+	edge2 = new EdgeComponent(light, inGame, inCamera, points2);
+	edge3 = new EdgeComponent(light, inGame, inCamera, points3);
+	edge4 = new EdgeComponent(light, inGame, inCamera, points4);
+	edge5 = new EdgeComponent(light, inGame, inCamera, points5);
+	edge6 = new EdgeComponent(light, inGame, inCamera, points6);
 }
 
-BoxComponent::BoxComponent(Game* inGame, Camera* inCamera) :GameComponent(inGame)
+BoxComponent::BoxComponent(bool light, Game* inGame, Camera* inCamera) :GameComponent(inGame)
 {
 	SimpleMath::Vector4* points = new SimpleMath::Vector4[16]{
 		SimpleMath::Vector4(-1.0f, 3.0f, -2.0f, 1.0f), SimpleMath::Vector4(1.0f, 0.0f, 0.0f, 1.0f),
@@ -151,12 +151,17 @@ BoxComponent::BoxComponent(Game* inGame, Camera* inCamera) :GameComponent(inGame
 	};
 	inputPoints(points);
 
-	edge1 = new EdgeComponent(inGame, inCamera, points1);
-	edge2 = new EdgeComponent(inGame, inCamera, points2);
-	edge3 = new EdgeComponent(inGame, inCamera, points3);
-	edge4 = new EdgeComponent(inGame, inCamera, points4);
-	edge5 = new EdgeComponent(inGame, inCamera, points5);
-	edge6 = new EdgeComponent(inGame, inCamera, points6);
+	edge1 = new EdgeComponent(light, inGame, inCamera, points1);
+	edge2 = new EdgeComponent(light, inGame, inCamera, points2);
+	edge3 = new EdgeComponent(light, inGame, inCamera, points3);
+	edge4 = new EdgeComponent(light, inGame, inCamera, points4);
+	edge5 = new EdgeComponent(light, inGame, inCamera, points5);
+	edge6 = new EdgeComponent(light, inGame, inCamera, points6);
+}
+
+BoxComponent::~BoxComponent()
+{
+	DestroyResources();
 }
 
 void BoxComponent::Initialize()
@@ -192,33 +197,39 @@ void BoxComponent::DestroyResources()
 	if (edge1 != nullptr)
 	{
 		edge1->DestroyResources();
-		delete[] edge1;
+		delete edge1;
 	}
 	if (edge2 != nullptr)
 	{
 		edge2->DestroyResources();
-		delete[] edge1;
+		delete edge2;
 	}
 	if (edge3 != nullptr)
 	{
 		edge3->DestroyResources();
-		delete[] edge1;
+		delete edge3;
 	}
 	if (edge4 != nullptr)
 	{
 		edge4->DestroyResources();
-		delete[] edge1;
+		delete edge4;
 	}
 	if (edge5 != nullptr)
 	{
 		edge5->DestroyResources();
-		delete[] edge1;
+		delete edge5;
 	}
 	if (edge6 != nullptr)
 	{
 		edge6->DestroyResources();
-		delete[] edge1;
+		delete edge6;
 	}
+	delete[] points1;
+	delete[] points2;
+	delete[] points3;
+	delete[] points4;
+	delete[] points5;
+	delete[] points6;
 }
 
 void BoxComponent::Draw(float deltaTime)

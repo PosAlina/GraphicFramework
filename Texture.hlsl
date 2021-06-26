@@ -35,9 +35,9 @@ PS_IN VSMain(VS_IN input)
 float4 PSMain(PS_IN input, in bool isFrontFace : SV_IsFrontFace) : SV_Target
 {
     float4 color = {0.0f, 1.0f, 0.0f, 1.0f};
-    //if (!iSFrontFace)
-    //{
-        color = DiffuseMap.Sample(Sampler, float2(input.tex.x, 1.0f - input.tex.y));
+//if (!iSFrontFace)
+//{
+    color = DiffuseMap.Sample(Sampler, float2(input.tex.x, 1.0f - input.tex.y));
     //}
     return color;
 }

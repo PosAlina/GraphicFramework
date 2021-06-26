@@ -6,11 +6,7 @@ TextureLoader::TextureLoader(Game* inGame)
 {
 	game = inGame;
 	// Initialize COM
-	auto res = CoInitialize(NULL);
-	if (FAILED(res))
-	{
-		std::cout << "No initialize com model" << std::endl;
-	}
+	auto res = CoInitialize(NULL); ZCHECK(res);
 
 	// Create the COM imaging factory
 	HRESULT hr = CoCreateInstance(CLSID_WICImagingFactory2, NULL, CLSCTX_INPROC_SERVER, IID_PPV_ARGS(&factory)); //ZCHECK(hr);
