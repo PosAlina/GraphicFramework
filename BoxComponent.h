@@ -22,6 +22,7 @@ public:
 	EdgeComponent* edge5 = nullptr;
 	EdgeComponent* edge6 = nullptr;
 
+	BoxComponent(Game* inGame, Camera* inCamera, SimpleMath::Vector4* points, LPCWSTR inTextureName);//8 points
 	BoxComponent(Game* inGame, Camera* inCamera, SimpleMath::Vector4* points);//16 points
 	BoxComponent(Game* inGame, Camera* inCamera);
 

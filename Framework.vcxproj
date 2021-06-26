@@ -156,6 +156,10 @@
     <ClCompile Include="TriangleComponent.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <FxCompile Include="LightShader.hlsl">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">yes</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">yes</ExcludedFromBuild>
+    </FxCompile>
     <FxCompile Include="MiniTri.fx">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">yes</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">yes</ExcludedFromBuild>
@@ -187,7 +191,6 @@
     <ClInclude Include="TextureLoader.h" />
     <ClInclude Include="TransformGame.h" />
     <ClInclude Include="TriangleComponent.h" />
-    <ClInclude Include="VertexPositionNormalBinormalTangentColorTex.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="ClassDiagram.cd" />
@@ -196,10 +199,13 @@
     <Natvis Include="Delegates.natvis" />
   </ItemGroup>
   <ItemGroup>
+    <Image Include="camouflage_Tex.jpg" />
     <Image Include="ground_Tex.png">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">yes</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">yes</ExcludedFromBuild>
     </Image>
+    <Image Include="pillow_Tex.jpg" />
+    <Image Include="wood_Tex.jpg" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

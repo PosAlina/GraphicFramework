@@ -16,6 +16,14 @@ void EdgeComponent::inputPoints(SimpleMath::Vector4* points)
 	points2[5] = points[7];
 }
 
+EdgeComponent::EdgeComponent(Game* inGame, Camera* inCamera, SimpleMath::Vector4* points, LPCWSTR inTextureName) :GameComponent(inGame)
+{
+	inputPoints(points);
+
+	tri1 = new TriangleComponent(inGame, inCamera, points1, inTextureName);
+	tri2 = new TriangleComponent(inGame, inCamera, points2, inTextureName);
+}
+
 EdgeComponent::EdgeComponent(Game* inGame, Camera* inCamera, SimpleMath::Vector4* points) :GameComponent(inGame)
 {
 	inputPoints(points);

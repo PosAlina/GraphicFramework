@@ -31,9 +31,9 @@ void TransformGame::Initialize()
 	plane = new PlaneComponent(this, cam);
 
 	//SimpleMath::Vector4* tripoints = new SimpleMath::Vector4[6]{
-	//	SimpleMath::Vector4(-4.0f, 8.0f, -2.0f, 1.0f), SimpleMath::Vector4(1.0f, 0.0f, 0.0f, 1.0f),
-	//	SimpleMath::Vector4(-4.0f, 15.0f, -4.0f, 1.0f), SimpleMath::Vector4(1.0f, 0.0f, 0.0f, 1.0f),
-	//	SimpleMath::Vector4(-2.0f, 8.0f, -4.0f, 1.0f), SimpleMath::Vector4(1.0f, 0.0f, 0.0f, 1.0f),
+	//	SimpleMath::Vector4(-4.0f, 8.0f, -2.0f, 1.0f), SimpleMath::Vector4(0.0f, 1.0f, 0.0f, 1.0f),
+	//	SimpleMath::Vector4(-4.0f, 15.0f, -4.0f, 1.0f), SimpleMath::Vector4(0.5f, 0.0f, 0.0f, 1.0f),
+	//	SimpleMath::Vector4(-2.0f, 8.0f, -4.0f, 1.0f), SimpleMath::Vector4(1.0f, 1.0f, 1.0f, 1.0f),
 	//};
 	//tri = new TriangleComponent(this, cam, tripoints, L"ground_Tex.png");
 	//Components.emplace_back(tri);
@@ -41,18 +41,28 @@ void TransformGame::Initialize()
 	box1 = new BoxComponent(this, cam);
 	boxes.emplace_back(box1);
 
-	SimpleMath::Vector4* points = new SimpleMath::Vector4[16]{
-		SimpleMath::Vector4(-4.0f, 3.0f, -2.0f, 1.0f), SimpleMath::Vector4(1.0f, 0.0f, 0.0f, 1.0f),
-		SimpleMath::Vector4(-4.0f, 3.0f, -4.0f, 1.0f), SimpleMath::Vector4(1.0f, 0.0f, 0.0f, 1.0f),
-		SimpleMath::Vector4(-2.0f, 3.0f, -4.0f, 1.0f), SimpleMath::Vector4(1.0f, 0.0f, 0.0f, 1.0f),
-		SimpleMath::Vector4(-2.0f, 3.0f, -2.0f, 1.0f), SimpleMath::Vector4(1.0f, 0.0f, 0.0f, 1.0f),
+	//SimpleMath::Vector4* points = new SimpleMath::Vector4[16]{
+	//	SimpleMath::Vector4(-4.0f, 3.0f, -2.0f, 1.0f), SimpleMath::Vector4(1.0f, 0.0f, 0.0f, 1.0f),
+	//	SimpleMath::Vector4(-4.0f, 3.0f, -4.0f, 1.0f), SimpleMath::Vector4(1.0f, 0.0f, 0.0f, 1.0f),
+	//	SimpleMath::Vector4(-2.0f, 3.0f, -4.0f, 1.0f), SimpleMath::Vector4(1.0f, 0.0f, 0.0f, 1.0f),
+	//	SimpleMath::Vector4(-2.0f, 3.0f, -2.0f, 1.0f), SimpleMath::Vector4(1.0f, 0.0f, 0.0f, 1.0f),
 
-		SimpleMath::Vector4(-4.0f, 1.0f, -2.0f, 1.0f), SimpleMath::Vector4(1.0f, 0.0f, 0.0f, 1.0f),
-		SimpleMath::Vector4(-4.0f, 1.0f, -4.0f, 1.0f), SimpleMath::Vector4(1.0f, 0.0f, 0.0f, 1.0f),
-		SimpleMath::Vector4(-2.0f, 1.0f, -4.0f, 1.0f), SimpleMath::Vector4(1.0f, 0.0f, 0.0f, 1.0f),
-		SimpleMath::Vector4(-2.0f, 1.0f, -2.0f, 1.0f), SimpleMath::Vector4(1.0f, 0.0f, 0.0f, 1.0f),
+	//	SimpleMath::Vector4(-4.0f, 1.0f, -2.0f, 1.0f), SimpleMath::Vector4(1.0f, 0.0f, 0.0f, 1.0f),
+	//	SimpleMath::Vector4(-4.0f, 1.0f, -4.0f, 1.0f), SimpleMath::Vector4(1.0f, 0.0f, 0.0f, 1.0f),
+	//	SimpleMath::Vector4(-2.0f, 1.0f, -4.0f, 1.0f), SimpleMath::Vector4(1.0f, 0.0f, 0.0f, 1.0f),
+	//	SimpleMath::Vector4(-2.0f, 1.0f, -2.0f, 1.0f), SimpleMath::Vector4(1.0f, 0.0f, 0.0f, 1.0f),
+	//};
+	SimpleMath::Vector4* points = new SimpleMath::Vector4[8]{
+		SimpleMath::Vector4(-4.0f, 3.0f, -2.0f, 1.0f),
+		SimpleMath::Vector4(-4.0f, 3.0f, -4.0f, 1.0f),
+		SimpleMath::Vector4(-2.0f, 3.0f, -4.0f, 1.0f),
+		SimpleMath::Vector4(-2.0f, 3.0f, -2.0f, 1.0f),
+		SimpleMath::Vector4(-4.0f, 1.0f, -2.0f, 1.0f),
+		SimpleMath::Vector4(-4.0f, 1.0f, -4.0f, 1.0f),
+		SimpleMath::Vector4(-2.0f, 1.0f, -4.0f, 1.0f),
+		SimpleMath::Vector4(-2.0f, 1.0f, -2.0f, 1.0f),
 	};
-	box2 = new BoxComponent(this, cam, points);
+	box2 = new BoxComponent(this, cam, points, L"pillow_Tex.jpg");
 	boxes.emplace_back(box2);
 
 	points = new SimpleMath::Vector4[16]{
@@ -80,21 +90,31 @@ void TransformGame::Initialize()
 		SimpleMath::Vector4(-5.0f, 1.0f, -4.0f, 1.0f), SimpleMath::Vector4(0.0f, 0.0f, 1.0f, 1.0f),
 		SimpleMath::Vector4(-5.0f, 1.0f, -2.0f, 1.0f), SimpleMath::Vector4(0.0f, 0.0f, 1.0f, 1.0f),
 	};
-	box4 = new BoxComponent(this, cam, points);
+	box4 = new BoxComponent(this, cam, points);// , L"ground_Tex.png");
 	boxes.emplace_back(box4);
 
-	points = new SimpleMath::Vector4[16]{
-		SimpleMath::Vector4(-7.0f, 5.0f, -5.0f, 1.0f), SimpleMath::Vector4(1.0f, 1.0f, 0.0f, 1.0f),
-		SimpleMath::Vector4(-7.0f, 5.0f, -7.0f, 1.0f), SimpleMath::Vector4(1.0f, 1.0f, 0.0f, 1.0f),
-		SimpleMath::Vector4(-5.0f, 5.0f, -7.0f, 1.0f), SimpleMath::Vector4(1.0f, 1.0f, 0.0f, 1.0f),
-		SimpleMath::Vector4(-5.0f, 5.0f, -5.0f, 1.0f), SimpleMath::Vector4(1.0f, 1.0f, 0.0f, 1.0f),
+	//points = new SimpleMath::Vector4[16]{
+	//	SimpleMath::Vector4(-7.0f, 5.0f, -5.0f, 1.0f), SimpleMath::Vector4(1.0f, 1.0f, 0.0f, 1.0f),
+	//	SimpleMath::Vector4(-7.0f, 5.0f, -7.0f, 1.0f), SimpleMath::Vector4(1.0f, 1.0f, 0.0f, 1.0f),
+	//	SimpleMath::Vector4(-5.0f, 5.0f, -7.0f, 1.0f), SimpleMath::Vector4(1.0f, 1.0f, 0.0f, 1.0f),
+	//	SimpleMath::Vector4(-5.0f, 5.0f, -5.0f, 1.0f), SimpleMath::Vector4(1.0f, 1.0f, 0.0f, 1.0f),
 
-		SimpleMath::Vector4(-7.0f, 2.0f, -5.0f, 1.0f), SimpleMath::Vector4(1.0f, 1.0f, 0.0f, 1.0f),
-		SimpleMath::Vector4(-7.0f, 2.0f, -7.0f, 1.0f), SimpleMath::Vector4(1.0f, 1.0f, 0.0f, 1.0f),
-		SimpleMath::Vector4(-5.0f, 2.0f, -7.0f, 1.0f), SimpleMath::Vector4(1.0f, 1.0f, 0.0f, 1.0f),
-		SimpleMath::Vector4(-5.0f, 2.0f, -5.0f, 1.0f), SimpleMath::Vector4(1.0f, 1.0f, 0.0f, 1.0f),
+	//	SimpleMath::Vector4(-7.0f, 2.0f, -5.0f, 1.0f), SimpleMath::Vector4(1.0f, 1.0f, 0.0f, 1.0f),
+	//	SimpleMath::Vector4(-7.0f, 2.0f, -7.0f, 1.0f), SimpleMath::Vector4(1.0f, 1.0f, 0.0f, 1.0f),
+	//	SimpleMath::Vector4(-5.0f, 2.0f, -7.0f, 1.0f), SimpleMath::Vector4(1.0f, 1.0f, 0.0f, 1.0f),
+	//	SimpleMath::Vector4(-5.0f, 2.0f, -5.0f, 1.0f), SimpleMath::Vector4(1.0f, 1.0f, 0.0f, 1.0f),
+	//};
+	points = new SimpleMath::Vector4[16]{
+		SimpleMath::Vector4(-7.0f, 5.0f, -5.0f, 1.0f),
+		SimpleMath::Vector4(-7.0f, 5.0f, -7.0f, 1.0f),
+		SimpleMath::Vector4(-5.0f, 5.0f, -7.0f, 1.0f),
+		SimpleMath::Vector4(-5.0f, 5.0f, -5.0f, 1.0f),
+		SimpleMath::Vector4(-7.0f, 3.0f, -5.0f, 1.0f),
+		SimpleMath::Vector4(-7.0f, 3.0f, -7.0f, 1.0f),
+		SimpleMath::Vector4(-5.0f, 3.0f, -7.0f, 1.0f),
+		SimpleMath::Vector4(-5.0f, 3.0f, -5.0f, 1.0f),
 	};
-	box5 = new BoxComponent(this, cam, points);
+	box5 = new BoxComponent(this, cam, points, L"camouflage_Tex.jpg");
 	boxes.emplace_back(box5);
 
 	points = new SimpleMath::Vector4[16]{
@@ -125,46 +145,68 @@ void TransformGame::Initialize()
 	box7 = new BoxComponent(this, cam, points);
 	boxes.emplace_back(box7);
 
-	points = new SimpleMath::Vector4[16]{
-		SimpleMath::Vector4(1.0f, 3.0f, 4.0f, 1.0f), SimpleMath::Vector4(0.1f, 0.5f, 0.5f, 1.0f),
-		SimpleMath::Vector4(1.0f, 3.0f, 6.0f, 1.0f), SimpleMath::Vector4(0.1f, 0.5f, 0.5f, 1.0f),
-		SimpleMath::Vector4(-1.0f, 3.0f, 6.0f, 1.0f), SimpleMath::Vector4(0.1f, 0.5f, 0.5f, 1.0f),
-		SimpleMath::Vector4(-1.0f, 3.0f, 4.0f, 1.0f), SimpleMath::Vector4(0.1f, 0.5f, 0.5f, 1.0f),
+	//points = new SimpleMath::Vector4[16]{
+	//	SimpleMath::Vector4(1.0f, 3.0f, 4.0f, 1.0f), SimpleMath::Vector4(0.1f, 0.5f, 0.5f, 1.0f),
+	//	SimpleMath::Vector4(1.0f, 3.0f, 6.0f, 1.0f), SimpleMath::Vector4(0.1f, 0.5f, 0.5f, 1.0f),
+	//	SimpleMath::Vector4(-1.0f, 3.0f, 6.0f, 1.0f), SimpleMath::Vector4(0.1f, 0.5f, 0.5f, 1.0f),
+	//	SimpleMath::Vector4(-1.0f, 3.0f, 4.0f, 1.0f), SimpleMath::Vector4(0.1f, 0.5f, 0.5f, 1.0f),
 
-		SimpleMath::Vector4(1.0f, 1.0f, 4.0f, 1.0f), SimpleMath::Vector4(0.1f, 0.5f, 0.5f, 1.0f),
-		SimpleMath::Vector4(1.0f, 1.0f, 6.0f, 1.0f), SimpleMath::Vector4(0.1f, 0.5f, 0.5f, 1.0f),
-		SimpleMath::Vector4(-1.0f, 1.0f, 6.0f, 1.0f), SimpleMath::Vector4(0.1f, 0.5f, 0.5f, 1.0f),
-		SimpleMath::Vector4(-1.0f, 1.0f, 4.0f, 1.0f), SimpleMath::Vector4(0.1f, 0.5f, 0.5f, 1.0f),
+	//	SimpleMath::Vector4(1.0f, 1.0f, 4.0f, 1.0f), SimpleMath::Vector4(0.1f, 0.5f, 0.5f, 1.0f),
+	//	SimpleMath::Vector4(1.0f, 1.0f, 6.0f, 1.0f), SimpleMath::Vector4(0.1f, 0.5f, 0.5f, 1.0f),
+	//	SimpleMath::Vector4(-1.0f, 1.0f, 6.0f, 1.0f), SimpleMath::Vector4(0.1f, 0.5f, 0.5f, 1.0f),
+	//	SimpleMath::Vector4(-1.0f, 1.0f, 4.0f, 1.0f), SimpleMath::Vector4(0.1f, 0.5f, 0.5f, 1.0f),
+	//};
+	points = new SimpleMath::Vector4[8]{
+		SimpleMath::Vector4(1.0f, 3.0f, 4.0f, 1.0f),
+		SimpleMath::Vector4(1.0f, 3.0f, 6.0f, 1.0f),
+		SimpleMath::Vector4(-1.0f, 3.0f, 6.0f, 1.0f),
+		SimpleMath::Vector4(-1.0f, 3.0f, 4.0f, 1.0f),
+
+		SimpleMath::Vector4(1.0f, 1.0f, 4.0f, 1.0f),
+		SimpleMath::Vector4(1.0f, 1.0f, 6.0f, 1.0f),
+		SimpleMath::Vector4(-1.0f, 1.0f, 6.0f, 1.0f),
+		SimpleMath::Vector4(-1.0f, 1.0f, 4.0f, 1.0f),
 	};
-	box8 = new BoxComponent(this, cam, points);
+	box8 = new BoxComponent(this, cam, points, L"ground_Tex.png");
 	boxes.emplace_back(box8);
 
 	points = new SimpleMath::Vector4[16]{
-		SimpleMath::Vector4(4.0f, 5.0f, 1.0f, 1.0f), SimpleMath::Vector4(0.0f, 0.5f, 0.1f, 1.0f),
-		SimpleMath::Vector4(4.0f, 5.0f, -1.0f, 1.0f), SimpleMath::Vector4(0.5f, 0.5f, 0.1f, 1.0f),
-		SimpleMath::Vector4(5.0f, 5.0f, -1.0f, 1.0f), SimpleMath::Vector4(0.0f, 0.5f, 0.1f, 1.0f),
-		SimpleMath::Vector4(5.0f, 5.0f, 1.0f, 1.0f), SimpleMath::Vector4(0.5f, 0.5f, 0.1f, 1.0f),
+		SimpleMath::Vector4(4.0f, 5.0f, 1.0f, 1.0f), SimpleMath::Vector4(1.0f, 0.5f, 0.3f, 1.0f),
+		SimpleMath::Vector4(4.0f, 5.0f, -1.0f, 1.0f), SimpleMath::Vector4(1.0f, 0.5f, 0.3f, 1.0f),
+		SimpleMath::Vector4(5.0f, 5.0f, -1.0f, 1.0f), SimpleMath::Vector4(1.0f, 0.5f, 0.3f, 1.0f),
+		SimpleMath::Vector4(5.0f, 5.0f, 1.0f, 1.0f), SimpleMath::Vector4(1.0f, 0.5f, 0.3f, 1.0f),
 
-		SimpleMath::Vector4(4.0f, 2.0f, 1.0f, 1.0f), SimpleMath::Vector4(0.0f, 0.5f, 0.1f, 1.0f),
-		SimpleMath::Vector4(4.0f, 2.0f, -1.0f, 1.0f), SimpleMath::Vector4(0.5f, 0.5f, 0.1f, 1.0f),
-		SimpleMath::Vector4(5.0f, 2.0f, -1.0f, 1.0f), SimpleMath::Vector4(0.0f, 0.5f, 0.1f, 1.0f),
-		SimpleMath::Vector4(5.0f, 2.0f, 1.0f, 1.0f), SimpleMath::Vector4(0.5f, 0.5f, 0.1f, 1.0f),
+		SimpleMath::Vector4(4.0f, 2.0f, 1.0f, 1.0f), SimpleMath::Vector4(1.0f, 0.5f, 0.3f, 1.0f),
+		SimpleMath::Vector4(4.0f, 2.0f, -1.0f, 1.0f), SimpleMath::Vector4(1.0f, 0.5f, 0.3f, 1.0f),
+		SimpleMath::Vector4(5.0f, 2.0f, -1.0f, 1.0f), SimpleMath::Vector4(1.0f, 0.5f, 0.3f, 1.0f),
+		SimpleMath::Vector4(5.0f, 2.0f, 1.0f, 1.0f), SimpleMath::Vector4(1.0f, 0.5f, 0.3f, 1.0f),
 	};
 	box9 = new BoxComponent(this, cam, points);
 	boxes.emplace_back(box9);
 
-	points = new SimpleMath::Vector4[16]{
-		SimpleMath::Vector4(4.0f, 3.0f, 4.0f, 1.0f), SimpleMath::Vector4(1.0f, 0.5f, 0.3f, 1.0f),
-		SimpleMath::Vector4(4.0f, 3.0f, 2.0f, 1.0f), SimpleMath::Vector4(1.0f, 0.5f, 0.3f, 1.0f),
-		SimpleMath::Vector4(2.0f, 3.0f, 2.0f, 1.0f), SimpleMath::Vector4(1.0f, 0.5f, 0.3f, 1.0f),
-		SimpleMath::Vector4(2.0f, 3.0f, 4.0f, 1.0f), SimpleMath::Vector4(1.0f, 0.5f, 0.3f, 1.0f),
+	//points = new SimpleMath::Vector4[16]{
+	//	SimpleMath::Vector4(4.0f, 3.0f, 4.0f, 1.0f), SimpleMath::Vector4(1.0f, 0.5f, 0.3f, 1.0f),
+	//	SimpleMath::Vector4(4.0f, 3.0f, 2.0f, 1.0f), SimpleMath::Vector4(1.0f, 0.5f, 0.3f, 1.0f),
+	//	SimpleMath::Vector4(2.0f, 3.0f, 2.0f, 1.0f), SimpleMath::Vector4(1.0f, 0.5f, 0.3f, 1.0f),
+	//	SimpleMath::Vector4(2.0f, 3.0f, 4.0f, 1.0f), SimpleMath::Vector4(1.0f, 0.5f, 0.3f, 1.0f),
 
-		SimpleMath::Vector4(4.5f, 1.0f, 4.0f, 1.0f), SimpleMath::Vector4(1.0f, 0.5f, 0.3f, 1.0f),
-		SimpleMath::Vector4(4.5f, 1.0f, 2.0f, 1.0f), SimpleMath::Vector4(1.0f, 0.5f, 0.3f, 1.0f),
-		SimpleMath::Vector4(2.5f, 1.0f, 2.f, 1.0f), SimpleMath::Vector4(1.0f, 0.5f, 0.3f, 1.0f),
-		SimpleMath::Vector4(2.5f, 1.0f, 4.0f, 1.0f), SimpleMath::Vector4(1.0f, 0.5f, 0.3f, 1.0f),
+	//	SimpleMath::Vector4(4.5f, 1.0f, 4.0f, 1.0f), SimpleMath::Vector4(1.0f, 0.5f, 0.3f, 1.0f),
+	//	SimpleMath::Vector4(4.5f, 1.0f, 2.0f, 1.0f), SimpleMath::Vector4(1.0f, 0.5f, 0.3f, 1.0f),
+	//	SimpleMath::Vector4(2.5f, 1.0f, 2.f, 1.0f), SimpleMath::Vector4(1.0f, 0.5f, 0.3f, 1.0f),
+	//	SimpleMath::Vector4(2.5f, 1.0f, 4.0f, 1.0f), SimpleMath::Vector4(1.0f, 0.5f, 0.3f, 1.0f),
+	//};
+	points = new SimpleMath::Vector4[8]{
+		SimpleMath::Vector4(4.0f, 3.0f, 4.0f, 1.0f),
+		SimpleMath::Vector4(4.0f, 3.0f, 2.0f, 1.0f),
+		SimpleMath::Vector4(2.0f, 3.0f, 2.0f, 1.0f),
+		SimpleMath::Vector4(2.0f, 3.0f, 4.0f, 1.0f),
+
+		SimpleMath::Vector4(4.5f, 1.0f, 4.0f, 1.0f),
+		SimpleMath::Vector4(4.5f, 1.0f, 2.0f, 1.0f),
+		SimpleMath::Vector4(2.5f, 1.0f, 2.f, 1.0f),
+		SimpleMath::Vector4(2.5f, 1.0f, 4.0f, 1.0f),
 	};
-	box10 = new BoxComponent(this, cam, points);
+	box10 = new BoxComponent(this, cam, points, L"wood_Tex.jpg");
 	boxes.emplace_back(box10);
 
 	Components.emplace_back(plane);

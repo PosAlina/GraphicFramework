@@ -53,6 +53,77 @@ void BoxComponent::inputPoints(SimpleMath::Vector4* points)
 	points6[7] = points[15];
 }
 
+BoxComponent::BoxComponent(Game* inGame, Camera* inCamera, SimpleMath::Vector4* points, LPCWSTR inTextureName) :GameComponent(inGame)
+{
+	points1 = new SimpleMath::Vector4[8];
+	points2 = new SimpleMath::Vector4[8];
+	points3 = new SimpleMath::Vector4[8];
+	points4 = new SimpleMath::Vector4[8];
+	points5 = new SimpleMath::Vector4[8];
+	points6 = new SimpleMath::Vector4[8];
+
+	points1[0] = points[0];
+	points1[1] = SimpleMath::Vector4(0.0f, 0.0f, 0.0f, 0.0f);
+	points1[2] = points[1];
+	points1[3] = SimpleMath::Vector4(0.0f, 1.0f, 0.0f, 0.0f);
+	points1[4] = points[2];
+	points1[5] = SimpleMath::Vector4(1.0f, 1.0f, 0.0f, 0.0f);
+	points1[6] = points[3];
+	points1[7] = SimpleMath::Vector4(1.0f, 0.0f, 0.0f, 0.0f);
+
+	points2[0] = points[4];
+	points2[1] = SimpleMath::Vector4(0.0f, 0.0f, 0.0f, 0.0f);
+	points2[2] = points[5];
+	points2[3] = SimpleMath::Vector4(0.0f, 1.0f, 0.0f, 0.0f);
+	points2[4] = points[6];
+	points2[5] = SimpleMath::Vector4(1.0f, 1.0f, 0.0f, 0.0f);
+	points2[6] = points[7];
+	points2[7] = SimpleMath::Vector4(1.0f, 0.0f, 0.0f, 0.0f);
+
+	points3[0] = points[0];
+	points3[1] = SimpleMath::Vector4(0.0f, 0.0f, 0.0f, 0.0f);
+	points3[2] = points[1];
+	points3[3] = SimpleMath::Vector4(0.0f, 1.0f, 0.0f, 0.0f);
+	points3[4] = points[5];
+	points3[5] = SimpleMath::Vector4(1.0f, 1.0f, 0.0f, 0.0f);
+	points3[6] = points[4];
+	points3[7] = SimpleMath::Vector4(1.0f, 0.0f, 0.0f, 0.0f);
+
+	points4[0] = points[1];
+	points4[1] = SimpleMath::Vector4(0.0f, 0.0f, 0.0f, 0.0f);
+	points4[2] = points[2];
+	points4[3] = SimpleMath::Vector4(0.0f, 1.0f, 0.0f, 0.0f);
+	points4[4] = points[6];
+	points4[5] = SimpleMath::Vector4(1.0f, 1.0f, 0.0f, 0.0f);
+	points4[6] = points[5];
+	points4[7] = SimpleMath::Vector4(1.0f, 0.0f, 0.0f, 0.0f);
+
+	points5[0] = points[2];
+	points5[1] = SimpleMath::Vector4(0.0f, 0.0f, 0.0f, 0.0f);
+	points5[2] = points[3];
+	points5[3] = SimpleMath::Vector4(0.0f, 1.0f, 0.0f, 0.0f);
+	points5[4] = points[7];
+	points5[5] = SimpleMath::Vector4(1.0f, 1.0f, 0.0f, 0.0f);
+	points5[6] = points[6];
+	points5[7] = SimpleMath::Vector4(1.0f, 0.0f, 0.0f, 0.0f);
+
+	points6[0] = points[3];
+	points6[1] = SimpleMath::Vector4(0.0f, 0.0f, 0.0f, 0.0f);
+	points6[2] = points[0];
+	points6[3] = SimpleMath::Vector4(0.0f, 1.0f, 0.0f, 0.0f);
+	points6[4] = points[4];
+	points6[5] = SimpleMath::Vector4(1.0f, 1.0f, 0.0f, 0.0f);
+	points6[6] = points[7];
+	points6[7] = SimpleMath::Vector4(1.0f, 0.0f, 0.0f, 0.0f);
+
+	edge1 = new EdgeComponent(inGame, inCamera, points1, inTextureName);
+	edge2 = new EdgeComponent(inGame, inCamera, points2, inTextureName);
+	edge3 = new EdgeComponent(inGame, inCamera, points3, inTextureName);
+	edge4 = new EdgeComponent(inGame, inCamera, points4, inTextureName);
+	edge5 = new EdgeComponent(inGame, inCamera, points5, inTextureName);
+	edge6 = new EdgeComponent(inGame, inCamera, points6, inTextureName);
+}
+
 BoxComponent::BoxComponent(Game* inGame, Camera* inCamera, SimpleMath::Vector4* points) :GameComponent(inGame)
 {
 	inputPoints(points);

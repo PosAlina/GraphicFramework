@@ -71,6 +71,9 @@
     <FxCompile Include="ObjModelShader.hlsl">
       <Filter>Файлы ресурсов</Filter>
     </FxCompile>
+    <FxCompile Include="LightShader.hlsl">
+      <Filter>Файлы ресурсов</Filter>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game.h">
@@ -124,9 +127,6 @@
     <ClInclude Include="TextureLoader.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
-    <ClInclude Include="VertexPositionNormalBinormalTangentColorTex.h">
-      <Filter>Файлы заголовков</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="ClassDiagram.cd" />
@@ -136,6 +136,15 @@
   </ItemGroup>
   <ItemGroup>
     <Image Include="ground_Tex.png">
+      <Filter>Файлы ресурсов</Filter>
+    </Image>
+    <Image Include="wood_Tex.jpg">
+      <Filter>Файлы ресурсов</Filter>
+    </Image>
+    <Image Include="pillow_Tex.jpg">
+      <Filter>Файлы ресурсов</Filter>
+    </Image>
+    <Image Include="camouflage_Tex.jpg">
       <Filter>Файлы ресурсов</Filter>
     </Image>
   </ItemGroup>
