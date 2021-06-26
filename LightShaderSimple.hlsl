@@ -61,7 +61,7 @@ float4 PSMain(PS_IN input, in bool isFrontFace : SV_IsFrontFace) : SV_Target
 
     float3 ambientLightColor = color.xyz; // diffuse value for main color of material
     //float3 ambientLightColor = float3(0.8f, 0.8f, 0.8f);
-    float3 ambient = ambientLightColor * ConstData.KaSpecPowKsX.x; // global background light
+    float3 ambient = ambientLightColor * ConstData.KaSpecPowKsX.x; //lobal background light
 
     //float3 diffuse = saturate(dot(lightDir, normal))* ambientLightColor; // saturate - Clamps the specified value within the range of 0 to 1.
    // float diff = max(dot(lightDir, normal), 0.0f);

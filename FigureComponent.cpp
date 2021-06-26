@@ -60,6 +60,11 @@ FigureComponent::FigureComponent(bool light, int vcount, int icount, Game* inGam
 	count_i = icount;
 }
 
+FigureComponent::~FigureComponent()
+{
+	DestroyResources();
+}
+
 void FigureComponent::Initialize()
 {
 	if (hasTexture)
@@ -139,9 +144,9 @@ void FigureComponent::Update(float deltaTime)
 		auto cam_pos = camera->GetPosition();
 		constantData.ViewerPos = SimpleMath::Vector4(cam_pos.x, cam_pos.y, cam_pos.z, 1.0f);
 
-		constantData.Direction = SimpleMath::Vector4(10.0f, 30.0f, 10.0f, 1.0f);
+		constantData.Direction = SimpleMath::Vector4(-15.0f, 30.0f, 10.0f, 1.0f);
 		constantData.Color = SimpleMath::Vector4(1.0f, 1.0f, 1.0f, 1.0f);
-		constantData.KaSpecPowKsX = SimpleMath::Vector4(0.2f, 0.4f, 1.0f, 1.0f);
+		constantData.KaSpecPowKsX = SimpleMath::Vector4(0.1f, 0.4f, 1.0f, 1.0f);
 
 		//game->Context->UpdateSubresource(constantBuffer, 0, nullptr, &constantData, 0, 0);
 

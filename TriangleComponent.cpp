@@ -74,6 +74,11 @@ TriangleComponent::TriangleComponent(bool light, Game* inGame, Camera* inCamera)
 	ind = new int[3]{ 0, 1, 2 };
 }
 
+TriangleComponent::~TriangleComponent()
+{
+	DestroyResources();
+}
+
 void TriangleComponent::Initialize()
 {
 	if (hasTexture)

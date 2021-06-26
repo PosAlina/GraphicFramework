@@ -1,9 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ClassDiagram MajorVersion="1" MinorVersion="1">
   <Class Name="Game">
-    <Position X="10.25" Y="0.5" Width="1.5" />
+    <Position X="12.5" Y="0.75" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AASCAQAAAgEAA6gkAEAAATQCIwjCAAEAYA0QAAhAAEI=</HashCode>
+      <HashCode>AASCAQAAAgEAA6gkAEAAATQCIwjCAAEAYA0QAAhAAFI=</HashCode>
       <FileName>Game.h</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
@@ -14,14 +14,14 @@
     </ShowAsCollectionAssociation>
   </Class>
   <Class Name="DisplayWin32">
-    <Position X="14.25" Y="0.5" Width="1.5" />
+    <Position X="16.5" Y="0.75" Width="1.5" />
     <TypeIdentifier>
       <HashCode>QAABAAAAAAAAAAAAAAAAIAAAAAAAAAAABAAACAAAAEA=</HashCode>
       <FileName>DisplayWin32.h</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="GameComponent">
-    <Position X="6" Y="0.5" Width="1.5" />
+    <Position X="8.25" Y="0.75" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAQAAAAFAAAAAwAAAAAAAAAAAABAAAAICAAAAAAAAAA=</HashCode>
       <FileName>GameComponent.h</FileName>
@@ -31,7 +31,7 @@
     </ShowAsAssociation>
   </Class>
   <Class Name="InputDevice">
-    <Position X="12.5" Y="0.5" Width="1.5" />
+    <Position X="14.75" Y="0.75" Width="1.5" />
     <Compartments>
       <Compartment Name="Nested Types" Collapsed="false" />
     </Compartments>
@@ -66,12 +66,12 @@
     </ShowAsAssociation>
   </Class>
   <Class Name="TriangleComponent">
-    <Position X="5.5" Y="3.25" Width="1.5" />
+    <Position X="7.75" Y="3.5" Width="1.5" />
     <Compartments>
       <Compartment Name="Nested Types" Collapsed="false" />
     </Compartments>
     <TypeIdentifier>
-      <HashCode>AAQAAACFAgQAAwAgEAAAAAAAAIBQAIAACAAACAAAAgA=</HashCode>
+      <HashCode>CAQAIAClAhQAIwAgFAAAAAAAAJBWAoAACAAQCAAAAgg=</HashCode>
       <FileName>TriangleComponent.h</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
@@ -79,9 +79,9 @@
     </ShowAsAssociation>
   </Class>
   <Class Name="TransformGame">
-    <Position X="12.75" Y="10.5" Width="1.5" />
+    <Position X="15" Y="10.75" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAUABAAAAAgAAQAAAAAAAAAAABAAAAAAAAAAAAAAAAA=</HashCode>
+      <HashCode>AAUABAAAAAgAAQAAAAAAAAAAABAAAAAAAAAAAAAAAgA=</HashCode>
       <FileName>TransformGame.h</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
@@ -90,18 +90,19 @@
     </ShowAsAssociation>
   </Class>
   <Class Name="EdgeComponent">
-    <Position X="3.5" Y="3.25" Width="1.5" />
+    <Position X="5.75" Y="3.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AwQAAAAAAAgAAwEAAAAAAAAASABgAAAACAAAAAAAAAA=</HashCode>
+      <HashCode>AwQAIAAAAAgAAwEAAAAAAAAASABgAAAACBAAAAABAAA=</HashCode>
       <FileName>EdgeComponent.h</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
       <Field Name="tri1" />
       <Field Name="tri2" />
+      <Field Name="figure" />
     </ShowAsAssociation>
   </Class>
   <Class Name="PlaneComponent">
-    <Position X="7.25" Y="3.25" Width="1.5" />
+    <Position X="9.5" Y="3.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAQAEACFAgQAAwAgFIAAAAAAAIBQAAAACAAACAAAAgA=</HashCode>
       <FileName>PlaneComponent.h</FileName>
@@ -111,7 +112,7 @@
     </ShowAsAssociation>
   </Class>
   <Class Name="CameraController">
-    <Position X="10" Y="9.75" Width="1.5" />
+    <Position X="12.25" Y="10" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAQCABAAABABAAEAAAAIAAAAABAAAAAIAABAAAAAAAA=</HashCode>
       <FileName>CameraController.h</FileName>
@@ -122,7 +123,7 @@
     </ShowAsAssociation>
   </Class>
   <Class Name="Camera">
-    <Position X="7.75" Y="9.75" Width="1.5" />
+    <Position X="10" Y="10" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAACAAQAACAAAAAAQAAAAAAAACIEAAAIAAAACAAAAAA=</HashCode>
       <FileName>Camera.h</FileName>
@@ -132,9 +133,9 @@
     </ShowAsAssociation>
   </Class>
   <Class Name="BoxComponent">
-    <Position X="1" Y="3.25" Width="1.5" />
+    <Position X="3.25" Y="3.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>BwQACAAAAAAAAwUAAAAAAAIBAABgACAACAAAABAAADg=</HashCode>
+      <HashCode>BwQACAAAAAAAAwUAAAAAAAIBAABgACAACAIAABAAADg=</HashCode>
       <FileName>BoxComponent.h</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
@@ -147,11 +148,21 @@
     </ShowAsAssociation>
   </Class>
   <Class Name="std::vector&lt;_Ty, _Alloc&gt;" Collapsed="true">
-    <Position X="7.5" Y="1.5" Width="1.5" />
+    <Position X="9.75" Y="1.75" Width="1.5" />
     <TypeIdentifier>
       <HashCode>A2AEk4EqCrBsCEBAAOMIIAAyEEUEQBIghQkwgkAFUko=</HashCode>
       <FileName>C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.29.30037\include\vector</FileName>
     </TypeIdentifier>
+  </Class>
+  <Class Name="FigureComponent">
+    <Position X="1.25" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>CAQAIAClAhQAIwAgFAAAAAAAAJBWEgEACAIQCAAAAgg=</HashCode>
+      <FileName>FigureComponent.h</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="camera" />
+    </ShowAsAssociation>
   </Class>
   <Font Name="Segoe UI" Size="9" />
 </ClassDiagram>

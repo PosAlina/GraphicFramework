@@ -97,6 +97,11 @@ EdgeComponent::EdgeComponent(bool light, Game* inGame, Camera* inCamera) :GameCo
 	tri2 = new TriangleComponent(light, inGame, inCamera, points2);
 }
 
+EdgeComponent::~EdgeComponent()
+{
+	DestroyResources();
+}
+
 void EdgeComponent::Initialize()
 {
 	if (fig_state) {
@@ -118,30 +123,15 @@ void EdgeComponent::Initialize()
 void EdgeComponent::DestroyResources()
 {
 	if (fig_state) {
-		figure->DestroyResources();
-		delete figure;
-		delete[] index;
+		if (figure != nullptr) delete figure;
+		if (index != nullptr) delete[] index;
 	}
 	else {
-		if (tri1 != nullptr)
-		{
-			tri1->DestroyResources();
-			delete tri1;
-		}
-		if (tri2 != nullptr)
-		{
-			tri2->DestroyResources();
-			delete tri2;
-		}
+		if (tri1 != nullptr) delete tri1;
+		if (tri2 != nullptr) delete tri2;
 	}
-	if (points1 != nullptr)
-	{
-		delete[] points1;
-	}
-	if (points2 != nullptr)
-	{
-		delete[] points2;
-	}
+	if (points1 != nullptr) delete[] points1;
+	if (points2 != nullptr) delete[] points2;
 }
 
 void EdgeComponent::Draw(float deltaTime)

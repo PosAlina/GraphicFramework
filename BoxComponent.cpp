@@ -160,7 +160,6 @@ BoxComponent::BoxComponent(bool light, Game* inGame, Camera* inCamera) :GameComp
 
 BoxComponent::~BoxComponent()
 {
-	DestroyResources();
 }
 
 void BoxComponent::Initialize()
@@ -193,42 +192,18 @@ void BoxComponent::Initialize()
 
 void BoxComponent::DestroyResources()
 {
-	if (edge1 != nullptr)
-	{
-		edge1->DestroyResources();
-		delete edge1;
-	}
-	if (edge2 != nullptr)
-	{
-		edge2->DestroyResources();
-		delete edge2;
-	}
-	if (edge3 != nullptr)
-	{
-		edge3->DestroyResources();
-		delete edge3;
-	}
-	if (edge4 != nullptr)
-	{
-		edge4->DestroyResources();
-		delete edge4;
-	}
-	if (edge5 != nullptr)
-	{
-		edge5->DestroyResources();
-		delete edge5;
-	}
-	if (edge6 != nullptr)
-	{
-		edge6->DestroyResources();
-		delete edge6;
-	}
-	delete[] points1;
-	delete[] points2;
-	delete[] points3;
-	delete[] points4;
-	delete[] points5;
-	delete[] points6;
+	if (edge1 != nullptr) delete edge1;
+	if (edge2 != nullptr) delete edge2;
+	if (edge3 != nullptr) delete edge3;
+	if (edge4 != nullptr) delete edge4;
+	if (edge5 != nullptr) delete edge5;
+	if (edge6 != nullptr) delete edge6;
+	if (points1 != nullptr)	delete[] points1;
+	if (points2 != nullptr)	delete[] points2;
+	if (points3 != nullptr)	delete[] points3;
+	if (points4 != nullptr)	delete[] points4;
+	if (points5 != nullptr)	delete[] points5;
+	if (points6 != nullptr)	delete[] points6;
 }
 
 void BoxComponent::Draw(float deltaTime)

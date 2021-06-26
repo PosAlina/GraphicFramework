@@ -30,6 +30,7 @@ public:
 	PlaneComponent(Game* inGame, Camera* inCamera, int size);
 	PlaneComponent(Game* inGame, Camera* inCamera);
 	PlaneComponent(Game* inGame);
+	~PlaneComponent();
 
 	virtual void Initialize() override;
 	virtual void DestroyResources() override;

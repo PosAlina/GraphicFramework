@@ -206,6 +206,7 @@
   </ItemGroup>
   <ItemGroup>
     <Image Include="box_Tex.jpg" />
+    <Image Include="brick_Tex.png" />
     <Image Include="camouflage_Tex.jpg" />
     <Image Include="ground_Tex.png">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">yes</ExcludedFromBuild>

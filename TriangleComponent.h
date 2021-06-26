@@ -46,6 +46,7 @@ public:
 	TriangleComponent(bool light, Game* inGame, Camera* inCamera, SimpleMath::Vector4* points, LPCWSTR inTextureName);
 	TriangleComponent(bool light, Game* inGame, Camera* inCamera, SimpleMath::Vector4* points);
 	TriangleComponent(bool light, Game* inGame, Camera* inCamera);
+	~TriangleComponent();
 
 	virtual void Initialize() override;
 	virtual void DestroyResources() override;

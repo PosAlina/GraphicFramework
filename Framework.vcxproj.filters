@@ -159,5 +159,8 @@
     <Image Include="box_Tex.jpg">
       <Filter>Файлы ресурсов</Filter>
     </Image>
+    <Image Include="brick_Tex.png">
+      <Filter>Файлы ресурсов</Filter>
+    </Image>
   </ItemGroup>
 </Project>

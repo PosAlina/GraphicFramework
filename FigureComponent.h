@@ -48,6 +48,7 @@ public:
 
 	FigureComponent(bool light, int vcount, int icount, Game* inGame, Camera* inCamera, SimpleMath::Vector4* inPoints, LPCWSTR inTextureName, int* indces);
 	FigureComponent(bool light, int vcount, int icount, Game* inGame, Camera* inCamera, SimpleMath::Vector4* inPoints, int* indeces);
+	~FigureComponent();
 
 	virtual void Initialize() override;
 	virtual void DestroyResources() override;

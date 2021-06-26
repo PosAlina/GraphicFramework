@@ -21,6 +21,7 @@ public:
 	EdgeComponent(bool light, Game* inGame, Camera* inCamera, SimpleMath::Vector4* points, LPCWSTR inTextureName);//8 points
 	EdgeComponent(bool light, Game* inGame, Camera* inCamera, SimpleMath::Vector4* points);//8 points
 	EdgeComponent(bool light, Game* inGame, Camera* inCamera);
+	~EdgeComponent();
 
 	virtual void Initialize() override;
 	virtual void DestroyResources() override;

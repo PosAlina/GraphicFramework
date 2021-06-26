@@ -49,6 +49,11 @@ PlaneComponent::PlaneComponent(Game* inGame) : GameComponent(inGame)
 	count = (size * 2 + 1) * 8;
 }
 
+PlaneComponent::~PlaneComponent()
+{
+	DestroyResources();
+}
+
 void PlaneComponent::Initialize()
 {
 	HRESULT res;
@@ -219,8 +224,6 @@ void PlaneComponent::Initialize()
 
 void PlaneComponent::DestroyResources()
 {
-	if (points != nullptr) delete points;
-
 	if (layout != nullptr) layout->Release();
 	if (pixelShader != nullptr) pixelShader->Release();
 	if (vertexShader != nullptr) vertexShader->Release();
@@ -228,7 +231,6 @@ void PlaneComponent::DestroyResources()
 	if (vertexShaderByteCode != nullptr) vertexShaderByteCode->Release();
 	if (vertices != nullptr) vertices->Release();
 	if (rastState != nullptr) rastState->Release();
-
 	if (constantBuffer != nullptr) constantBuffer->Release();
 	if (annotation != nullptr) annotation->Release();
 }
