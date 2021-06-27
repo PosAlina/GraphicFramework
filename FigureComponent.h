@@ -32,6 +32,9 @@ class FigureComponent :
 	int* ind = nullptr;
 	int count_v = 0;
 	int count_i = 0;
+	int speed = 5;
+	int random = 0;
+	bool direct = true;
 	//Light
 	//ID3D11Buffer* lightBuffer = nullptr;
 	bool onLight = true;
@@ -43,6 +46,8 @@ class FigureComponent :
 	void InitializeTexture();
 	void InitializeColorLight();
 	void InitializeTextureLight();
+
+	void random_speed();
 public:
 	SimpleMath::Vector3 Position;
 

@@ -1,26 +1,27 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ClassDiagram MajorVersion="1" MinorVersion="1">
-  <Class Name="Game">
-    <Position X="12.5" Y="0.75" Width="1.5" />
+  <Class Name="Game" Collapsed="true">
+    <Position X="12.5" Y="1" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AASCAQAAAgEAA6gkAEAAATQCIwjCAAEAYA0QAAhAAFI=</HashCode>
       <FileName>Game.h</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
       <Field Name="InputDevice" />
+      <Field Name="Display" />
     </ShowAsAssociation>
     <ShowAsCollectionAssociation>
       <Field Name="Components" />
     </ShowAsCollectionAssociation>
   </Class>
-  <Class Name="DisplayWin32">
-    <Position X="16.5" Y="0.75" Width="1.5" />
+  <Class Name="DisplayWin32" Collapsed="true">
+    <Position X="10.75" Y="4.75" Width="1.5" />
     <TypeIdentifier>
       <HashCode>QAABAAAAAAAAAAAAAAAAIAAAAAAAAAAABAAACAAAAEA=</HashCode>
       <FileName>DisplayWin32.h</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="GameComponent">
+  <Class Name="GameComponent" Collapsed="true">
     <Position X="8.25" Y="0.75" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAQAAAAFAAAAAwAAAAAAAAAAAABAAAAICAAAAAAAAAA=</HashCode>
@@ -30,8 +31,8 @@
       <Field Name="game" />
     </ShowAsAssociation>
   </Class>
-  <Class Name="InputDevice">
-    <Position X="14.75" Y="0.75" Width="1.5" />
+  <Class Name="InputDevice" Collapsed="true">
+    <Position X="13.5" Y="3.25" Width="1.5" />
     <Compartments>
       <Compartment Name="Nested Types" Collapsed="false" />
     </Compartments>
@@ -57,6 +58,22 @@
         </TypeIdentifier>
       </Struct>
     </NestedTypes>
+    <AssociationLine Name="game" Type="Game" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="13.5" Y="3.812" />
+        <Point X="13.5" Y="4.187" />
+        <Point X="13.396" Y="4.187" Type="JumpStart" />
+        <Point X="13.229" Y="4.187" Type="JumpEnd" />
+        <Point X="13.021" Y="4.187" Type="JumpStart" />
+        <Point X="12.854" Y="4.187" Type="JumpEnd" />
+        <Point X="12.708" Y="4.187" Type="JumpStart" />
+        <Point X="12.542" Y="4.187" Type="JumpEnd" />
+        <Point X="12.125" Y="4.187" />
+        <Point X="12.125" Y="0.625" />
+        <Point X="13.656" Y="0.625" />
+        <Point X="13.656" Y="1" />
+      </Path>
+    </AssociationLine>
     <TypeIdentifier>
       <HashCode>AAAAAAAIAAAIAAAAAAACACAAhBIAAAAIAAAAQACCAIA=</HashCode>
       <FileName>InputDevice.h</FileName>
@@ -65,13 +82,13 @@
       <Field Name="game" />
     </ShowAsAssociation>
   </Class>
-  <Class Name="TriangleComponent">
+  <Class Name="TriangleComponent" Collapsed="true">
     <Position X="7.75" Y="3.5" Width="1.5" />
     <Compartments>
       <Compartment Name="Nested Types" Collapsed="false" />
     </Compartments>
     <TypeIdentifier>
-      <HashCode>CAQAIAClAhQAIwAgFAAAAAAAAJBWAoAACAAQCAAAAgg=</HashCode>
+      <HashCode>CAQAIAClAhQAIwAgHAAAAAAAAJBWAoAACAAQCAAAAgg=</HashCode>
       <FileName>TriangleComponent.h</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
@@ -79,7 +96,7 @@
     </ShowAsAssociation>
   </Class>
   <Class Name="TransformGame">
-    <Position X="15" Y="10.75" Width="1.5" />
+    <Position X="16.25" Y="0.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAUABAAAAAgAAQAAAAAAAAAAABAAAAAAAAAAAAAAAgA=</HashCode>
       <FileName>TransformGame.h</FileName>
@@ -89,30 +106,30 @@
       <Field Name="camCont" />
     </ShowAsAssociation>
   </Class>
-  <Class Name="EdgeComponent">
+  <Class Name="EdgeComponent" Collapsed="true">
     <Position X="5.75" Y="3.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AwQAIAAAAAgAAwEAAAAAAAAASABgAAAACBAAAAABAAA=</HashCode>
+      <HashCode>AwQAIAAAAAgAAwEAAAAAAAAASABgAAAACBAQAAABAAA=</HashCode>
       <FileName>EdgeComponent.h</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
+      <Field Name="figure" />
       <Field Name="tri1" />
       <Field Name="tri2" />
-      <Field Name="figure" />
     </ShowAsAssociation>
   </Class>
-  <Class Name="PlaneComponent">
+  <Class Name="PlaneComponent" Collapsed="true">
     <Position X="9.5" Y="3.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAQAEACFAgQAAwAgFIAAAAAAAIBQAAAACAAACAAAAgA=</HashCode>
+      <HashCode>AAQAEACFAgQAAwAgFIAAAAAAAIBQCAAACAAACAAAAgA=</HashCode>
       <FileName>PlaneComponent.h</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
       <Field Name="camera" />
     </ShowAsAssociation>
   </Class>
-  <Class Name="CameraController">
-    <Position X="12.25" Y="10" Width="1.5" />
+  <Class Name="CameraController" Collapsed="true">
+    <Position X="13.25" Y="5.25" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAQCABAAABABAAEAAAAIAAAAABAAAAAIAABAAAAAAAA=</HashCode>
       <FileName>CameraController.h</FileName>
@@ -122,8 +139,8 @@
       <Field Name="Camera" />
     </ShowAsAssociation>
   </Class>
-  <Class Name="Camera">
-    <Position X="10" Y="10" Width="1.5" />
+  <Class Name="Camera" Collapsed="true">
+    <Position X="11.25" Y="6" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAACAAQAACAAAAAAQAAAAAAAACIEAAAIAAAACAAAAAA=</HashCode>
       <FileName>Camera.h</FileName>
@@ -132,7 +149,7 @@
       <Field Name="game" />
     </ShowAsAssociation>
   </Class>
-  <Class Name="BoxComponent">
+  <Class Name="BoxComponent" Collapsed="true">
     <Position X="3.25" Y="3.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>BwQACAAAAAAAAwUAAAAAAAIBAABgACAACAIAABAAADg=</HashCode>
@@ -148,16 +165,16 @@
     </ShowAsAssociation>
   </Class>
   <Class Name="std::vector&lt;_Ty, _Alloc&gt;" Collapsed="true">
-    <Position X="9.75" Y="1.75" Width="1.5" />
+    <Position X="9.75" Y="0.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>A2AEk4EqCrBsCEBAAOMIIAAyEEUEQBIghQkwgkAFUko=</HashCode>
       <FileName>C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.29.30037\include\vector</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="FigureComponent">
+  <Class Name="FigureComponent" Collapsed="true">
     <Position X="1.25" Y="3.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>CAQAIAClAhQAIwAgFAAAAAAAAJBWEgEACAIQCAAAAgg=</HashCode>
+      <HashCode>CEQAIAClAhQAIwAgFAAAAAAAAJBWEgEACAIQCAAAAgg=</HashCode>
       <FileName>FigureComponent.h</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>

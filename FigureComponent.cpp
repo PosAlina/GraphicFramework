@@ -2,6 +2,16 @@
 #include "inclib.h"
 #include "Game.h"
 #include "TextureLoader.h"
+#include <random>
+
+#define M_PI 3.14159265358979323846
+#define DEFAULT_SPEED 5
+#define ROTATE_X 2.0f
+#define ROTATE_Z -3.0f
+
+bool on_random = false;
+bool on_direction = false;
+bool on_rotate = true;
 
 struct ConstantData_Simple
 {
@@ -19,8 +29,24 @@ struct ConstantLightData
 	SimpleMath::Vector4 KaSpecPowKsX;
 };
 
+void FigureComponent::random_speed()
+{
+	std::random_device rd;
+	std::mt19937 mersenne(rd());
+	std::uniform_int_distribution<> dist(1, 10);
+	random = dist(mersenne);
+	random = dist(mersenne);
+	speed = random;
+
+	std::uniform_int_distribution<> bdist(1, 2);
+	if (on_direction)
+		direct = (bdist(mersenne) == 1) ? true : false;
+}
+
 FigureComponent::FigureComponent(bool light, int vcount, int icount, Game* inGame, Camera* inCamera, SimpleMath::Vector4* inPoints, LPCWSTR inTextureName, int* indeces) :GameComponent(inGame)
 {
+	if (on_random) random_speed();
+	else random = DEFAULT_SPEED;
 	camera = inCamera;
 	Position = SimpleMath::Vector3::Zero;
 	points = new SimpleMath::Vector4[vcount * 2];
@@ -42,6 +68,8 @@ FigureComponent::FigureComponent(bool light, int vcount, int icount, Game* inGam
 
 FigureComponent::FigureComponent(bool light, int vcount, int icount, Game* inGame, Camera* inCamera, SimpleMath::Vector4* inPoints, int* indeces) :GameComponent(inGame)
 {
+	if (on_random) random_speed();
+	else random = DEFAULT_SPEED;
 	camera = inCamera;
 	Position = SimpleMath::Vector3::Zero;
 	points = new SimpleMath::Vector4[vcount * 2];
@@ -134,13 +162,28 @@ void FigureComponent::Draw(float deltaTime)
 void FigureComponent::Update(float deltaTime)
 {
 	HRESULT resalt;
+	float time = 0.0f;
 
 	if (onLight)
 	{
 		auto constantData = ConstantLightData{};
 
+		if (on_rotate) {
+			if (speed == random) {
+				float rad = direct ? (M_PI / 8) : (M_PI  - (M_PI / 8));
+				auto x = Position.x;
+				auto z = Position.z;
+				auto x0 = ROTATE_X;
+				auto z0 = ROTATE_Z;
+				Position.x = (x - x0) * cos(rad) - (z - z0) * sin(rad);
+				Position.z = (x - x0) * sin(rad) + (z - z0) * cos(rad);
+				speed = 0;
+			}
+			else speed++;
+		}
 		constantData.WorldViewProj = SimpleMath::Matrix::CreateTranslation(Position) * camera->ViewMatrix * camera->ProjMatrix;
 		constantData.World = SimpleMath::Matrix::CreateTranslation(Position);
+		
 		auto cam_pos = camera->GetPosition();
 		constantData.ViewerPos = SimpleMath::Vector4(cam_pos.x, cam_pos.y, cam_pos.z, 1.0f);
 
@@ -159,6 +202,19 @@ void FigureComponent::Update(float deltaTime)
 	}
 	else
 	{
+		if (on_rotate) {
+			if (speed == random) {
+				float rad = direct ? (M_PI / 8) : (M_PI - (M_PI / 8));
+				auto x = Position.x;
+				auto z = Position.z;
+				auto x0 = 2.0f;
+				auto z0 = -3.0f;
+				Position.x = (x - x0) * cos(rad) - (z - z0) * sin(rad);
+				Position.z = (x - x0) * sin(rad) + (z - z0) * cos(rad);
+				speed = 0;
+			}
+			else speed++;
+		}
 		auto constantData = ConstantData_Simple{};
 		constantData.WorldViewProj = SimpleMath::Matrix::CreateTranslation(Position) * camera->ViewMatrix * camera->ProjMatrix;
 
