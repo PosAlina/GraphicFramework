@@ -5,7 +5,7 @@
 #include <random>
 
 #define M_PI 3.14159265358979323846
-#define DEFAULT_SPEED 5
+#define DEFAULT_SPEED 2
 #define ROTATE_X 2.0f
 #define ROTATE_Z -3.0f
 
@@ -45,6 +45,7 @@ void FigureComponent::random_speed()
 
 FigureComponent::FigureComponent(bool light, int vcount, int icount, Game* inGame, Camera* inCamera, SimpleMath::Vector4* inPoints, LPCWSTR inTextureName, int* indeces) :GameComponent(inGame)
 {
+	speed = DEFAULT_SPEED;
 	if (on_random) random_speed();
 	else random = DEFAULT_SPEED;
 	camera = inCamera;
@@ -68,6 +69,7 @@ FigureComponent::FigureComponent(bool light, int vcount, int icount, Game* inGam
 
 FigureComponent::FigureComponent(bool light, int vcount, int icount, Game* inGame, Camera* inCamera, SimpleMath::Vector4* inPoints, int* indeces) :GameComponent(inGame)
 {
+	speed = DEFAULT_SPEED;
 	if (on_random) random_speed();
 	else random = DEFAULT_SPEED;
 	camera = inCamera;

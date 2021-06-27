@@ -32,7 +32,7 @@ class FigureComponent :
 	int* ind = nullptr;
 	int count_v = 0;
 	int count_i = 0;
-	int speed = 5;
+	int speed = 0;
 	int random = 0;
 	bool direct = true;
 	//Light
