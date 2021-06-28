@@ -1,5 +1,5 @@
 #pragma once
-#include "inclib.h"
+#include "../include/inclib.h"
 #include "GameComponent.h"
 #include "Camera.h"
 

@@ -2,7 +2,7 @@
 #include <unordered_set>
 #include "Keys.h"
 #include "Delegates.h"
-#include "inclib.h"
+#include "../include/inclib.h"
 
 class Game; 
 
@@ -114,7 +114,7 @@ public:
 
 /*
 #pragma once
-#include "inclib.h"
+#include "../include/inclib.h"
 #include "DisplayWin32.h"
 #include <unordered_set>
 

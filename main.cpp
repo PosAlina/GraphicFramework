@@ -1,6 +1,6 @@
 #pragma warning(disable : 4267)
-#include "inclib.h"
-#include "TransformGame.h"
+#include "include/inclib.h"
+#include "include/TransformGame.h"
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR pScmdline, int iCmdshow)
 {

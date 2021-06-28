@@ -1,22 +1,26 @@
-#include "FigureComponent.h"
-#include "inclib.h"
-#include "Game.h"
-#include "TextureLoader.h"
-#include <random>
-
-#define M_PI 3.14159265358979323846
-#define DEFAULT_SPEED 2
-#define ROTATE_X 2.0f
-#define ROTATE_Z -3.0f
-
-bool on_random = false;
-bool on_direction = false;
-bool on_rotate = true;
+#include "../include/TriangleComponent.h"
+#include "../include/inclib.h"
+#include "../include/Game.h"
+#include "../include/TextureLoader.h"
 
 struct ConstantData_Simple
 {
 	SimpleMath::Matrix WorldViewProj;
 };
+
+//struct ConstantData_Light
+//{
+//	SimpleMath::Matrix WorldViewProj;
+//	SimpleMath::Matrix World;
+//	SimpleMath::Vector4 ViewerPos;
+//};
+//
+//struct LightData
+//{
+//	SimpleMath::Vector4 Direction;
+//	SimpleMath::Vector4 Color;
+//	SimpleMath::Vector4 KaSpecPowKsX;
+//};
 
 struct ConstantLightData
 {
@@ -29,73 +33,53 @@ struct ConstantLightData
 	SimpleMath::Vector4 KaSpecPowKsX;
 };
 
-void FigureComponent::random_speed()
+TriangleComponent::TriangleComponent(bool light, Game* inGame, Camera* inCamera, SimpleMath::Vector4* inPoints, LPCWSTR inTextureName) :GameComponent(inGame)
 {
-	std::random_device rd;
-	std::mt19937 mersenne(rd());
-	std::uniform_int_distribution<> dist(1, 10);
-	random = dist(mersenne);
-	random = dist(mersenne);
-	speed = random;
-
-	std::uniform_int_distribution<> bdist(1, 2);
-	if (on_direction)
-		direct = (bdist(mersenne) == 1) ? true : false;
-}
-
-FigureComponent::FigureComponent(bool light, int vcount, int icount, Game* inGame, Camera* inCamera, SimpleMath::Vector4* inPoints, LPCWSTR inTextureName, int* indeces) :GameComponent(inGame)
-{
-	speed = DEFAULT_SPEED;
-	if (on_random) random_speed();
-	else random = DEFAULT_SPEED;
 	camera = inCamera;
 	Position = SimpleMath::Vector3::Zero;
-	points = new SimpleMath::Vector4[vcount * 2];
-	for (auto i = 0; i < vcount * 2; ++i)
+	points = new SimpleMath::Vector4[6];
+	for (auto i = 0; i < 6; ++i)
 	{
 		points[i] = inPoints[i];
 	}
 	textureName = inTextureName;
 	hasTexture = true;
 	onLight = light;
-	ind = new int[icount * 3];
-	for (auto i = 0; i < icount * 3; ++i)
-	{
-		ind[i] = indeces[i];
-	}
-	count_v = vcount;
-	count_i = icount;
+	ind = new int[3]{ 0, 1, 2 };
 }
 
-FigureComponent::FigureComponent(bool light, int vcount, int icount, Game* inGame, Camera* inCamera, SimpleMath::Vector4* inPoints, int* indeces) :GameComponent(inGame)
+TriangleComponent::TriangleComponent(bool light, Game* inGame, Camera* inCamera, SimpleMath::Vector4* inPoints) :GameComponent(inGame)
 {
-	speed = DEFAULT_SPEED;
-	if (on_random) random_speed();
-	else random = DEFAULT_SPEED;
 	camera = inCamera;
 	Position = SimpleMath::Vector3::Zero;
-	points = new SimpleMath::Vector4[vcount * 2];
-	for (auto i = 0; i < vcount * 2; ++i)
+	points = new SimpleMath::Vector4[6];
+	for (auto i = 0; i < 6; ++i)
 	{
 		points[i] = inPoints[i];
 	}
-	hasTexture = false;
 	onLight = light;
-	ind = new int[icount * 3];
-	for (auto i = 0; i < icount * 3; ++i)
-	{
-		ind[i] = indeces[i];
-	}
-	count_v = vcount;
-	count_i = icount;
+	ind = new int[3]{ 0, 1, 2 };
 }
 
-FigureComponent::~FigureComponent()
+TriangleComponent::TriangleComponent(bool light, Game* inGame, Camera* inCamera) :GameComponent(inGame)
+{
+	camera = inCamera;
+	Position = SimpleMath::Vector3::Zero;
+	points = new SimpleMath::Vector4[6]{
+		SimpleMath::Vector4(0.0f, 1.0f, -1.0f, 1.0f), SimpleMath::Vector4(1.0f, 0.0f, 0.0f, 1.0f),
+		SimpleMath::Vector4(1.0f, 1.0f, 0.0f, 1.0f), SimpleMath::Vector4(0.0f, 1.0f, 0.0f, 0.0f),
+		SimpleMath::Vector4(0.0f, 1.0f, -2.0f, 1.0f), SimpleMath::Vector4(0.0f, 0.0f, 1.0f, 1.0f),
+	};
+	onLight = light;
+	ind = new int[3]{ 0, 1, 2 };
+}
+
+TriangleComponent::~TriangleComponent()
 {
 	DestroyResources();
 }
 
-void FigureComponent::Initialize()
+void TriangleComponent::Initialize()
 {
 	if (hasTexture)
 	{
@@ -106,17 +90,17 @@ void FigureComponent::Initialize()
 	onLight ? InitializeColorLight() : InitialColor();
 }
 
-void FigureComponent::DestroyResources()
+void TriangleComponent::DestroyResources()
 {
 	if (points != nullptr) delete[] points;
-	if (ind != nullptr) delete[] ind;
 
 	if (layout != nullptr) layout->Release();
 	if (pixelShader != nullptr) pixelShader->Release();
 	if (vertexShader != nullptr) vertexShader->Release();
 	if (pixelShaderByteCode != nullptr) pixelShaderByteCode->Release();
 	if (vertexShaderByteCode != nullptr) vertexShaderByteCode->Release();
-
+	
+	
 	if (vertices != nullptr) vertices->Release();
 	if (indeces != nullptr) indeces->Release();
 	if (rastState != nullptr) rastState->Release();
@@ -129,7 +113,7 @@ void FigureComponent::DestroyResources()
 	if (texSRV != nullptr) texSRV->Release();
 }
 
-void FigureComponent::Draw(float deltaTime)
+void TriangleComponent::Draw(float deltaTime)
 {
 	auto context = game->Context;
 	ID3D11RasterizerState* oldState;
@@ -155,87 +139,95 @@ void FigureComponent::Draw(float deltaTime)
 	}
 
 	annotation->BeginEvent(L"Triangle draw event");
-	context->DrawIndexed(count_i * 3, 0, 0);
+	context->DrawIndexed(3, 0, 0);
+	//context->Draw(3, 0);
 	annotation->EndEvent();
 	context->RSSetState(oldState);
 	if (oldState != nullptr) oldState->Release();
 }
 
-void FigureComponent::Update(float deltaTime)
+void TriangleComponent::Update(float deltaTime)
 {
 	HRESULT resalt;
-	float time = 0.0f;
 
 	if (onLight)
 	{
-		auto constantData = ConstantLightData{};
+		//if (constantBuffer != nullptr)
+		//{
+			auto constantData = ConstantLightData{};
+	
+			constantData.WorldViewProj = SimpleMath::Matrix::CreateTranslation(Position) * camera->ViewMatrix * camera->ProjMatrix;
+			constantData.World = SimpleMath::Matrix::CreateTranslation(Position);
+			auto cam_pos = camera->GetPosition();
+			constantData.ViewerPos = SimpleMath::Vector4(cam_pos.x, cam_pos.y, cam_pos.z, 1.0f);
 
-		if (on_rotate) {
-			if (speed == random) {
-				float rad = direct ? (M_PI / 8) : (M_PI  - (M_PI / 8));
-				auto x = Position.x;
-				auto z = Position.z;
-				auto x0 = ROTATE_X;
-				auto z0 = ROTATE_Z;
-				Position.x = (x - x0) * cos(rad) - (z - z0) * sin(rad);
-				Position.z = (x - x0) * sin(rad) + (z - z0) * cos(rad);
-				speed = 0;
+			constantData.Direction = SimpleMath::Vector4(1.0f, 30.0f, 0.0f, 1.0f);
+			constantData.Color = SimpleMath::Vector4(1.0f, 1.0f, 1.0f, 1.0f);
+			constantData.KaSpecPowKsX = SimpleMath::Vector4(0.2f, 0.4f, 1.0f, 1.0f);
+
+			//game->Context->UpdateSubresource(constantBuffer, 0, nullptr, &constantData, 0, 0);
+
+			D3D11_MAPPED_SUBRESOURCE res1 = {};
+			resalt = game->Context->Map(constantBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &res1); ZCHECK(resalt);
+		//	if (res1.pData != nullptr)
+		//	{
+				auto dataP1 = reinterpret_cast<float*>(res1.pData);
+				memcpy(dataP1, &constantData, sizeof(constantData));
+				game->Context->Unmap(constantBuffer, 0);
+		//	}
+		/*}
+
+		if (lightBuffer != nullptr)
+		{
+			auto lightData = LightData{};
+			lightData.Direction = SimpleMath::Vector4(1.0f, 30.0f, 0.0f, 1.0f);
+			lightData.Color = SimpleMath::Vector4(1.0f, 1.0f, 1.0f, 1.0f);
+			lightData.KaSpecPowKsX = SimpleMath::Vector4(0.5f, 1.0f, 1.0f, 1.0f);
+
+			game->Context->UpdateSubresource(lightBuffer, 0, nullptr, &lightData, 0, 0);
+
+			D3D11_MAPPED_SUBRESOURCE res2 = {};
+			resalt = game->Context->Map(lightBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &res2);
+			if (FAILED(resalt))
+			{
+				std::cout << L"Const buffer dont update" << std::endl;
 			}
-			else speed++;
-		}
-		constantData.WorldViewProj = SimpleMath::Matrix::CreateTranslation(Position) * camera->ViewMatrix * camera->ProjMatrix;
-		constantData.World = SimpleMath::Matrix::CreateTranslation(Position);
-		
-		auto cam_pos = camera->GetPosition();
-		constantData.ViewerPos = SimpleMath::Vector4(cam_pos.x, cam_pos.y, cam_pos.z, 1.0f);
-
-		constantData.Direction = SimpleMath::Vector4(-15.0f, 30.0f, 10.0f, 1.0f);
-		constantData.Color = SimpleMath::Vector4(1.0f, 1.0f, 1.0f, 1.0f);
-		constantData.KaSpecPowKsX = SimpleMath::Vector4(0.1f, 0.4f, 1.0f, 1.0f);
-
-		//game->Context->UpdateSubresource(constantBuffer, 0, nullptr, &constantData, 0, 0);
-
-		D3D11_MAPPED_SUBRESOURCE res1 = {};
-		resalt = game->Context->Map(constantBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &res1); ZCHECK(resalt);
-
-		auto dataP1 = reinterpret_cast<float*>(res1.pData);
-		memcpy(dataP1, &constantData, sizeof(constantData));
-		game->Context->Unmap(constantBuffer, 0);
+			if (res2.pData != nullptr)
+			{
+				auto dataP2 = reinterpret_cast<float*>(res2.pData);
+				memcpy(dataP2, &lightData, sizeof(lightData));
+				game->Context->Unmap(lightBuffer, 0);
+			}
+		}*/
 	}
 	else
 	{
-		if (on_rotate) {
-			if (speed == random) {
-				float rad = direct ? (M_PI / 8) : (M_PI - (M_PI / 8));
-				auto x = Position.x;
-				auto z = Position.z;
-				auto x0 = 2.0f;
-				auto z0 = -3.0f;
-				Position.x = (x - x0) * cos(rad) - (z - z0) * sin(rad);
-				Position.z = (x - x0) * sin(rad) + (z - z0) * cos(rad);
-				speed = 0;
-			}
-			else speed++;
-		}
-		auto constantData = ConstantData_Simple{};
-		constantData.WorldViewProj = SimpleMath::Matrix::CreateTranslation(Position) * camera->ViewMatrix * camera->ProjMatrix;
+		//if (constantBuffer != nullptr)
+		//{
+			auto constantData = ConstantData_Simple{};
+			constantData.WorldViewProj = SimpleMath::Matrix::CreateTranslation(Position) * camera->ViewMatrix * camera->ProjMatrix;
 
-		//game->Context->UpdateSubresource(constantBuffer, 0, nullptr, &constantData, 0, 0);
+			//game->Context->UpdateSubresource(constantBuffer, 0, nullptr, &constantData, 0, 0);
 
-		D3D11_MAPPED_SUBRESOURCE res = {};
-		resalt = game->Context->Map(constantBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &res); ZCHECK(resalt);
-		auto dataP = reinterpret_cast<float*>(res.pData);
-		memcpy(dataP, &constantData, sizeof(constantData));
-		game->Context->Unmap(constantBuffer, 0);
+			D3D11_MAPPED_SUBRESOURCE res = {};
+			resalt = game->Context->Map(constantBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &res); ZCHECK(resalt);
+			//if (res.pData != nullptr)
+			//{
+				auto dataP = reinterpret_cast<float*>(res.pData);
+				memcpy(dataP, &constantData, sizeof(constantData));
+				game->Context->Unmap(constantBuffer, 0);
+			//}
+
+		//}
 	}
 }
 
-void FigureComponent::InitialColor() {
+void TriangleComponent::InitialColor() {
 	HRESULT res;
 
 #pragma region Initialize shaders wwith color
 	ID3DBlob* errorVertexCode;
-	res = D3DCompileFromFile(L"Simple.hlsl",
+	res = D3DCompileFromFile(L"shader/Simple.hlsl",
 		nullptr /*macros*/,
 		nullptr /*include*/,
 		"VSMain",
@@ -255,7 +247,7 @@ void FigureComponent::InitialColor() {
 		}
 		else
 		{
-			MessageBox(game->Display->hWnd, L"Simple.hlsl", L"Missing Shader File", MB_OK);
+			MessageBox(game->Display->hWnd, L"shader/Simple.hlsl", L"Missing Shader File", MB_OK);
 		}
 	}
 	res = game->Device->CreateVertexShader(
@@ -264,7 +256,7 @@ void FigureComponent::InitialColor() {
 		nullptr, &vertexShader); ZCHECK(res);
 
 	ID3DBlob* errorPixelCode;
-	res = D3DCompileFromFile(L"Simple.hlsl",
+	res = D3DCompileFromFile(L"shader/Simple.hlsl",
 		nullptr /*macros*/,
 		nullptr /*include*/,
 		"PSMain",
@@ -284,7 +276,7 @@ void FigureComponent::InitialColor() {
 		}
 		else
 		{
-			MessageBox(game->Display->hWnd, L"Simple.hlsl", L"Missing Shader File", MB_OK);
+			MessageBox(game->Display->hWnd, L"shader/Simple.hlsl", L"Missing Shader File", MB_OK);
 		}
 	}
 	res = game->Device->CreatePixelShader(
@@ -327,7 +319,7 @@ void FigureComponent::InitialColor() {
 	bufDesc.CPUAccessFlags = 0;
 	bufDesc.MiscFlags = 0;
 	bufDesc.StructureByteStride = 32;
-	bufDesc.ByteWidth = sizeof(SimpleMath::Vector4) * 2 * count_v;
+	bufDesc.ByteWidth = sizeof(SimpleMath::Vector4) * 6;
 
 	D3D11_SUBRESOURCE_DATA positionsData = {};
 	positionsData.pSysMem = points;
@@ -342,7 +334,7 @@ void FigureComponent::InitialColor() {
 	indDesc.CPUAccessFlags = 0;
 	indDesc.MiscFlags = 0;
 	indDesc.StructureByteStride = 32;
-	indDesc.ByteWidth = sizeof(sizeof(int)) * 3 * count_i;
+	indDesc.ByteWidth = sizeof(sizeof(int)) * 3;
 
 	D3D11_SUBRESOURCE_DATA indData = {};
 	indData.pSysMem = ind;
@@ -372,13 +364,13 @@ void FigureComponent::InitialColor() {
 #pragma endregion Initialize rasterization state
 }
 
-void FigureComponent::InitializeTexture()
+void TriangleComponent::InitializeTexture()
 {
 	HRESULT res;
 
 #pragma region Initialize shaders
 	ID3DBlob* errorVertexCode;
-	res = D3DCompileFromFile(L"Texture.hlsl",
+	res = D3DCompileFromFile(L"shader/Texture.hlsl",
 		nullptr,
 		nullptr,
 		"VSMain",
@@ -407,7 +399,7 @@ void FigureComponent::InitializeTexture()
 		nullptr, &vertexShader); ZCHECK(res);
 
 	ID3DBlob* errorPixelCode;
-	res = D3DCompileFromFile(L"Texture.hlsl",
+	res = D3DCompileFromFile(L"shader/Texture.hlsl",
 		nullptr,
 		nullptr,
 		"PSMain",
@@ -427,7 +419,7 @@ void FigureComponent::InitializeTexture()
 		}
 		else
 		{
-			MessageBox(game->Display->hWnd, L"Texture.hlsl", L"Missing Shader File", MB_OK);
+			MessageBox(game->Display->hWnd, L"shader/Texture.hlsl", L"Missing Shader File", MB_OK);
 		}
 	}
 	res = game->Device->CreatePixelShader(
@@ -470,7 +462,7 @@ void FigureComponent::InitializeTexture()
 	bufDesc.CPUAccessFlags = 0;
 	bufDesc.MiscFlags = 0;
 	bufDesc.StructureByteStride = 32;
-	bufDesc.ByteWidth = sizeof(SimpleMath::Vector4) * 2 * count_v;
+	bufDesc.ByteWidth = sizeof(SimpleMath::Vector4) * 6;
 
 	D3D11_SUBRESOURCE_DATA positionsData = {};
 	positionsData.pSysMem = points;
@@ -479,13 +471,14 @@ void FigureComponent::InitializeTexture()
 
 	res = game->Device->CreateBuffer(&bufDesc, &positionsData, &vertices); ZCHECK(res);
 
+
 	D3D11_BUFFER_DESC indDesc = {};
 	indDesc.Usage = D3D11_USAGE_DEFAULT;
 	indDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
 	indDesc.CPUAccessFlags = 0;
 	indDesc.MiscFlags = 0;
 	indDesc.StructureByteStride = 32;
-	indDesc.ByteWidth = sizeof(sizeof(int)) * 3 * count_i;
+	indDesc.ByteWidth = sizeof(sizeof(int)) * 3;
 
 	D3D11_SUBRESOURCE_DATA indData = {};
 	indData.pSysMem = ind;
@@ -534,13 +527,13 @@ void FigureComponent::InitializeTexture()
 #pragma endregion Load texture
 }
 
-void FigureComponent::InitializeTextureLight()
+void TriangleComponent::InitializeTextureLight()
 {
 	HRESULT res;
 
 #pragma region Initialize shaders
 	ID3DBlob* errorVertexCode;
-	res = D3DCompileFromFile(L"LightShaderTexture.hlsl",
+	res = D3DCompileFromFile(L"shader/LightShaderTexture.hlsl",
 		nullptr,
 		nullptr,
 		"VSMain",
@@ -560,7 +553,7 @@ void FigureComponent::InitializeTextureLight()
 		}
 		else
 		{
-			MessageBox(game->Display->hWnd, L"LightShaderTexture.hlsl", L"Missing Shader File", MB_OK);
+			MessageBox(game->Display->hWnd, L"shader/LightShaderTexture.hlsl", L"Missing Shader File", MB_OK);
 		}
 	}
 	res = game->Device->CreateVertexShader(
@@ -569,7 +562,7 @@ void FigureComponent::InitializeTextureLight()
 		nullptr, &vertexShader); ZCHECK(res);
 
 	ID3DBlob* errorPixelCode;
-	res = D3DCompileFromFile(L"LightShaderTexture.hlsl",
+	res = D3DCompileFromFile(L"shader/LightShaderTexture.hlsl",
 		nullptr,
 		nullptr,
 		"PSMain",
@@ -589,7 +582,7 @@ void FigureComponent::InitializeTextureLight()
 		}
 		else
 		{
-			MessageBox(game->Display->hWnd, L"LightShaderTexture.hlsl", L"Missing Shader File", MB_OK);
+			MessageBox(game->Display->hWnd, L"shader/LightShaderTexture.hlsl", L"Missing Shader File", MB_OK);
 		}
 	}
 	res = game->Device->CreatePixelShader(
@@ -641,7 +634,7 @@ void FigureComponent::InitializeTextureLight()
 	bufDesc.CPUAccessFlags = 0;
 	bufDesc.MiscFlags = 0;
 	bufDesc.StructureByteStride = 32;
-	bufDesc.ByteWidth = sizeof(SimpleMath::Vector4) * 2 * count_v;
+	bufDesc.ByteWidth = sizeof(SimpleMath::Vector4) * 6;
 
 	D3D11_SUBRESOURCE_DATA positionsData = {};
 	positionsData.pSysMem = points;
@@ -650,13 +643,14 @@ void FigureComponent::InitializeTextureLight()
 
 	res = game->Device->CreateBuffer(&bufDesc, &positionsData, &vertices); ZCHECK(res);
 
+
 	D3D11_BUFFER_DESC indDesc = {};
 	indDesc.Usage = D3D11_USAGE_DEFAULT;
 	indDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
 	indDesc.CPUAccessFlags = 0;
 	indDesc.MiscFlags = 0;
 	indDesc.StructureByteStride = 32;
-	indDesc.ByteWidth = sizeof(sizeof(int)) * 3 * count_i;
+	indDesc.ByteWidth = sizeof(sizeof(int)) * 3;
 
 	D3D11_SUBRESOURCE_DATA indData = {};
 	indData.pSysMem = ind;
@@ -664,6 +658,19 @@ void FigureComponent::InitializeTextureLight()
 	indData.SysMemSlicePitch = 0;
 
 	res = game->Device->CreateBuffer(&indDesc, &indData, &indeces); ZCHECK(res);
+	//D3D11_BUFFER_DESC lightBufDesc = {};
+	//lightBufDesc.Usage = D3D11_USAGE_DEFAULT;
+	//lightBufDesc.BindFlags = D3D11_BIND_SHADER_RESOURCE;
+	//lightBufDesc.CPUAccessFlags = 0;// D3D11_CPU_ACCESS_WRITE;
+	//lightBufDesc.MiscFlags = 0;
+	//lightBufDesc.StructureByteStride = 0;
+	//lightBufDesc.ByteWidth = sizeof(LightData);
+
+	//res = game->Device->CreateBuffer(&lightBufDesc, nullptr, &lightBuffer);
+	//if (FAILED(res))
+	//{
+	//	std::cout << L"Light buffer dont initialize" << std::endl;
+	//}
 
 	D3D11_BUFFER_DESC constBufDesc = {};
 	constBufDesc.Usage = D3D11_USAGE_DYNAMIC;
@@ -705,12 +712,12 @@ void FigureComponent::InitializeTextureLight()
 }
 
 
-void FigureComponent::InitializeColorLight() {
+void TriangleComponent::InitializeColorLight() {
 	HRESULT res;
 
 #pragma region Initialize shaders wwith color
 	ID3DBlob* errorVertexCode;
-	res = D3DCompileFromFile(L"LightShaderSimple.hlsl",
+	res = D3DCompileFromFile(L"shader/LightShaderSimple.hlsl",
 		nullptr /*macros*/,
 		nullptr /*include*/,
 		"VSMain",
@@ -730,7 +737,7 @@ void FigureComponent::InitializeColorLight() {
 		}
 		else
 		{
-			MessageBox(game->Display->hWnd, L"LightShaderSimple.hlsl", L"Missing Shader File", MB_OK);
+			MessageBox(game->Display->hWnd, L"shader/LightShaderSimple.hlsl", L"Missing Shader File", MB_OK);
 		}
 	}
 	res = game->Device->CreateVertexShader(
@@ -739,7 +746,7 @@ void FigureComponent::InitializeColorLight() {
 		nullptr, &vertexShader); ZCHECK(res);
 
 	ID3DBlob* errorPixelCode;
-	res = D3DCompileFromFile(L"LightShaderSimple.hlsl",
+	res = D3DCompileFromFile(L"shader/LightShaderSimple.hlsl",
 		nullptr /*macros*/,
 		nullptr /*include*/,
 		"PSMain",
@@ -759,7 +766,7 @@ void FigureComponent::InitializeColorLight() {
 		}
 		else
 		{
-			MessageBox(game->Display->hWnd, L"LightShaderSimple.hlsl", L"Missing Shader File", MB_OK);
+			MessageBox(game->Display->hWnd, L"shader/LightShaderSimple.hlsl", L"Missing Shader File", MB_OK);
 		}
 	}
 	res = game->Device->CreatePixelShader(
@@ -810,7 +817,7 @@ void FigureComponent::InitializeColorLight() {
 	bufDesc.CPUAccessFlags = 0;
 	bufDesc.MiscFlags = 0;
 	bufDesc.StructureByteStride = 32;
-	bufDesc.ByteWidth = sizeof(SimpleMath::Vector4) * 2 * count_v;
+	bufDesc.ByteWidth = sizeof(SimpleMath::Vector4) * 6;
 
 	D3D11_SUBRESOURCE_DATA positionsData = {};
 	positionsData.pSysMem = points;
@@ -819,13 +826,14 @@ void FigureComponent::InitializeColorLight() {
 
 	res = game->Device->CreateBuffer(&bufDesc, &positionsData, &vertices); ZCHECK(res);
 
+
 	D3D11_BUFFER_DESC indDesc = {};
 	indDesc.Usage = D3D11_USAGE_DEFAULT;
 	indDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
 	indDesc.CPUAccessFlags = 0;
 	indDesc.MiscFlags = 0;
 	indDesc.StructureByteStride = 32;
-	indDesc.ByteWidth = sizeof(sizeof(int)) * 3 * count_i;
+	indDesc.ByteWidth = sizeof(sizeof(int)) * 3;
 
 	D3D11_SUBRESOURCE_DATA indData = {};
 	indData.pSysMem = ind;

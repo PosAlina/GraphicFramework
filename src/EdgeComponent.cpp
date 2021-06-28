@@ -1,4 +1,4 @@
-#include "EdgeComponent.h"
+#include "../include/EdgeComponent.h"
 
 bool fig_state = true;
 

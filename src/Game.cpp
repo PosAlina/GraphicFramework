@@ -1,7 +1,7 @@
-#include "Game.h"
-#include "InputDevice.h"
-#include "Camera.h"
-#include "TextureLoader.h"
+#include "../include/Game.h"
+#include "../include/InputDevice.h"
+#include "../include/Camera.h"
+#include "../include/TextureLoader.h"
 
 Game* Game::Instance = nullptr;
 

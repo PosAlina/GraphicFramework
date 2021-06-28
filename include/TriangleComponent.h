@@ -1,12 +1,11 @@
 #pragma once
+#include "../include/inclib.h"
 #include "GameComponent.h"
-#include "inclib.h"
 #include "Camera.h"
 
 class Game;
 
-class FigureComponent :
-    public GameComponent
+class TriangleComponent : public GameComponent
 {
 	ID3D11InputLayout* layout = nullptr;
 
@@ -29,12 +28,7 @@ class FigureComponent :
 	LPCWSTR textureName = L"";
 	bool hasTexture = false;
 	ID3D11Buffer* indeces = nullptr;
-	int* ind = nullptr;
-	int count_v = 0;
-	int count_i = 0;
-	int speed = 0;
-	int random = 0;
-	bool direct = true;
+	int* ind;
 	//Light
 	//ID3D11Buffer* lightBuffer = nullptr;
 	bool onLight = true;
@@ -46,14 +40,13 @@ class FigureComponent :
 	void InitializeTexture();
 	void InitializeColorLight();
 	void InitializeTextureLight();
-
-	void random_speed();
 public:
 	SimpleMath::Vector3 Position;
 
-	FigureComponent(bool light, int vcount, int icount, Game* inGame, Camera* inCamera, SimpleMath::Vector4* inPoints, LPCWSTR inTextureName, int* indces);
-	FigureComponent(bool light, int vcount, int icount, Game* inGame, Camera* inCamera, SimpleMath::Vector4* inPoints, int* indeces);
-	~FigureComponent();
+	TriangleComponent(bool light, Game* inGame, Camera* inCamera, SimpleMath::Vector4* points, LPCWSTR inTextureName);
+	TriangleComponent(bool light, Game* inGame, Camera* inCamera, SimpleMath::Vector4* points);
+	TriangleComponent(bool light, Game* inGame, Camera* inCamera);
+	~TriangleComponent();
 
 	virtual void Initialize() override;
 	virtual void DestroyResources() override;
@@ -61,4 +54,3 @@ public:
 	virtual void Update(float deltaTime) override;
 	virtual void Reload() override {}
 };
-

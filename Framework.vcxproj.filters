@@ -18,49 +18,49 @@
     <ClCompile Include="main.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
-    <ClCompile Include="Game.cpp">
+    <ClCompile Include="src\Game.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
-    <ClCompile Include="DisplayWin32.cpp">
+    <ClCompile Include="src\DisplayWin32.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
-    <ClCompile Include="InputDevice.cpp">
+    <ClCompile Include="src\InputDevice.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
-    <ClCompile Include="TriangleComponent.cpp">
+    <ClCompile Include="src\TriangleComponent.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
-    <ClCompile Include="GameComponent.cpp">
+    <ClCompile Include="src\GameComponent.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
-    <ClCompile Include="TransformGame.cpp">
+    <ClCompile Include="src\TransformGame.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
-    <ClCompile Include="Delegates.cpp">
+    <ClCompile Include="src\Delegates.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
-    <ClCompile Include="PlaneComponent.cpp">
+    <ClCompile Include="src\PlaneComponent.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
-    <ClCompile Include="Camera.cpp">
+    <ClCompile Include="src\Camera.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
-    <ClCompile Include="CameraController.cpp">
+    <ClCompile Include="src\CameraController.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
-    <ClCompile Include="SimpleMath.cpp">
+    <ClCompile Include="src\SimpleMath.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
-    <ClCompile Include="EdgeComponent.cpp">
+    <ClCompile Include="src\EdgeComponent.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
-    <ClCompile Include="BoxComponent.cpp">
+    <ClCompile Include="src\BoxComponent.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
-    <ClCompile Include="TextureLoader.cpp">
+    <ClCompile Include="src\TextureLoader.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
-    <ClCompile Include="FigureComponent.cpp">
+    <ClCompile Include="src\FigureComponent.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
   </ItemGroup>
@@ -68,72 +68,72 @@
     <FxCompile Include="MiniTri.fx">
       <Filter>Файлы ресурсов</Filter>
     </FxCompile>
-    <FxCompile Include="Simple.hlsl">
+    <FxCompile Include="shader\Simple.hlsl">
       <Filter>Файлы ресурсов</Filter>
     </FxCompile>
-    <FxCompile Include="Texture.hlsl">
+    <FxCompile Include="shader\Texture.hlsl">
       <Filter>Файлы ресурсов</Filter>
     </FxCompile>
-    <FxCompile Include="LightShaderTexture.hlsl">
+    <FxCompile Include="shader\LightShaderTexture.hlsl">
       <Filter>Файлы ресурсов</Filter>
     </FxCompile>
-    <FxCompile Include="LightShaderSimple.hlsl">
+    <FxCompile Include="shader\LightShaderSimple.hlsl">
       <Filter>Файлы ресурсов</Filter>
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Game.h">
+    <ClInclude Include="include\Game.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
-    <ClInclude Include="DisplayWin32.h">
+    <ClInclude Include="include\DisplayWin32.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
-    <ClInclude Include="InputDevice.h">
+    <ClInclude Include="include\InputDevice.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
-    <ClInclude Include="TriangleComponent.h">
+    <ClInclude Include="include\TriangleComponent.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
-    <ClInclude Include="GameComponent.h">
+    <ClInclude Include="include\GameComponent.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
-    <ClInclude Include="pch.h">
+    <ClInclude Include="include\pch.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
-    <ClInclude Include="TransformGame.h">
+    <ClInclude Include="include\TransformGame.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
-    <ClInclude Include="SimpleMath.h">
+    <ClInclude Include="include\SimpleMath.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
-    <ClInclude Include="inclib.h">
+    <ClInclude Include="include\inclib.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
-    <ClInclude Include="Keys.h">
+    <ClInclude Include="include\Keys.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
-    <ClInclude Include="Delegates.h">
+    <ClInclude Include="include\Delegates.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
-    <ClInclude Include="PlaneComponent.h">
+    <ClInclude Include="include\PlaneComponent.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
-    <ClInclude Include="Camera.h">
+    <ClInclude Include="include\Camera.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
-    <ClInclude Include="CameraController.h">
+    <ClInclude Include="include\CameraController.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
-    <ClInclude Include="EdgeComponent.h">
+    <ClInclude Include="include\EdgeComponent.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
-    <ClInclude Include="BoxComponent.h">
+    <ClInclude Include="include\BoxComponent.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
-    <ClInclude Include="TextureLoader.h">
+    <ClInclude Include="include\TextureLoader.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
-    <ClInclude Include="FigureComponent.h">
+    <ClInclude Include="include\FigureComponent.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
   </ItemGroup>
@@ -144,22 +144,22 @@
     <Natvis Include="Delegates.natvis" />
   </ItemGroup>
   <ItemGroup>
-    <Image Include="ground_Tex.png">
+    <Image Include="texture\ground_Tex.png">
       <Filter>Файлы ресурсов</Filter>
     </Image>
-    <Image Include="wood_Tex.jpg">
+    <Image Include="texture\wood_Tex.jpg">
       <Filter>Файлы ресурсов</Filter>
     </Image>
-    <Image Include="pillow_Tex.jpg">
+    <Image Include="texture\pillow_Tex.jpg">
       <Filter>Файлы ресурсов</Filter>
     </Image>
-    <Image Include="camouflage_Tex.jpg">
+    <Image Include="texture\camouflage_Tex.jpg">
       <Filter>Файлы ресурсов</Filter>
     </Image>
-    <Image Include="box_Tex.jpg">
+    <Image Include="texture\box_Tex.jpg">
       <Filter>Файлы ресурсов</Filter>
     </Image>
-    <Image Include="brick_Tex.png">
+    <Image Include="texture\brick_Tex.png">
       <Filter>Файлы ресурсов</Filter>
     </Image>
   </ItemGroup>

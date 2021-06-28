@@ -1,6 +1,6 @@
-#include "PlaneComponent.h"
-#include "inclib.h"
-#include "Game.h"
+#include "../include/PlaneComponent.h"
+#include "../include/inclib.h"
+#include "../include/Game.h"
 
 PlaneComponent::PlaneComponent(Game* inGame, Camera* inCamera, int inSize) :GameComponent(inGame)
 {
@@ -60,7 +60,7 @@ void PlaneComponent::Initialize()
 
 #pragma region Initialize shaders
 	ID3DBlob* errorVertexCode;
-	res = D3DCompileFromFile(L"Simple.hlsl",
+	res = D3DCompileFromFile(L"shader/Simple.hlsl",
 		nullptr /*macros*/,
 		nullptr /*include*/,
 		"VSMain",
@@ -80,7 +80,7 @@ void PlaneComponent::Initialize()
 		}
 		else
 		{
-			MessageBox(game->Display->hWnd, L"Simple.hlsl", L"Missing Shader File", MB_OK);
+			MessageBox(game->Display->hWnd, L"shader/Simple.hlsl", L"Missing Shader File", MB_OK);
 		}
 	}
 	res = game->Device->CreateVertexShader(
@@ -89,7 +89,7 @@ void PlaneComponent::Initialize()
 		nullptr, &vertexShader); ZCHECK(res);
 
 	ID3DBlob* errorPixelCode;
-	res = D3DCompileFromFile(L"Simple.hlsl",
+	res = D3DCompileFromFile(L"shader/Simple.hlsl",
 		nullptr /*macros*/,
 		nullptr /*include*/,
 		"PSMain",
@@ -109,7 +109,7 @@ void PlaneComponent::Initialize()
 		}
 		else
 		{
-			MessageBox(game->Display->hWnd, L"Simple.hlsl", L"Missing Shader File", MB_OK);
+			MessageBox(game->Display->hWnd, L"shader/Simple.hlsl", L"Missing Shader File", MB_OK);
 		}
 	}
 	res = game->Device->CreatePixelShader(

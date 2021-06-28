@@ -1,10 +1,10 @@
-#include "TransformGame.h"
-#include "TriangleComponent.h"
-#include "EdgeComponent.h"
-#include "BoxComponent.h"
-#include "PlaneComponent.h"
-#include "InputDevice.h"
-#include "FigureComponent.h"
+#include "../include/TransformGame.h"
+#include "../include/TriangleComponent.h"
+#include "../include/EdgeComponent.h"
+#include "../include/BoxComponent.h"
+#include "../include/PlaneComponent.h"
+#include "../include/InputDevice.h"
+#include "../include/FigureComponent.h"
 
 PlaneComponent* plane;
 //TriangleComponent *tri;
@@ -127,7 +127,7 @@ void TransformGame::InitViaEdges()
 //	SimpleMath::Vector4(-4.0f, 15.0f, -4.0f, 1.0f), SimpleMath::Vector4(0.5f, 0.0f, 0.0f, 1.0f),
 //	SimpleMath::Vector4(-2.0f, 8.0f, -4.0f, 1.0f), SimpleMath::Vector4(1.0f, 1.0f, 1.0f, 1.0f),
 //};
-//tri = new TriangleComponent(this, cam, tripoints, L"ground_Tex.png");
+//tri = new TriangleComponent(this, cam, tripoints, L"texture/ground_Tex.png");
 //Components.emplace_back(tri);
 //edge = new EdgeComponent(this, cam);
 	box1 = new BoxComponent(light, this, cam);
@@ -154,7 +154,7 @@ void TransformGame::InitViaEdges()
 		SimpleMath::Vector4(-2.0f, 1.0f, -4.0f, 1.0f),
 		SimpleMath::Vector4(-2.0f, 1.0f, -2.0f, 1.0f),
 	};
-	box2 = new BoxComponent(light, this, cam, points, L"pillow_Tex.jpg");
+	box2 = new BoxComponent(light, this, cam, points, L"texture/pillow_Tex.jpg");
 	boxes.emplace_back(box2);
 
 	//points = new SimpleMath::Vector4[16]{
@@ -179,7 +179,7 @@ void TransformGame::InitViaEdges()
 	SimpleMath::Vector4(-2.5f, 2.0f, -9.0f, 1.0f),
 	SimpleMath::Vector4(-2.5f, 2.0f, -6.0f, 1.0f),
 	};
-	box3 = new BoxComponent(light, this, cam, points, L"brick_Tex.png");
+	box3 = new BoxComponent(light, this, cam, points, L"texture/brick_Tex.png");
 	boxes.emplace_back(box3);
 
 	//points = new SimpleMath::Vector4[16]{
@@ -204,7 +204,7 @@ void TransformGame::InitViaEdges()
 		SimpleMath::Vector4(-5.0f, 1.0f, -4.0f, 1.0f),
 		SimpleMath::Vector4(-5.0f, 1.0f, -2.0f, 1.0f),
 	};
-	box4 = new BoxComponent(light, this, cam, points, L"ground_Tex.png");
+	box4 = new BoxComponent(light, this, cam, points, L"texture/ground_Tex.png");
 	boxes.emplace_back(box4);
 
 	//points = new SimpleMath::Vector4[16]{
@@ -228,7 +228,7 @@ void TransformGame::InitViaEdges()
 		SimpleMath::Vector4(-5.0f, 3.0f, -7.0f, 1.0f),
 		SimpleMath::Vector4(-5.0f, 3.0f, -5.0f, 1.0f),
 	};
-	box5 = new BoxComponent(light, this, cam, points, L"camouflage_Tex.jpg");
+	box5 = new BoxComponent(light, this, cam, points, L"texture/camouflage_Tex.jpg");
 	boxes.emplace_back(box5);
 
 	//points = new SimpleMath::Vector4[16]{
@@ -252,7 +252,7 @@ void TransformGame::InitViaEdges()
 		SimpleMath::Vector4(-1.0f, 1.0f, -6.0f, 1.0f),
 		SimpleMath::Vector4(0.0f, 1.0f, -5.0f, 1.0f),
 	};
-	box6 = new BoxComponent(light, this, cam, points, L"camouflage_Tex.jpg");
+	box6 = new BoxComponent(light, this, cam, points, L"texture/camouflage_Tex.jpg");
 	boxes.emplace_back(box6);
 
 	//points = new SimpleMath::Vector4[16]{
@@ -276,7 +276,7 @@ void TransformGame::InitViaEdges()
 		SimpleMath::Vector4(-4.0f, 1.0f, 4.0f, 1.0f),
 		SimpleMath::Vector4(-4.0f, 1.0f, 2.0f, 1.0f),
 	};
-	box7 = new BoxComponent(light, this, cam, points, L"box_Tex.jpg");
+	box7 = new BoxComponent(light, this, cam, points, L"texture/box_Tex.jpg");
 	boxes.emplace_back(box7);
 
 	//points = new SimpleMath::Vector4[16]{
@@ -301,7 +301,7 @@ void TransformGame::InitViaEdges()
 		SimpleMath::Vector4(-1.0f, 1.0f, 6.0f, 1.0f),
 		SimpleMath::Vector4(-1.0f, 1.0f, 4.0f, 1.0f),
 	};
-	box8 = new BoxComponent(light, this, cam, points, L"ground_Tex.png");
+	box8 = new BoxComponent(light, this, cam, points, L"texture/ground_Tex.png");
 	boxes.emplace_back(box8);
 
 	//points = new SimpleMath::Vector4[16]{
@@ -325,7 +325,7 @@ void TransformGame::InitViaEdges()
 		SimpleMath::Vector4(5.0f, 2.0f, -1.0f, 1.0f),
 		SimpleMath::Vector4(5.0f, 2.0f, 1.0f, 1.0f),
 	};
-	box9 = new BoxComponent(light, this, cam, points, L"wood_Tex.jpg");
+	box9 = new BoxComponent(light, this, cam, points, L"texture/wood_Tex.jpg");
 	boxes.emplace_back(box9);
 
 	//points = new SimpleMath::Vector4[16]{
@@ -350,7 +350,7 @@ void TransformGame::InitViaEdges()
 		SimpleMath::Vector4(2.5f, 1.0f, 2.f, 1.0f),
 		SimpleMath::Vector4(2.5f, 1.0f, 4.0f, 1.0f),
 	};
-	box10 = new BoxComponent(light, this, cam, points, L"wood_Tex.jpg");
+	box10 = new BoxComponent(light, this, cam, points, L"texture/wood_Tex.jpg");
 	boxes.emplace_back(box10);
 
 	for (auto box : boxes)
@@ -407,7 +407,7 @@ void TransformGame::InitViaFigures()
 	};
 
 	inputTexPoints(points);
-	fig2 = new FigureComponent(light, 48, 12, this, cam, fpoints, L"pillow_Tex.jpg", index);
+	fig2 = new FigureComponent(light, 48, 12, this, cam, fpoints, L"texture/pillow_Tex.jpg", index);
 	figures.emplace_back(fig2);
 
 	points = new SimpleMath::Vector4[16]{
@@ -421,7 +421,7 @@ void TransformGame::InitViaFigures()
 	SimpleMath::Vector4(-2.5f, 2.0f, -6.0f, 1.0f),
 	};
 	inputTexPoints(points);
-	fig3 = new FigureComponent(light, 48, 12, this, cam, fpoints, L"brick_Tex.png", index);
+	fig3 = new FigureComponent(light, 48, 12, this, cam, fpoints, L"texture/brick_Tex.png", index);
 	figures.emplace_back(fig3);
 
 	points = new SimpleMath::Vector4[16]{
@@ -436,7 +436,7 @@ void TransformGame::InitViaFigures()
 	};
 	boxes.emplace_back(box4);
 	inputTexPoints(points);
-	fig4 = new FigureComponent(light, 48, 12, this, cam, fpoints, L"ground_Tex.png", index);
+	fig4 = new FigureComponent(light, 48, 12, this, cam, fpoints, L"texture/ground_Tex.png", index);
 	figures.emplace_back(fig4);
 
 	points = new SimpleMath::Vector4[16]{
@@ -450,7 +450,7 @@ void TransformGame::InitViaFigures()
 		SimpleMath::Vector4(-5.0f, 3.0f, -5.0f, 1.0f),
 	};
 	inputTexPoints(points);
-	fig5 = new FigureComponent(light, 48, 12, this, cam, fpoints, L"camouflage_Tex.jpg", index);
+	fig5 = new FigureComponent(light, 48, 12, this, cam, fpoints, L"texture/camouflage_Tex.jpg", index);
 	figures.emplace_back(fig5);
 
 	points = new SimpleMath::Vector4[16]{
@@ -464,7 +464,7 @@ void TransformGame::InitViaFigures()
 		SimpleMath::Vector4(0.0f, 1.0f, -5.0f, 1.0f),
 	};
 	inputTexPoints(points);
-	fig6 = new FigureComponent(light, 48, 12, this, cam, fpoints, L"camouflage_Tex.jpg", index);
+	fig6 = new FigureComponent(light, 48, 12, this, cam, fpoints, L"texture/camouflage_Tex.jpg", index);
 	figures.emplace_back(fig6);
 
 	points = new SimpleMath::Vector4[8]{
@@ -478,7 +478,7 @@ void TransformGame::InitViaFigures()
 		SimpleMath::Vector4(-4.0f, 1.0f, 2.0f, 1.0f),
 	};
 	inputTexPoints(points);
-	fig7 = new FigureComponent(light, 48, 12, this, cam, fpoints, L"box_Tex.jpg", index);
+	fig7 = new FigureComponent(light, 48, 12, this, cam, fpoints, L"texture/box_Tex.jpg", index);
 	figures.emplace_back(fig7);
 
 	points = new SimpleMath::Vector4[8]{
@@ -492,7 +492,7 @@ void TransformGame::InitViaFigures()
 		SimpleMath::Vector4(-1.0f, 1.0f, 4.0f, 1.0f),
 	};
 	inputTexPoints(points);
-	fig8 = new FigureComponent(light, 48, 12, this, cam, fpoints, L"ground_Tex.png", index);
+	fig8 = new FigureComponent(light, 48, 12, this, cam, fpoints, L"texture/ground_Tex.png", index);
 	figures.emplace_back(fig8);
 
 	points = new SimpleMath::Vector4[16]{
@@ -506,7 +506,7 @@ void TransformGame::InitViaFigures()
 		SimpleMath::Vector4(5.0f, 2.0f, 1.0f, 1.0f),
 	};
 	inputTexPoints(points);
-	fig9 = new FigureComponent(light, 48, 12, this, cam, fpoints, L"wood_Tex.jpg", index);
+	fig9 = new FigureComponent(light, 48, 12, this, cam, fpoints, L"texture/wood_Tex.jpg", index);
 	figures.emplace_back(fig9);
 
 	points = new SimpleMath::Vector4[8]{
@@ -520,7 +520,7 @@ void TransformGame::InitViaFigures()
 		SimpleMath::Vector4(2.5f, 1.0f, 4.0f, 1.0f),
 	};
 	inputTexPoints(points);
-	fig10 = new FigureComponent(light, 48, 12, this, cam, fpoints, L"wood_Tex.jpg", index);
+	fig10 = new FigureComponent(light, 48, 12, this, cam, fpoints, L"texture/wood_Tex.jpg", index);
 	figures.emplace_back(fig10);
 
 

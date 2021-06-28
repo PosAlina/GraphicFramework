@@ -1,6 +1,6 @@
-#include "inclib.h"
-#include "TextureLoader.h"
-#include "Game.h"
+#include "../include/inclib.h"
+#include "../include/TextureLoader.h"
+#include "../include/Game.h"
 
 TextureLoader::TextureLoader(Game* inGame)
 {

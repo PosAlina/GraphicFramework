@@ -1,5 +1,5 @@
-#include "InputDevice.h"
-#include "Game.h"
+#include "../include/InputDevice.h"
+#include "../include/Game.h"
 
 InputDevice::InputDevice(Game *inGame)
 {

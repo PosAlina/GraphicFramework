@@ -1,4 +1,4 @@
-#include "DisplayWin32.h"
+#include "../include/DisplayWin32.h"
 
 HMODULE DisplayWin32::Module = nullptr;
 

@@ -1,4 +1,4 @@
-#include "BoxComponent.h"
+#include "../include/BoxComponent.h"
 
 void BoxComponent::inputPoints(SimpleMath::Vector4* points)
 {

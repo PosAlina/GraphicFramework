@@ -139,29 +139,29 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="BoxComponent.cpp" />
-    <ClCompile Include="Camera.cpp" />
-    <ClCompile Include="CameraController.cpp" />
-    <ClCompile Include="Delegates.cpp" />
-    <ClCompile Include="DisplayWin32.cpp" />
-    <ClCompile Include="FigureComponent.cpp" />
-    <ClCompile Include="Game.cpp" />
-    <ClCompile Include="GameComponent.cpp" />
-    <ClCompile Include="InputDevice.cpp" />
+    <ClCompile Include="src\BoxComponent.cpp" />
+    <ClCompile Include="src\Camera.cpp" />
+    <ClCompile Include="src\CameraController.cpp" />
+    <ClCompile Include="src\Delegates.cpp" />
+    <ClCompile Include="src\DisplayWin32.cpp" />
+    <ClCompile Include="src\FigureComponent.cpp" />
+    <ClCompile Include="src\Game.cpp" />
+    <ClCompile Include="src\GameComponent.cpp" />
+    <ClCompile Include="src\InputDevice.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="PlaneComponent.cpp" />
-    <ClCompile Include="SimpleMath.cpp" />
-    <ClCompile Include="EdgeComponent.cpp" />
-    <ClCompile Include="TextureLoader.cpp" />
-    <ClCompile Include="TransformGame.cpp" />
-    <ClCompile Include="TriangleComponent.cpp" />
+    <ClCompile Include="src\PlaneComponent.cpp" />
+    <ClCompile Include="src\SimpleMath.cpp" />
+    <ClCompile Include="src\EdgeComponent.cpp" />
+    <ClCompile Include="src\TextureLoader.cpp" />
+    <ClCompile Include="src\TransformGame.cpp" />
+    <ClCompile Include="src\TriangleComponent.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="LightShaderSimple.hlsl">
+    <FxCompile Include="shader\LightShaderSimple.hlsl">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">yes</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">yes</ExcludedFromBuild>
     </FxCompile>
-    <FxCompile Include="LightShaderTexture.hlsl">
+    <FxCompile Include="shader\LightShaderTexture.hlsl">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">yes</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">yes</ExcludedFromBuild>
     </FxCompile>
@@ -169,34 +169,34 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">yes</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">yes</ExcludedFromBuild>
     </FxCompile>
-    <FxCompile Include="Texture.hlsl">
+    <FxCompile Include="shader\Texture.hlsl">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">yes</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">yes</ExcludedFromBuild>
     </FxCompile>
-    <FxCompile Include="Simple.hlsl">
+    <FxCompile Include="shader\Simple.hlsl">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">yes</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">yes</ExcludedFromBuild>
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="BoxComponent.h" />
-    <ClInclude Include="Camera.h" />
-    <ClInclude Include="CameraController.h" />
-    <ClInclude Include="Delegates.h" />
-    <ClInclude Include="DisplayWin32.h" />
-    <ClInclude Include="FigureComponent.h" />
-    <ClInclude Include="Game.h" />
-    <ClInclude Include="GameComponent.h" />
-    <ClInclude Include="inclib.h" />
-    <ClInclude Include="InputDevice.h" />
-    <ClInclude Include="Keys.h" />
-    <ClInclude Include="pch.h" />
-    <ClInclude Include="PlaneComponent.h" />
-    <ClInclude Include="SimpleMath.h" />
-    <ClInclude Include="EdgeComponent.h" />
-    <ClInclude Include="TextureLoader.h" />
-    <ClInclude Include="TransformGame.h" />
-    <ClInclude Include="TriangleComponent.h" />
+    <ClInclude Include="include\BoxComponent.h" />
+    <ClInclude Include="include\Camera.h" />
+    <ClInclude Include="include\CameraController.h" />
+    <ClInclude Include="include\Delegates.h" />
+    <ClInclude Include="include\DisplayWin32.h" />
+    <ClInclude Include="include\FigureComponent.h" />
+    <ClInclude Include="include\Game.h" />
+    <ClInclude Include="include\GameComponent.h" />
+    <ClInclude Include="include\inclib.h" />
+    <ClInclude Include="include\InputDevice.h" />
+    <ClInclude Include="include\Keys.h" />
+    <ClInclude Include="include\pch.h" />
+    <ClInclude Include="include\PlaneComponent.h" />
+    <ClInclude Include="include\SimpleMath.h" />
+    <ClInclude Include="include\EdgeComponent.h" />
+    <ClInclude Include="include\TextureLoader.h" />
+    <ClInclude Include="include\TransformGame.h" />
+    <ClInclude Include="include\TriangleComponent.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="ClassDiagram.cd" />
@@ -205,15 +205,15 @@
     <Natvis Include="Delegates.natvis" />
   </ItemGroup>
   <ItemGroup>
-    <Image Include="box_Tex.jpg" />
-    <Image Include="brick_Tex.png" />
-    <Image Include="camouflage_Tex.jpg" />
-    <Image Include="ground_Tex.png">
+    <Image Include="texture\box_Tex.jpg" />
+    <Image Include="texture\brick_Tex.png" />
+    <Image Include="texture\camouflage_Tex.jpg" />
+    <Image Include="texture\ground_Tex.png">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">yes</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">yes</ExcludedFromBuild>
     </Image>
-    <Image Include="pillow_Tex.jpg" />
-    <Image Include="wood_Tex.jpg" />
+    <Image Include="texture\pillow_Tex.jpg" />
+    <Image Include="texture\wood_Tex.jpg" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

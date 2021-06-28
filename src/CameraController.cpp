@@ -1,5 +1,5 @@
-#include "CameraController.h"
-#include "Game.h"
+#include "../include/CameraController.h"
+#include "../include/Game.h"
 
 CameraController::CameraController(Game* inGame, ::Camera* inCamera)
 {

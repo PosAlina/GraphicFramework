@@ -1,5 +1,5 @@
-#include "Camera.h"
-#include "Game.h"
+#include "../include/Camera.h"
+#include "../include/Game.h"
 
 #define M_PI 3.14159265358979323846
 
